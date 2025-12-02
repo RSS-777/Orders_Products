@@ -1,3 +1,12 @@
+CREATE TABLE users (
+    id INT PRIMARY KEY,
+    name VARCHAR(255),
+    email VARCHAR(255),
+    password VARCHAR(255),
+    role VARCHAR(50),
+    photo VARCHAR(255) NULL
+);
+
 CREATE TABLE orders (
     id INT PRIMARY KEY,
     title VARCHAR(255),
@@ -20,6 +29,11 @@ CREATE TABLE products (
     order_id INT,
     date DATETIME
 );
+
+INSERT INTO users VALUES
+(1, 'Admin User', 'admin@example.com', 'admin', 'admin', NULL),
+(2, 'John Doe', 'john@example.com', 'admin', 'manager', NULL),
+(3, 'Mark Smith', 'mark@example.com', 'admin', 'viewer', NULL);
 
 INSERT INTO orders VALUES 
 (1, 'Order 1', '2017-06-29 12:09:33', 'desc'),
