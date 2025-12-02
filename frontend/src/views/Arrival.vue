@@ -1,8 +1,8 @@
 <script setup lang="ts">
-// import { onMounted } from "vue";
-// import { getProducts } from "../api/productsApi";
-// import { getOrders } from "../api/ordersApi";
-import { orders, products } from "../api/data";
+import { onMounted } from "vue";
+import { getProducts } from "../api/productsApi";
+import { getOrders } from "../api/ordersApi";
+// import { orders, products } from "../api/data";
 
 // onMounted(async () => {
 //   const res = await getProducts();

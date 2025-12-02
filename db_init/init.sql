@@ -31,9 +31,9 @@ CREATE TABLE products (
 );
 
 INSERT INTO users VALUES
-(1, 'Admin User', 'admin@example.com', 'admin', 'admin', NULL),
-(2, 'John Doe', 'john@example.com', 'admin', 'manager', NULL),
-(3, 'Mark Smith', 'mark@example.com', 'admin', 'viewer', NULL);
+(1, 'Admin User', 'admin@example.com', '$2b$10$EixZa...', 'admin', NULL),
+(2, 'John Doe', 'john@example.com', '$2b$10$zX1K...', 'manager', NULL),
+(3, 'Mark Smith', 'mark@example.com', '$2b$10$Qe8G...', 'viewer', NULL);
 
 INSERT INTO orders VALUES 
 (1, 'Order 1', '2017-06-29 12:09:33', 'desc'),

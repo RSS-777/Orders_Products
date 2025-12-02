@@ -4,6 +4,7 @@ import Groups from '../views/Groups.vue';
 import Products from '../views/Products.vue';
 import Users from '../views/Users.vue';
 import Settings from '../views/Settings.vue';
+import NotFound from '../views/NotFound.vue';
 
 const routes = [
   {
@@ -34,6 +35,11 @@ const routes = [
     path: '/settings',
     name: 'settings',
     component: Settings,
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFound,
   },
 ];
 
