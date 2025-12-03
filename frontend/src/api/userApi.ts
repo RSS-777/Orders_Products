@@ -12,6 +12,7 @@ export interface ILoginResponse {
   success: boolean;
   token?: string;
   userId?: number;
+  photoUrl?: string;
   error?: string;
 }
 
@@ -37,6 +38,7 @@ export const login = async (
       success: true,
       token: data.token,
       userId: data.userId,
+      photoUrl: data.photoUrl
     };
 
   } catch (err) {

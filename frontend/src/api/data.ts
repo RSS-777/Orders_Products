@@ -1,38 +1,9 @@
-interface Price {
-  value: number;
-  symbol: string;
-  isDefault: 0 | 1;
-}
+import type {IProduct} from '../types/product'
+import type { IApiResponse } from '../types/api';
+import type { IOrder } from '../types/order';
+import type { IUser } from '../types/user';
 
-interface Guarantee {
-  start: string; 
-  end: string;
-}
-
-interface Product {
-  id: number;
-  serialNumber: number;
-  isNew: 0 | 1;
-  photo: string;
-  title: string;
-  type: string;
-  specification: string;
-  guarantee: Guarantee;
-  price: Price[];
-  order: number; 
-  date: string; 
-}
-
-interface Order {
-  id: number;
-  title: string;
-  date: string; 
-  description: string;
-  products: Product[]; 
-}
-
-
-export const products: Product[] = [
+export const products: IProduct[] = [
   {
     id: 1,
     serialNumber: 1234,
@@ -46,8 +17,8 @@ export const products: Product[] = [
       end: '2017-06-29 12:09:33'
     },
     price: [
-      { value: 100, symbol: 'USD', isDefault: 0 },
-      { value: 2600, symbol: 'UAH', isDefault: 1 }
+      { value: 100, symbol: 'USD', isDefault: 1 },
+      { value: 2600, symbol: 'UAH', isDefault: 0 }
     ],
     order: 1,
     date: '2017-06-29 12:09:33'
@@ -70,50 +41,126 @@ export const products: Product[] = [
     ],
     order: 2,
     date: '2017-06-29 12:09:33'
-  }
-];
-
-export const orders: Order[] = [
-  {
-    id: 1,
-    title: 'Order 1',
-    date: '2017-06-29 12:09:33',
-    description: 'desc',
-    get products() { return products.filter(p => p.order === this.id); }
-  },
-  {
-    id: 2,
-    title: 'Order 2',
-    date: '2017-06-29 12:09:33',
-    description: 'desc',
-    get products() { return products.filter(p => p.order === this.id); }
   },
   {
     id: 3,
-    title: 'Order 3',
-    date: '2017-06-29 12:09:33',
-    description: 'desc',
-    get products() { return products.filter(p => p.order === this.id); }
+    serialNumber: 1236,
+    isNew: 1,
+    photo: 'pathToFile.jpg',
+    title: 'Product 3',
+    type: 'Monitors',
+    specification: 'Specification 3',
+    guarantee: {
+      start: '2017-07-01 12:09:33',
+      end: '2017-08-01 12:09:33'
+    },
+    price: [
+      { value: 0, symbol: 'USD', isDefault: 0 },
+      { value: 5200, symbol: 'UAH', isDefault: 1 }
+    ],
+    order: 2,
+    date: '2017-07-01 12:09:33'
+  },
+  {
+    id: 4,
+    serialNumber: 1237,
+    isNew: 0, 
+    photo: 'pathToFile.jpg',
+    title: 'Product 4',
+    type: 'Monitors',
+    specification: 'Specification 4',
+    guarantee: {
+      start: '2017-07-02 12:09:33',
+      end: '2017-08-02 12:09:33'
+    },
+    price: [
+      { value: 100, symbol: 'USD', isDefault: 1 },
+      { value: 0, symbol: 'UAH', isDefault: 0 }
+    ],
+    order: 4,
+    date: '2017-07-02 12:09:33'
+  },
+  {
+    id: 5,
+    serialNumber: 1237,
+    isNew: 0, 
+    photo: 'pathToFile.jpg',
+    title: 'Product 4',
+    type: 'Monitors',
+    specification: 'Specification 4',
+    guarantee: {
+      start: '2017-07-02 12:09:33',
+      end: '2017-08-02 12:09:33'
+    },
+    price: [
+      { value: 0, symbol: 'USD', isDefault: 0 },
+      { value: 2400.788, symbol: 'UAH', isDefault: 1 }
+    ],
+    order: 5,
+    date: '2017-07-02 12:09:33'
   }
 ];
 
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  password: string;
-  role: 'admin' | 'manager' | 'viewer'; 
-  photo: string; 
+export const getProducts = ():IApiResponse<IProduct[]> => {
+    return {
+      success: true,
+      data: products,
+    };
 }
 
-export const users: User[] = [
+export const orders: IOrder[] = [
+  {
+    id: 1,
+    title: 'Длинное предлинное длиннющее название прихода',
+    date: '2017-06-29 12:09:33',
+    description: 'desc',
+    products: products.filter(p => p.order === 1)
+  },
+  {
+    id: 2,
+    title: 'Длинное предлинное длиннющее',
+    date: '2017-06-29 12:09:33',
+    description: 'desc',
+     products: products.filter(p => p.order === 2)
+  },
+  {
+    id: 3,
+    title: 'Длинное предлинное длиннющее название прихода',
+    date: '2017-06-29 12:09:33',
+    description: 'desc',
+     products: products.filter(p => p.order === 3)
+  },
+  {
+    id: 4,
+    title: 'Длинное предлинное длиннющее название прихода',
+    date: '2017-06-29 12:09:33',
+    description: 'desc',
+     products: products.filter(p => p.order === 4)
+  },
+  {
+    id: 5,
+    title: 'Длинное предлинное длиннющее название прихода',
+    date: '2017-06-29 12:09:33',
+    description: 'desc',
+     products: products.filter(p => p.order === 5)
+  }
+];
+
+export const  getOrders = (): IApiResponse<IOrder[]> => {
+  return { 
+    success: true, 
+    data : orders
+  };
+}
+
+export const users: IUser[] = [
   {
     id: 1,
     name: 'Admin User',
     email: 'admin@example.com',
     password: 'admin',
     role: 'admin',
-    photo: 'default.png'
+    photoUrl: ''
   },
   {
     id: 2,
@@ -121,7 +168,7 @@ export const users: User[] = [
     email: 'john@example.com',
     password: 'admin',
     role: 'manager',
-    photo: 'john.png'
+    photoUrl: ''
   },
   {
     id: 3,
@@ -129,6 +176,31 @@ export const users: User[] = [
     email: 'mark@example.com',
     password: 'admin',
     role: 'viewer',
-    photo: 'mark.png'
+    photoUrl: ''
   }
 ];
+
+export const login = (email: string, password: string) => {
+  const user = users[0]; 
+
+    if (!user) {
+    return {
+      success: false,
+      message: "No users found"
+    };
+  }
+
+  if(email !== user.email || password !== user.password) {
+    return {
+      success: false,
+      message: 'Incorrect email or password.'
+    }
+  }
+  
+  return {
+    success: true,
+    token: "mock-token-" + user.id, 
+    userId: user.id,
+    photoUrl: user.photoUrl
+  };
+};

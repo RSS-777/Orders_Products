@@ -4,7 +4,7 @@ CREATE TABLE users (
     email VARCHAR(255),
     password VARCHAR(255),
     role VARCHAR(50),
-    photo VARCHAR(255) NULL
+    photoUrl VARCHAR(255) NULL
 );
 
 CREATE TABLE orders (
