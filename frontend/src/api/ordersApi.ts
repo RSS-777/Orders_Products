@@ -78,3 +78,35 @@ export const getOrderById = async (id: number): Promise<IOrderResponse> => {
     };
   }
 };
+
+export const deleteOrder = async (id: number): Promise<IOrderResponse> => {
+  try {
+    const response = await fetch(`${BASE_URL}/orders/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error("Order not found.");
+      }
+      if (response.status === 500) {
+        throw new Error("Server error while deleting order.");
+      }
+      throw new Error("Unexpected server response.");
+    }
+
+    const data: IOrder = await response.json();
+
+    return { success: true, data };
+
+  } catch (err) {
+    if (import.meta.env.VITE_APP_MODE === "development") {
+      console.error("Error deleting order:", err);
+    }
+
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Unknown error occurred.",
+    };
+  }
+};

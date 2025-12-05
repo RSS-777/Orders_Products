@@ -1,18 +1,58 @@
 <script setup lang="ts">
-import { onMounted, reactive } from "vue";
+import { onMounted, computed, reactive, ref } from "vue";
 import { getOrders } from "../api/data";
+import OrderProducts from "../components/Arrival/OrderProducts.vue";
 // import { getOrders } from "../api/ordersApi";
 import type { IOrder } from "../types/order";
-import CustomButton from "../components/CustomButton.vue";
-import type { IProduct } from "../types/product";
-import PriceDisplay from "../components/Arrival/PriceDisplay.vue";
-import BaseButton from "../components/BaseButton.vue";
-import imageBacket from "../assets/basket.png";
+import ConfirmModal from "../components/ConfirmModal.vue";
+import WrapperMain from "../components/WrapperMain.vue";
+import { deleteOrder } from "../api/ordersApi";
+import defaultImageProduct from "../assets/box.png"
+import EllipsisText from "../components/EllipsisText.vue";
+import SecondaryText from "../components/SecondaryText.vue";
 
 const state = reactive({
   countOrders: 0,
   dataOrders: [] as IOrder[],
 });
+
+const orderId = ref<number | null>(null)
+const showModal = ref<boolean>(false);
+const fetchMessage = ref<string>('')
+const showProducts = ref<boolean>(false);
+
+const toggleProducts = () => {
+  showProducts.value = !showProducts.value;
+};
+
+const currentOrder = computed(() => {
+  if (orderId.value === null) return null
+  return state.dataOrders.find(o => o.id === orderId.value) || null
+})
+
+const handleConfirmDelete = async () => {
+  if (orderId.value === null) return;
+
+  const res = await deleteOrder(orderId.value)
+
+  if (res.error) {
+    fetchMessage.value = res.error
+    setTimeout(() => { fetchMessage.value = '' }, 2000)
+    return
+  }
+
+  orderId.value = null
+  showModal.value = false
+}
+
+const handleCancelDelete = () => {
+  showModal.value = false
+}
+
+const handleDelete = (id: number) => {
+  orderId.value = id
+  showModal.value = true
+}
 
 onMounted(async () => {
   const res = await getOrders();
@@ -25,55 +65,48 @@ onMounted(async () => {
     console.error("Error orders:", res.error);
   }
 });
-
-const handleOpenProducts = () => {
-  console.log('handleOpenProducts')
-}
-
-const handleDelete = () => {
-  console.log('handleDelete')
-}
 </script>
 
 
 <template>
-  <main class="main w-100 overflow-x-auto px-3 mx-auto">
-    <div class="main__inner w-100">
-      <div class="title d-flex gap-3 align-items-center justify-content-start pt-5">
-        <button class="title__btn btn btn-sm rounded-circle text-white">+</button>
-        <h1>Приходы / {{ state.countOrders }}</h1>
+  <WrapperMain>
+    <main class="main pb-2 mx-auto w-100 overflow-auto">
+      <div class="main__inner mx-3">
+        <div class="title d-flex gap-3 align-items-center justify-content-start pt-5">
+          <button class="title__btn btn btn-sm rounded-circle text-white p-0">+</button>
+          <h1>Приходы / {{ state.countOrders }}</h1>
+        </div>
+        <OrderProducts :handleDelete="handleDelete"
+          :orders="state.dataOrders" />
       </div>
-
-      <div class="order pt-5 d-flex flex-column  gap-2">
-
-        <div v-for="element in state.dataOrders" :key="element.id" class="order__block border rounded-2  gap-3 p-2">
-          <p class="order__title text-truncate flex-grow-1" :title="element.title">
-            <span class="order__title-text">{{ element.title }}</span>
-          </p>
-
-          <div class="order__products d-flex align-items-center gap-3 justify-content-center">
-            <CustomButton @click="handleOpenProducts" />
-            <div class="d-flex flex-column">
-              <span class="fs-5 lh-1">{{ element.products.length }}</span>
-              <span class="order__products-title">Продукта</span>
-            </div>
-          </div>
-
-          <div class="order__date d-flex flex-column align-items-center justify-content-center">
-            <span class="order__date-count">{{element.products.filter(p => p.isNew === 1).length}} / {{
-              element.products.length }}</span>
-            <span class="order__date-time">{{ element.date.split(' ')[0] }}</span>
-          </div>
-          <div class="d-flex justify-content-center">
-            <PriceDisplay :products="element.products"/>
-          </div>
-          <BaseButton @click="handleDelete">
-            <img :src="imageBacket" alt="Icon basket" width="12" height="12">
-          </BaseButton>
+    </main>
+    <ConfirmModal :show="showModal" :message="fetchMessage" name="приход" @confirm="handleConfirmDelete"
+      @cancel="handleCancelDelete">
+      <div class="modal-element p-4">
+        <EllipsisText v-if="currentOrder" :title="currentOrder.title"  className="fs-5 border-0 fw-medium"/>
+        <p class="fd-2 lh-sm my-2">{{ currentOrder?.description }}</p>
+        <div v-if="currentOrder?.products.length">
+          <button class="modal-element__btn border-0 bg-transparent p-0 d-flex align-items-center" @click="toggleProducts">
+            <span>Продукти</span> <span>{{showProducts ? '▲': '▼'}}</span>
+          </button>
+          <ul class="product list-unstyled mt-2 overflow-y-auto"
+            :style="{ maxHeight: showProducts ? '200px' : '5px', transition: 'max-height 0.5s ease' }">
+            <li v-for="product in currentOrder?.products" :key="product.id" class="product__list gap-4 py-1">
+              <div class="product__status rounded-circle ms-4"
+                :class="product.isNew ? 'product__status--active' : 'product__status--inActive'"
+                :aria-label="product.isNew ? 'новый продукт' : 'существующий продукт'"></div>
+              <img :src="product.photo ? product.photo : defaultImageProduct" alt="Product" width="42" height="42"
+                class="me-3">
+              <div class="product__information overflow-hidden">
+                <EllipsisText :title="product.title" />
+                <SecondaryText :text="product.serialNumber" />
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
-    </div>
-  </main>
+    </ConfirmModal>
+  </WrapperMain>
 </template>
 
 <style scoped>
@@ -82,7 +115,7 @@ const handleDelete = () => {
 }
 
 .main__inner {
-  min-width: 800px;
+  min-width: 780px;
 }
 
 .title__btn {
@@ -90,35 +123,38 @@ const handleDelete = () => {
   border: 5px solid #7BAB4B;
   width: 30px;
   height: 30px;
-  padding: 0;
 }
 
-.order__block {
+.modal-element {
+  border-top: 1px solid rgb(189, 189, 189);
+}
+
+.modal-element__btn {
+   color: #7BAB4B;
+}
+
+.product__status {
+  width: 8px;
+  height: 8px;
+  background-color: #7BAB4B;
+}
+
+.product__status--active {
+  background-color: #7BAB4B;
+}
+
+.product__status--inActive {
+  background-color: rgb(171, 132, 3);
+}
+
+.product__list {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  grid-template-columns: auto auto 1fr;
   align-items: center;
+  border-top: 1px solid rgb(223, 223, 223);
 }
 
-.order__title {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: help;
-  max-width: 400px;
-}
-
-.order__products-title {
-  font-size: 12px;
-  color: rgb(158, 158, 158);
-}
-
-.order__title-text {
-  line-height: 1.2;
-  border-bottom: 1px solid rgb(182, 182, 182);
-}
-
-.order__date-count {
-  font-size: 12px;
-  color: rgb(158, 158, 158);
+.product__information {
+  max-width: 420px;
 }
 </style>

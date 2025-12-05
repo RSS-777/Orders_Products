@@ -1,11 +1,24 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useStore } from 'vuex';
 import logo from '../assets/logo.png'
 import clock from '../assets/clock.png'
 
-const formattedDate = ref('')
-const formattedDay = ref('')
-const formattedTime = ref('')
+const store = useStore();
+const searchValue = ref<string>('');
+const formattedDate = ref<string>('')
+const formattedDay = ref<string>('')
+const formattedTime = ref<string>('')
+
+const handleKeyPress = (e: KeyboardEvent) => {
+  if (e.key === 'Enter' && searchValue.value.trim() !== '') {
+    store.commit('search/setSearch', { text: searchValue.value.trim() });
+    searchValue.value = '';
+    setTimeout(() => {
+        store.commit('search/clearSearch');
+    }, 3000)
+  }
+};
 
 function updateDateTime() {
     const now = new Date()
@@ -57,7 +70,7 @@ onUnmounted(() => {
             </div>
 
             <div class="header__search flex-grow-1 my-2 my-sm-0 mx-sm-3">
-                <input class="header__search-input px-2" type="search" placeholder="Поиск" aria-label="Search" />
+                <input class="header__search-input px-2" type="search" placeholder="Поиск" aria-label="Search" v-model="searchValue" @keypress="handleKeyPress"/>
             </div>
         </div>
 

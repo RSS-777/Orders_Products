@@ -38,12 +38,12 @@ const totalUAH = computed(() => {
 
 <template>
     <div class="price d-flex flex-column ">
-        <span v-if="totalUSD" class="price__usd" :class="defaultCurrency !== 'USD' ? 'price__first' : 'price__last'"
+        <span v-if="totalUSD" class="price__usd text-nowrap" :class="defaultCurrency !== 'USD' ? 'price__first' : 'price__last'"
             :style="{ order: defaultCurrency === 'USD' ? 2 : 1 }">
             {{ totalUSD }} $
         </span>
 
-        <span v-if="totalUAH" class="price__uah" :class="defaultCurrency !== 'UAH' ? 'price__first' : 'price__last'"
+        <span v-if="totalUAH" class="price__uah text-nowrap" :class="defaultCurrency !== 'UAH' ? 'price__first' : 'price__last'"
             :style="{ order: defaultCurrency === 'UAH' ? 2 : 1 }">
             {{ totalUAH }} UAH
         </span>

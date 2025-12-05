@@ -66,12 +66,11 @@ const toggleMenu = () => {
 <template>
   <input ref="fileInput" type="file" class="d-none" accept="image/*" @change="changePhoto" />
 
-  <button class="btn-navbar d-md-none position-fixed z-3 top-3 start-3 focus-none border-0 bg-transparent"
-    @click="toggleMenu">
+  <button class="btn-navbar position-fixed z-5 pt-1 ps-2 fs-3 top-3 start-3 focus-none border-0 bg-transparent" @click="toggleMenu">
     ☰
   </button>
 
-  <div class="navigation p-2 w-100 bg-white border" :class="{ open: isOpen }" @click.stop>
+  <div class="navigation z-1 p-2 w-100 bg-white border" :class="{ open: isOpen }" @click.stop>
     <div class="navigation__image position-relative rounded-circle border mx-auto my-4">
       <img :src="userImage ? userImage : personDefaultImg" alt="Image person" class="img-fluid">
       <button @click="openFileDialog"
@@ -104,17 +103,17 @@ const toggleMenu = () => {
 <style scoped>
 .btn-navbar {
   color: #80B548;
-  font-size: 24px;
+  z-index: 1000;
 }
 
 .navigation {
   box-shadow: 4px 0 8px -4px rgba(85, 85, 85, 0.549);
-  min-width: 140px;
+  min-width: 180px;
   max-width: 250px;
-  position: fixed;
   height: 100%;
-  transform: translateX(-120%);
   transition: transform 1.5s ease;
+  position: fixed;
+  transform: translateX(-120%);
 }
 
 .navigation.open {
@@ -145,11 +144,15 @@ a {
   color: #1E2F38;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1025px) {
   .navigation {
-    position: relative;
+    position: static;
     transform: translateX(0);
     height: auto;
+  }
+
+  .btn-navbar {
+    display: none;
   }
 }
 </style>
