@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import auth from "./mobules/auth";
-import search from "./search";
+import search from "./mobules/search";
 
 export default createStore({
   modules: {

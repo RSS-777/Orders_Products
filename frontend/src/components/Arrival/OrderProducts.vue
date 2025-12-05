@@ -18,7 +18,6 @@ const { orders, handleDelete } = defineProps<{
 
 const store = useStore()
 const tempScroll = ref<number | undefined>(undefined)
-const openProducts = ref<number | null>(null)
 
 const searchText = computed(() => store.getters['search/text']);
 
@@ -35,7 +34,7 @@ if (index !== -1) {
 }
 
 const handleOpenProducts = (id: number) => {
-  openProducts.value = openProducts.value === id ? null : id;
+  console.log('відкрити продукти з фільтром', id)
 }
 
 watch(searchText, (newValue) => {

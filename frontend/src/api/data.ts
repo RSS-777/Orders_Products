@@ -96,7 +96,7 @@ export const products: IProduct[] = [
       { value: 0, symbol: 'USD', isDefault: 0 },
       { value: 2400.788, symbol: 'UAH', isDefault: 1 }
     ],
-    order: 5,
+    order: 0,
     date: '2017-07-02 12:09:33'
   },
   {
@@ -207,7 +207,7 @@ export const products: IProduct[] = [
       { value: 1200, symbol: 'USD', isDefault: 1 },
       { value: 36000, symbol: 'UAH', isDefault: 0 }
     ],
-    order: 6,
+    order: 0,
     date: '2017-08-01 12:09:33'
   },
   {
@@ -271,7 +271,7 @@ export const products: IProduct[] = [
       { value: 120, symbol: 'USD', isDefault: 1 },
       { value: 3600, symbol: 'UAH', isDefault: 0 }
     ],
-    order: 7,
+    order: 0,
     date: '2017-08-02 12:09:33'
   },
   {

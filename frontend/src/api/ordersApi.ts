@@ -110,3 +110,46 @@ export const deleteOrder = async (id: number): Promise<IOrderResponse> => {
     };
   }
 };
+
+export const createOrder = async (
+  token: string,
+  order: { title: string; description?: string }
+): Promise<IOrderResponse> => {
+  try {
+    const response = await fetch(`${BASE_URL}/orders`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify(order),
+    });
+
+    if (!response.ok) {
+      if (response.status === 400) {
+        throw new Error("Invalid data for creating order.");
+      }
+      if (response.status === 401) {
+        throw new Error("Unauthorized.");
+      }
+      if (response.status === 500) {
+        throw new Error("Server error while creating order.");
+      }
+      throw new Error("Unexpected server response.");
+    }
+
+    const data: IOrder = await response.json();
+
+    return { success: true, data };
+
+  } catch (err) {
+    if (import.meta.env.VITE_APP_MODE === "development") {
+      console.error("Error creating order:", err);
+    }
+
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Unknown error occurred.",
+    };
+  }
+};

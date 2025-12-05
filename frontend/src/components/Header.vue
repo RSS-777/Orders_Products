@@ -64,8 +64,8 @@ onUnmounted(() => {
         class="header container-fluid d-flex align-items-center justify-content-around px-2 py-2 w-100 position-relative z-2 bg-white">
         <div
             class="block block--width d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between w-100">
-            <div class="header__brand d-flex align-items-center">
-                <img class="header__brand-logo me-2" width="45" height="45" :src="logo" alt="Logo" />
+            <div class="header__brand d-flex align-items-center gap-1">
+                <img class="header__brand-logo me-2 object-fit-contain" width="45" height="45" :src="logo" alt="Logo" />
                 <span class="header__brand-title">inventory</span>
             </div>
 
@@ -90,14 +90,6 @@ onUnmounted(() => {
 <style scoped>
 .header {
     box-shadow: 0 4px 6px -2px rgba(85, 85, 85, 0.5);
-}
-
-.header__brand {
-    gap: 5px;
-}
-
-.header__brand-logo {
-    object-fit: contain;
 }
 
 .header__brand-title {

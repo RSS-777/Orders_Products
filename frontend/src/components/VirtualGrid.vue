@@ -20,39 +20,34 @@ const pageProvider = (pageNumber: number, pageSize: number) => {
 };
 
 watch(() => tempScroll, (newIndex) => {
-  if (newIndex !== undefined && newIndex !== null) {
-    activeIndex.value = newIndex;
+    if (newIndex !== undefined && newIndex !== null) {
+        activeIndex.value = newIndex;
 
-    setTimeout(() => {
-      activeIndex.value = null;
-    }, 3000);
-  }
+        setTimeout(() => {
+            activeIndex.value = null;
+        }, 3000);
+    }
 });
 </script>
 <template>
-    <div :style="maxHeight" class="mt-5  overflow-y-auto">
-        <Grid 
+    <div :style="maxHeight" class="mt-5 overflow-y-auto">
+        <Grid ї
             :length="items.length" 
             :pageProvider="pageProvider" 
             :pageSize="20" 
-            :scrollTo="tempScroll"
+            :scrollTo="tempScroll"    
             :class="classGrid" 
             class="columns" 
             :key="'gridKey'"
         >
             <template v-slot:default="{ item, index, style }">
-                <div 
-                :style="style"
-                :class="{ 'active-element': index === activeIndex }"
-                >
+                <div :style="style" :class="{ 'active-element': index === activeIndex }">
                     <slot :item="item"></slot>
                 </div>
             </template>
 
             <template v-slot:placeholder="{ index, style }">
-                <div 
-                :style="style"
-                >Loading... {{ index }}</div>
+                <div :style="style">Loading... {{ index }}</div>
             </template>
 
             <template v-slot:probe>
