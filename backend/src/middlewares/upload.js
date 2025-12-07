@@ -18,3 +18,4 @@ const uploadUserPhoto = multer({ storage: storage('users') });
 const uploadProductPhoto = multer({ storage: storage('products') });
 
 module.exports = { uploadUserPhoto, uploadProductPhoto };
+

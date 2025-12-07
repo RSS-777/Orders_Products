@@ -1,4 +1,4 @@
-const db = require('./db');
+const db = require('../db');
 
 const User = {
   getAll: async () => {
@@ -22,6 +22,10 @@ const User = {
   },
   updatePhoto: async (id, photoUrl) => {
     const [result] = await db.query('UPDATE users SET photo = ? WHERE id = ?', [photoUrl, id]);
+    return result;
+  },
+  deleteById: async (id) => {
+    const [result] = await db.query('DELETE FROM users WHERE id = ?', [id]);
     return result;
   }
 };

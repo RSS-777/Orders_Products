@@ -8,47 +8,23 @@ export interface IUserPhotoUpdateResponse {
   error?: string;
 }
 
-export interface ILoginResponse {
+export interface IUsersResponse {
   success: boolean;
-  token?: string;
-  userId?: number;
-  photoUrl?: string;
+  data?: {
+    id: number;
+    name: string;
+    email: string;
+    photoUrl?: string;
+    role: string;
+  }[];
   error?: string;
 }
 
-export const login = async (
-  email: string,
-  password: string
-): Promise<ILoginResponse> => {
-  try {
-    const response = await fetch(`${BASE_URL}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
-
-    if (!response.ok) {
-      if (response.status === 401) throw new Error("Invalid credentials.");
-      throw new Error("Server error.");
-    }
-
-    const data = await response.json();
-
-    return {
-      success: true,
-      token: data.token,
-      userId: data.userId,
-      photoUrl: data.photoUrl
-    };
-
-  } catch (err) {
-    return {
-      success: false,
-      error: err instanceof Error ? err.message : "Unknown error",
-    };
-  }
-};
-
+export interface IDeleteProfileResponse {
+  success: boolean;
+  message?: string;
+  error?: string;
+}
 
 export const updateUserPhoto = async (
   userId: number,
@@ -59,7 +35,7 @@ export const updateUserPhoto = async (
     const formData = new FormData();
     formData.append("photo", file);
 
-    const response = await fetch(`${BASE_URL}/users/${userId}/photo`, {
+    const response = await fetch(`${BASE_URL}/api/users/${userId}/photo`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`, 
@@ -100,6 +76,63 @@ export const updateUserPhoto = async (
     return {
       success: false,
       error: err instanceof Error ? err.message : "Unknown error occurred.",
+    };
+  }
+};
+
+export const getUsers = async (token: string): Promise<IUsersResponse> => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/users/getUsers`, {
+      method: "POST", 
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({})
+    });
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData?.message || "Failed to fetch users");
+    }
+
+    const data = await response.json();
+    return {
+      success: true,
+      data: data.users 
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Unknown error"
+    };
+  }
+};
+
+export const deleteMyProfile = async (token: string): Promise<IDeleteProfileResponse> => {
+  try {
+    const response = await fetch(`${BASE_URL}/api/users/deleteMyProfile`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData?.error || "Failed to delete profile");
+    }
+
+    const data = await response.json();
+    return {
+      success: true,
+      message: data.message || "Profile deleted successfully",
+    };
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : "Unknown error"
     };
   }
 };

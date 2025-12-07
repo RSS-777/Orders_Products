@@ -1,45 +1,102 @@
 const User = require('../models/userModel');
-const jwt = require('jsonwebtoken');
-const path = require('path');
-const fs = require('fs');
-const User = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const logger = require('../logger');
 
 const register = async (req, res) => {
-  const { name, email, password, role } = req.body;
-  if (!email || !password || !name || !role) return res.status(400).json({ message: 'Missing fields' });
+  try {
+    const { name, email, password } = req.body;
+    const role = 'admin'; 
 
-  const existingUser = await User.getByEmail(email);
-  if (existingUser) return res.status(400).json({ message: 'User already exists' });
+    if (!name || !email || !password) {
+      return res.status(400).json({ success: false, error: 'Missing fields' });
+    }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const newUser = await User.create({ name, email, password: hashedPassword, role });
+    const existingUser = await User.getByEmail(email);
+    if (existingUser) {
+      return res.status(409).json({ success: false, error: 'User already exists' });
+    }
 
-  res.status(201).json({ message: 'User created', userId: newUser.insertId });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = await User.create({ name, email, password: hashedPassword, role });
+
+    const token = jwt.sign(
+      { id: newUser.insertId, role },
+      process.env.JWT_SECRET || 'secret',
+      { expiresIn: '1h' }
+    );
+
+    return res.status(201).json({
+      success: true,
+      data: {
+        userId: newUser.insertId,
+        token,
+        photoUrl: ''
+      }
+    });
+  } catch (err) {
+    logger.error(`Failed to register user: ${err.message}`);
+    return res.status(500).json({ success: false, error: 'Server error' });
+  }
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.getByEmail(email);
+  try {
+    const { email, password } = req.body;
 
-  if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+    if (!email || !password) {
+      return res.status(400).json({ success: false, error: 'Missing email or password' });
+    }
 
-  const valid = await bcrypt.compare(password, user.password);
-  if (!valid) return res.status(401).json({ message: 'Invalid credentials' });
+    const user = await User.getByEmail(email);
+    if (!user) {
+      return res.status(401).json({ success: false, error: 'Invalid credentials' });
+    }
 
-  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || 'secret', { expiresIn: '1h' });
-  res.json({ token, userId: user.id, photoUrl: user.photo });
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) {
+      return res.status(401).json({ success: false, error: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign(
+      { id: user.id, role: user.role },
+      process.env.JWT_SECRET || 'secret',
+      { expiresIn: '1h' }
+    );
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        userId: user.id,
+        token,
+        photoUrl: user.photo || ''
+      }
+    });
+  } catch (err) {
+    logger.error(`Failed to login user ${req.body.email}: ${err.message}`);
+    return res.status(500).json({ success: false, error: 'Server error' });
+  }
 };
 
 const uploadPhoto = async (req, res) => {
-  if (!req.file) return res.status(400).json({ message: 'No file uploaded' });
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'No file uploaded' });
+    }
 
-  const userId = req.params.id;
-  const photoUrl = `/images/users/${req.file.filename}`;
+    const userId = parseInt(req.params.id, 10);
+    const photoUrl = `/images/users/${req.file.filename}`;
 
-  await User.updatePhoto(userId, photoUrl);
-  res.json({ success: true, data: { photoUrl } });
+    await User.updatePhoto(userId, photoUrl);
+
+    return res.status(200).json({
+      success: true,
+      data: { photoUrl }
+    });
+  } catch (err) {
+    logger.error(`Failed to upload photo for user ${req.params.id}: ${err.message}`);
+    return res.status(500).json({ success: false, error: 'Server error' });
+  }
 };
 
-module.exports = { login, uploadPhoto };
+module.exports = { register, login, uploadPhoto };

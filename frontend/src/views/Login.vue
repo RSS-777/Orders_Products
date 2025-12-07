@@ -2,8 +2,8 @@
 import { useStore } from "vuex";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { login } from "../api/data"; // mock
-// import { login } from "../api/userApi";
+// import { login } from "../api/data"; // mock
+import { login } from "../api/authApi";
 import * as yup from "yup";
 
 const store = useStore();
@@ -70,13 +70,16 @@ const onSubmit = async () => {
         <button class="btn btn-primary btn-primary--active w-100 bg-success border-0" type="submit">
           Войти
         </button>
+        <p class="mt-2 text-center"  v-if="!store.getters['auth/isAuth']">
+          Нет аккаунта? <router-link to="/register">Зарегистрироваться</router-link>
+        </p>
       </form>
     </div>
   </div>
 </template>
 
 <style scoped>
-  .btn-primary--active:active {
-    transform: scale(0.98);
-  }
+.btn-primary--active:active {
+  transform: scale(0.98);
+}
 </style>

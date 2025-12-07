@@ -19,7 +19,7 @@ export interface IOrderResponse {
 
 export const getOrders = async (): Promise<IOrdersResponse> => {
   try {
-    const response = await fetch(`${BASE_URL}/orders`, {
+    const response = await fetch(`${BASE_URL}/api/orders/get`, {
       method: "GET",
     });
 
@@ -46,41 +46,9 @@ export const getOrders = async (): Promise<IOrdersResponse> => {
   }
 };
 
-export const getOrderById = async (id: number): Promise<IOrderResponse> => {
-  try {
-    const response = await fetch(`${BASE_URL}/orders/${id}`, {
-      method: "GET",
-    });
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        throw new Error("Order not found.");
-      }
-      if (response.status === 500) {
-        throw new Error("Server error while fetching order.");
-      }
-      throw new Error("Unexpected server response.");
-    }
-
-    const data: IOrder = await response.json();
-
-    return { success: true, data };
-
-  } catch (err) {
-    if (import.meta.env.VITE_APP_MODE === "development") {
-      console.error("Error fetching order:", err);
-    }
-
-    return {
-      success: false,
-      error: err instanceof Error ? err.message : "Unknown error occurred.",
-    };
-  }
-};
-
 export const deleteOrder = async (id: number, token: string): Promise<IOrderResponse> => {
   try {
-    const response = await fetch(`${BASE_URL}/orders/${id}`, {
+    const response = await fetch(`${BASE_URL}/api/orders/${id}/delete`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`
@@ -121,7 +89,7 @@ export const createOrder = async (
   order: { title: string; description?: string }
 ): Promise<IOrderResponse> => {
   try {
-    const response = await fetch(`${BASE_URL}/orders`, {
+    const response = await fetch(`${BASE_URL}/api/orders/create`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
