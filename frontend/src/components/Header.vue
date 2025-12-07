@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref } from 'vue'
 import { useStore } from 'vuex';
+import { useDate } from '../composables/useDate';
+import { useTime } from '../composables/useTime';
 import logo from '../assets/logo.png'
 import clock from '../assets/clock.png'
 
 const store = useStore();
 const searchValue = ref<string>('');
-const formattedDate = ref<string>('')
-const formattedDay = ref<string>('')
-const formattedTime = ref<string>('')
+
+    const { formattedDate, formattedDay } = useDate('slash');
+const { formattedTime } = useTime();
+
 
 const handleKeyPress = (e: KeyboardEvent) => {
   if (e.key === 'Enter' && searchValue.value.trim() !== '') {
@@ -20,43 +23,6 @@ const handleKeyPress = (e: KeyboardEvent) => {
   }
 };
 
-function updateDateTime() {
-    const now = new Date()
-    const weekday = now.toLocaleDateString('ru-RU', { weekday: 'long' })
-    const dayOfWeek = weekday.charAt(0).toUpperCase() + weekday.slice(1)
-
-    const day = now.getDate().toString().padStart(2, '0')
-    const monthShort = now.toLocaleString('ru-RU', { month: 'short' })
-    const month = monthShort.charAt(0).toUpperCase() + monthShort.slice(1).replace('.', '')
-    const year = now.getFullYear()
-
-    formattedDate.value = `${day} ${month}, ${year}`
-    formattedDay.value = dayOfWeek
-
-    const hours = now.getHours().toString().padStart(2, '0')
-    const minutes = now.getMinutes().toString().padStart(2, '0')
-    formattedTime.value = `${hours}:${minutes}`
-}
-
-let timeoutId: number | undefined
-let intervalId: number | undefined
-
-onMounted(() => {
-    updateDateTime()
-
-    const now = new Date()
-    const msUntilNextMinute = (60 - now.getSeconds()) * 1000
-
-    timeoutId = window.setTimeout(() => {
-        updateDateTime()
-        intervalId = window.setInterval(updateDateTime, 60 * 1000)
-    }, msUntilNextMinute)
-})
-
-onUnmounted(() => {
-    if (timeoutId) clearTimeout(timeoutId)
-    if (intervalId) clearInterval(intervalId)
-})
 </script>
 
 <template>

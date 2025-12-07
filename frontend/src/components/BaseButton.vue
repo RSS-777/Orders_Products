@@ -9,8 +9,17 @@ const handleClick = () => {
 </script>
 
 <template>
-  <button class="btn d-flex align-items-center justify-content-center rounded-circle p-0"
+  <button class="button d-flex align-items-center justify-content-center p-2 bg-transparent border-0"
     @click="handleClick">
     <slot></slot>
   </button>
 </template>
+<style scoped>
+.button {
+  width: fit-content;
+}
+
+.button:active {
+  transform: scale(0.9);
+}
+</style>

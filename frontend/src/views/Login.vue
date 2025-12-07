@@ -2,7 +2,7 @@
 import { useStore } from "vuex";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { login } from "../api/data";
+import { login } from "../api/data"; // mock
 // import { login } from "../api/userApi";
 import * as yup from "yup";
 
@@ -49,8 +49,8 @@ const onSubmit = async () => {
 
 <template>
   <div class="d-flex justify-content-center align-items-center vh-100 w-100 bg-light">
-    <div class="card shadow p-4" style="width: 380px;">
-      <h3 class="text-center mb-3">Login</h3>
+    <div class="card shadow p-3 mx-2" style="width: 380px;">
+      <h3 class="text-center mb-3">Авторизация</h3>
 
       <div v-if="error" class="alert alert-danger py-2">
         {{ error }}
@@ -67,10 +67,16 @@ const onSubmit = async () => {
           <input v-model="password" type="password" class="form-control" />
         </div>
 
-        <button class="btn btn-primary w-100" type="submit">
-          Sign In
+        <button class="btn btn-primary btn-primary--active w-100 bg-success border-0" type="submit">
+          Войти
         </button>
       </form>
     </div>
   </div>
 </template>
+
+<style scoped>
+  .btn-primary--active:active {
+    transform: scale(0.98);
+  }
+</style>

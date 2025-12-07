@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper-main">
-    <slot /> 
+    <slot />
   </div>
 </template>
 
@@ -8,6 +8,6 @@
 .wrapper-main {
   position: relative;
   width: 100%;
+  overflow-x: auto;
 }
-
 </style>

@@ -9,302 +9,306 @@ export const products: IProduct[] = [
     serialNumber: 1234,
     isNew: 1,
     photo: '',
-    title: 'Product 1',
+    title: 'Монітор Samsung Odyssey G7 32" QHD 240Hz Curved Gaming Display',
     type: 'Monitors',
     specification: 'Specification 1',
-    guarantee: {
-      start: '2017-06-29 12:09:33',
-      end: '2017-06-29 12:09:33'
-    },
+    guarantee: { start: '2017-06-28 09:15:10', end: '2018-06-28 09:15:10' },
     price: [
       { value: 100, symbol: 'USD', isDefault: 1 },
       { value: 2600, symbol: 'UAH', isDefault: 0 }
     ],
     order: 1,
-    date: '2017-06-29 12:09:33'
+    date: '2017-06-28 09:15:10',
+    owner: 'Иванов Иван',
+    status: 'in_repair'
   },
   {
     id: 2,
     serialNumber: 1234,
     isNew: 1,
     photo: '',
-    title: 'Product 1',
-    type: 'Monitors',
+    title: 'Ноутбук Apple MacBook Pro 16" Intel i9 32GB RAM 1TB SSD Retina Display',
+    type: 'Laptops',
     specification: 'Specification 1',
-    guarantee: {
-      start: '2017-06-29 12:09:33',
-      end: '2017-06-29 12:09:33'
-    },
+    guarantee: { start: '2017-06-29 11:22:44', end: '2018-06-29 11:22:44' },
     price: [
       { value: 100, symbol: 'USD', isDefault: 0 },
       { value: 2600, symbol: 'UAH', isDefault: 1 }
     ],
     order: 2,
-    date: '2017-06-29 12:09:33'
+    date: '2017-06-29 11:22:44',
+    owner: 'Петров Пётр',
+    status: 'ready'
   },
   {
     id: 3,
     serialNumber: 1236,
     isNew: 1,
     photo: '',
-    title: 'Gigabyte X870 AORUS ELITE WIFI7 ICE (sAM5, AMD X870, PCI-Ex16)',
-    type: 'Monitors',
+    title: 'Материнська плата Gigabyte X870 AORUS ELITE WIFI7 ICE (sAM5, AMD X870, PCI-Ex16)',
+    type: 'Motherboards',
     specification: 'Specification 3',
-    guarantee: {
-      start: '2017-07-01 12:09:33',
-      end: '2017-08-01 12:09:33'
-    },
+    guarantee: { start: '2017-07-01 14:03:55', end: '2018-07-01 14:03:55' },
     price: [
       { value: 0, symbol: 'USD', isDefault: 0 },
       { value: 5200, symbol: 'UAH', isDefault: 1 }
     ],
     order: 2,
-    date: '2017-07-01 12:09:33'
+    date: '2017-07-01 14:03:55',
+    owner: 'Сидоров Сергей',
+    status: 'ready'
   },
   {
     id: 4,
     serialNumber: 1237,
-    isNew: 0, 
+    isNew: 0,
     photo: '',
-    title: 'Product 4',
-    type: 'Monitors',
+    title: 'Принтер HP LaserJet Pro M404dn з високошвидкісною друкарською головкою',
+    type: 'Printers',
     specification: 'Specification 4',
-    guarantee: {
-      start: '2017-07-02 12:09:33',
-      end: '2017-08-02 12:09:33'
-    },
+    guarantee: { start: '2017-07-02 08:44:12', end: '2018-07-02 08:44:12' },
     price: [
       { value: 100, symbol: 'USD', isDefault: 1 },
       { value: 0, symbol: 'UAH', isDefault: 0 }
     ],
     order: 4,
-    date: '2017-07-02 12:09:33'
+    date: '2017-07-02 08:44:12',
+    owner: '',
+    status: 'in_repair'
   },
   {
     id: 5,
     serialNumber: 1237,
-    isNew: 0, 
+    isNew: 0,
     photo: '',
-    title: 'Product 4',
-    type: 'Monitors',
+    title: 'Сканер Canon CanoScan LiDE 400 з роздільною здатністю 4800 dpi',
+    type: 'Scanners',
     specification: 'Specification 4',
-    guarantee: {
-      start: '2017-07-02 12:09:33',
-      end: '2017-08-02 12:09:33'
-    },
+    guarantee: { start: '2017-07-03 16:11:20', end: '2018-07-03 16:11:20' },
     price: [
       { value: 0, symbol: 'USD', isDefault: 0 },
       { value: 2400.788, symbol: 'UAH', isDefault: 1 }
     ],
-    order: 0,
-    date: '2017-07-02 12:09:33'
+    order: 1,
+    date: '2017-07-03 16:11:20',
+    owner: '',
+    status: 'in_repair'
   },
   {
     id: 6,
     serialNumber: 1537,
-    isNew: 0, 
+    isNew: 0,
     photo: '',
-    title: 'Product 4',
-    type: 'Monitors',
+    title: 'Мишка Logitech MX Master 3 Wireless з магнітним коліщатком',
+    type: 'Accessories',
     specification: 'Specification 4',
-    guarantee: {
-      start: '2017-07-02 12:09:33',
-      end: '2017-08-02 12:09:33'
-    },
+    guarantee: { start: '2017-07-04 10:55:01', end: '2018-07-04 10:55:01' },
     price: [
       { value: 0, symbol: 'USD', isDefault: 0 },
       { value: 2400.788, symbol: 'UAH', isDefault: 1 }
     ],
     order: 2,
-    date: '2017-07-02 12:09:33'
+    date: '2017-07-04 10:55:01',
+    owner: 'Кузнецов Алексей',
+    status: 'ready'
   },
   {
     id: 7,
     serialNumber: 1537,
-    isNew: 0, 
+    isNew: 0,
     photo: '',
-    title: 'Product 4',
-    type: 'Monitors',
+    title: 'Проектор Epson EB-S41 SVGA 3300 лм з підтримкою HDMI',
+    type: 'Projectors',
     specification: 'Specification 4',
-    guarantee: {
-      start: '2017-07-02 12:09:33',
-      end: '2017-08-02 12:09:33'
-    },
+    guarantee: { start: '2017-07-05 09:18:44', end: '2018-07-05 09:18:44' },
     price: [
       { value: 0, symbol: 'USD', isDefault: 0 },
       { value: 2400.788, symbol: 'UAH', isDefault: 1 }
     ],
     order: 2,
-    date: '2017-07-02 12:09:33'
+    date: '2017-07-05 09:18:44',
+    owner: 'Новиков Дмитрий',
+    status: 'in_repair'
   },
   {
     id: 8,
     serialNumber: 1537,
-    isNew: 0, 
+    isNew: 0,
     photo: '',
-    title: 'Product 4',
-    type: 'Monitors',
+    title: 'Екран для проектора 120" Manual Pull-down HD',
+    type: 'Projectors',
     specification: 'Specification 4',
-    guarantee: {
-      start: '2017-07-02 12:09:33',
-      end: '2017-08-02 12:09:33'
-    },
+    guarantee: { start: '2017-07-06 18:22:30', end: '2018-07-06 18:22:30' },
     price: [
       { value: 0, symbol: 'USD', isDefault: 0 },
       { value: 2400.788, symbol: 'UAH', isDefault: 1 }
     ],
     order: 2,
-    date: '2017-07-02 12:09:33'
+    date: '2017-07-06 18:22:30',
+    owner: 'Семенов Владимир',
+    status: 'ready'
   },
   {
     id: 9,
     serialNumber: 1537,
-    isNew: 1, 
+    isNew: 1,
     photo: '',
-    title: 'Product 4',
-    type: 'Monitors',
+    title: 'Ноутбук Lenovo ThinkPad X1 Carbon Gen 9 з OLED дисплеєм',
+    type: 'Laptops',
     specification: 'Specification 4',
-    guarantee: {
-      start: '2017-07-02 12:09:33',
-      end: '2017-08-02 12:09:33'
-    },
+    guarantee: { start: '2017-07-07 12:09:40', end: '2018-07-07 12:09:40' },
     price: [
       { value: 0, symbol: 'USD', isDefault: 0 },
       { value: 2400.788, symbol: 'UAH', isDefault: 1 }
     ],
     order: 2,
-    date: '2017-07-02 12:09:33'
+    date: '2017-07-07 12:09:40',
+    owner: '',
+    status: 'in_repair'
   },
   {
     id: 10,
     serialNumber: 1537,
-    isNew: 0, 
+    isNew: 0,
     photo: '',
-    title: 'Product 4',
+    title: 'Монітор Dell UltraSharp 27" 4K IPS з HDR підтримкою',
     type: 'Monitors',
     specification: 'Specification 4',
-    guarantee: {
-      start: '2017-07-02 12:09:33',
-      end: '2017-08-02 12:09:33'
-    },
+    guarantee: { start: '2017-07-08 15:31:22', end: '2018-07-08 15:31:22' },
     price: [
       { value: 0, symbol: 'USD', isDefault: 0 },
       { value: 2400.788, symbol: 'UAH', isDefault: 1 }
     ],
     order: 2,
-    date: '2017-07-02 12:09:33'
+    date: '2017-07-08 15:31:22',
+    owner: '',
+    status: 'in_repair'
   },
   {
     id: 11,
     serialNumber: 2001,
     isNew: 1,
     photo: '',
-    title: 'Ноутбук Lenovo ThinkPad X1',
+    title: 'Ноутбук Lenovo ThinkPad X1 з процесором Intel i7 та 512GB SSD',
     type: 'Laptops',
     specification: 'Intel i7, 16GB RAM, 512GB SSD',
-    guarantee: { start: '2017-08-01 12:09:33', end: '2018-08-01 12:09:33' },
+    guarantee: { start: '2017-08-01 10:02:11', end: '2018-08-01 10:02:11' },
     price: [
       { value: 1200, symbol: 'USD', isDefault: 1 },
       { value: 36000, symbol: 'UAH', isDefault: 0 }
     ],
-    order: 0,
-    date: '2017-08-01 12:09:33'
+    order: 4,
+    date: '2017-08-01 10:02:11',
+    owner: 'Федоров Николай',
+    status: 'in_repair'
   },
   {
     id: 12,
     serialNumber: 2002,
     isNew: 0,
     photo: '',
-    title: 'Монитор Dell UltraSharp 27"',
+    title: 'Монітор Dell UltraSharp 27" з IPS матрицею та 4K роздільною здатністю',
     type: 'Monitors',
     specification: 'IPS, 4K, 60Hz',
-    guarantee: { start: '2017-08-01 12:09:33', end: '2018-08-01 12:09:33' },
+    guarantee: { start: '2017-08-02 11:40:33', end: '2018-08-02 11:40:33' },
     price: [
       { value: 450, symbol: 'USD', isDefault: 1 },
       { value: 13500, symbol: 'UAH', isDefault: 0 }
     ],
     order: 6,
-    date: '2017-08-01 12:09:33'
+    date: '2017-08-02 11:40:33',
+    owner: '',
+    status: 'ready'
   },
   {
     id: 13,
     serialNumber: 2003,
     isNew: 1,
     photo: '',
-    title: 'Клавиатура Logitech MX Keys',
+    title: 'Клавіатура Logitech MX Keys Advanced Wireless Bluetooth',
     type: 'Accessories',
     specification: 'Bluetooth, черная',
-    guarantee: { start: '2017-08-01 12:09:33', end: '2018-08-01 12:09:33' },
+    guarantee: { start: '2017-08-03 13:55:48', end: '2018-08-03 13:55:48' },
     price: [
       { value: 100, symbol: 'USD', isDefault: 1 },
       { value: 3000, symbol: 'UAH', isDefault: 0 }
     ],
     order: 6,
-    date: '2017-08-01 12:09:33'
+    date: '2017-08-03 13:55:48',
+    owner: 'Морозова Анна',
+    status: 'in_repair'
   },
   {
     id: 14,
     serialNumber: 2101,
     isNew: 1,
     photo: '',
-    title: 'Принтер HP LaserJet Pro M404dn',
+    title: 'Принтер HP LaserJet Pro M404dn з високою швидкістю друку 40 стр/хв',
     type: 'Printers',
     specification: 'Ч/Б, 40 стр/мин',
-    guarantee: { start: '2017-08-02 12:09:33', end: '2018-08-02 12:09:33' },
+    guarantee: { start: '2017-08-04 09:29:17', end: '2018-08-04 09:29:17' },
     price: [
       { value: 300, symbol: 'USD', isDefault: 1 },
       { value: 9000, symbol: 'UAH', isDefault: 0 }
     ],
     order: 7,
-    date: '2017-08-02 12:09:33'
+    date: '2017-08-04 09:29:17',
+    owner: 'Васильев Сергей',
+    status: 'ready'
   },
   {
     id: 15,
     serialNumber: 2102,
     isNew: 0,
     photo: '',
-    title: 'Сканер Canon CanoScan LiDE 400',
+    title: 'Сканер Canon CanoScan LiDE 400 для високоякісного сканування документів',
     type: 'Scanners',
     specification: '4800 dpi, USB',
-    guarantee: { start: '2017-08-02 12:09:33', end: '2018-08-02 12:09:33' },
+    guarantee: { start: '2017-08-05 14:48:01', end: '2018-08-05 14:48:01' },
     price: [
       { value: 120, symbol: 'USD', isDefault: 1 },
       { value: 3600, symbol: 'UAH', isDefault: 0 }
     ],
-    order: 0,
-    date: '2017-08-02 12:09:33'
+    order: 8,
+    date: '2017-08-05 14:48:01',
+    owner: '',
+    status: 'in_repair'
   },
   {
     id: 16,
     serialNumber: 2201,
     isNew: 1,
     photo: '',
-    title: 'Проектор Epson EB-S41',
+    title: 'Проектор Epson EB-S41 SVGA 3300 лм з підтримкою HDMI та VGA',
     type: 'Projectors',
     specification: 'SVGA, 3300 лм',
-    guarantee: { start: '2017-08-03 12:09:33', end: '2018-08-03 12:09:33' },
+    guarantee: { start: '2017-08-10 13:33:55', end: '2018-08-10 13:33:55' },
     price: [
       { value: 400, symbol: 'USD', isDefault: 1 },
       { value: 12000, symbol: 'UAH', isDefault: 0 }
     ],
     order: 8,
-    date: '2017-08-03 12:09:33'
+    date: '2017-08-10 13:33:55',
+    owner: 'Киселев Дмитрий',
+    status: 'ready'
   },
   {
     id: 17,
     serialNumber: 2202,
     isNew: 0,
     photo: '',
-    title: 'Экран для проектора 120"',
+    title: 'Екран для проектора 120" Manual Pull-down HD з автоматичним вирівнюванням',
     type: 'Projectors',
     specification: 'Manual pull-down',
-    guarantee: { start: '2017-08-03 12:09:33', end: '2018-08-03 12:09:33' },
+    guarantee: { start: '2017-08-12 16:12:44', end: '2018-08-12 16:12:44' },
     price: [
       { value: 150, symbol: 'USD', isDefault: 1 },
       { value: 4500, symbol: 'UAH', isDefault: 0 }
     ],
-    order: 8,
-    date: '2017-08-03 12:09:33'
+    order: 11,
+    date: '2017-08-12 16:12:44',
+    owner: '',
+    status: 'in_repair'
   }
 ];
 
@@ -326,98 +330,98 @@ export const orders: IOrder[] = [
   {
     id: 2,
     title: 'Заказ канцелярских товаров для нового отдела',
-    date: '2017-06-29 12:09:33',
+    date: '2017-07-02 09:15:12',
     description: 'Заказ содержит 10 продуктов: коробки, книги, канцтовары.',
     products: products.filter(p => p.order === 2)
   },
   {
     id: 3,
     title: 'Закупка мониторов и периферийных устройств',
-    date: '2017-06-29 12:09:33',
+    date: '2017-07-06 14:22:50',
     description: 'desc',
     products: products.filter(p => p.order === 3)
   },
   {
     id: 4,
     title: 'Поставка ноутбуков для новых сотрудников',
-    date: '2017-06-29 12:09:33',
+    date: '2017-07-10 11:47:02',
     description: 'desc',
     products: products.filter(p => p.order === 4)
   },
   {
     id: 5,
     title: 'Заказ серверного оборудования и комплектующих',
-    date: '2017-06-29 12:09:33',
+    date: '2017-07-14 16:05:18',
     description: 'desc',
     products: products.filter(p => p.order === 5)
   },
   {
     id: 6,
     title: 'Закупка мебели для конференц-зала',
-    date: '2017-06-29 12:09:33',
+    date: '2017-07-18 10:33:27',
     description: 'desc',
     products: products.filter(p => p.order === 6)
   },
   {
     id: 7,
     title: 'Поставка принтеров и расходных материалов',
-    date: '2017-06-29 12:09:33',
+    date: '2017-07-21 13:56:41',
     description: 'desc',
     products: products.filter(p => p.order === 7)
   },
   {
     id: 8,
     title: 'Заказ программного обеспечения для бухгалтерии',
-    date: '2017-06-29 12:09:33',
+    date: '2017-07-25 15:12:09',
     description: 'desc',
     products: products.filter(p => p.order === 8)
   },
   {
     id: 9,
     title: 'Поставка сетевого оборудования и роутеров',
-    date: '2017-06-29 12:09:33',
+    date: '2017-07-28 09:44:55',
     description: 'desc',
     products: products.filter(p => p.order === 9)
   },
   {
     id: 10,
     title: 'Закупка кабельной продукции и аксессуаров',
-    date: '2017-06-29 12:09:33',
+    date: '2017-08-01 17:20:14',
     description: 'desc',
     products: products.filter(p => p.order === 10)
   },
   {
     id: 11,
     title: 'Заказ офисной электроники для отдела продаж',
-    date: '2017-06-29 12:09:33',
+    date: '2017-08-05 08:11:03',
     description: 'desc',
     products: products.filter(p => p.order === 11)
   },
   {
     id: 12,
     title: 'Поставка мониторов и док-станций для сотрудников',
-    date: '2017-06-29 12:09:33',
+    date: '2017-08-08 12:39:48',
     description: 'desc',
     products: products.filter(p => p.order === 12)
   },
   {
     id: 13,
     title: 'Закупка проекторов и экранов для конференц-залов',
-    date: '2017-06-29 12:09:33',
+    date: '2017-08-12 10:02:25',
     description: 'desc',
     products: products.filter(p => p.order === 13)
   },
   {
     id: 14,
     title: 'Поставка ноутбуков с предустановленным ПО',
-    date: '2017-06-29 12:09:33',
+    date: '2017-08-16 14:55:37',
     description: 'desc',
     products: products.filter(p => p.order === 14)
   },
   {
     id: 15,
     title: 'Заказ периферийных устройств и аксессуаров',
-    date: '2017-06-29 12:09:33',
+    date: '2017-08-20 09:28:51',
     description: 'desc',
     products: products.filter(p => p.order === 15)
   }

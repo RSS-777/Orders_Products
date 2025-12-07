@@ -34,6 +34,6 @@ p {
 }
 
 .active-element {
-  border: 2px solid #a1e958;
+  box-shadow: 1px 1px 3px 0 #a4ff49;;
   border-radius: 5px;
 }

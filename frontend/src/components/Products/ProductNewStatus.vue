@@ -8,7 +8,7 @@ const statusProdust =  isNew ? 'новый' : 'Б/У'
 
 <template>
     <div>
-        <span class="product">{{statusProdust}}</span>
+        <span class="product text-nowrap">{{statusProdust}}</span>
     </div>
 </template>
 

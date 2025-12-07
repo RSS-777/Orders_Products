@@ -46,7 +46,6 @@ export const getOrders = async (): Promise<IOrdersResponse> => {
   }
 };
 
-
 export const getOrderById = async (id: number): Promise<IOrderResponse> => {
   try {
     const response = await fetch(`${BASE_URL}/orders/${id}`, {
@@ -79,13 +78,19 @@ export const getOrderById = async (id: number): Promise<IOrderResponse> => {
   }
 };
 
-export const deleteOrder = async (id: number): Promise<IOrderResponse> => {
+export const deleteOrder = async (id: number, token: string): Promise<IOrderResponse> => {
   try {
     const response = await fetch(`${BASE_URL}/orders/${id}`, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     });
 
     if (!response.ok) {
+      if (response.status === 401) {
+        throw new Error("Unauthorized. Please log in again.");
+      }
       if (response.status === 404) {
         throw new Error("Order not found.");
       }

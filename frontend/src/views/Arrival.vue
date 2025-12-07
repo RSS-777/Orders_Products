@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { onMounted, computed, reactive, ref } from "vue";
-import { getOrders } from "../api/data";
-import OrderProducts from "../components/Arrival/OrderProducts.vue";
+import { useStore } from "vuex";
+import { getOrders } from "../api/data"; // mock
 // import { getOrders } from "../api/ordersApi";
+import { deleteOrder } from "../api/ordersApi";
 import type { IOrder } from "../types/order";
+import OrdersList from "../components/Arrival/OrdersList.vue";
 import ConfirmModal from "../components/ConfirmModal.vue";
 import WrapperMain from "../components/WrapperMain.vue";
-import { deleteOrder } from "../api/ordersApi";
 import EllipsisText from "../components/EllipsisText.vue";
 import ProductListShort from "../components/Arrival/ProductListShort.vue";
 import FormCreateOrder from "../components/Arrival/FormCreateOrder.vue";
@@ -15,7 +16,8 @@ const state = reactive({
   countOrders: 0,
   dataOrders: [] as IOrder[],
 });
-
+const store = useStore();
+const token = computed(() => store.getters['auth/token']);
 const isLoading = ref<boolean>()
 const orderId = ref<number | null>(null)
 const showModal = ref<boolean>(false);
@@ -37,7 +39,7 @@ const handleConfirmDelete = async () => {
 
   isLoading.value = true
   try {
-    const res = await deleteOrder(orderId.value)
+    const res = await deleteOrder(orderId.value, token.value)
 
     if (res.error) {
       fetchMessage.value = res.error
@@ -83,13 +85,13 @@ onMounted(async () => {
 
 <template>
   <WrapperMain>
-    <main class="main pb-2 mx-auto w-100 overflow-auto">
+    <main class="main pb-2 mx-auto position-relative">
       <div class="main__inner mx-3">
-        <div class="title d-flex gap-3 align-items-center justify-content-start pt-5">
-          <button class="title__btn btn btn-sm rounded-circle text-white p-0" @click="handleOpenForm">+</button>
+        <div class="d-flex gap-3 align-items-center justify-content-start pt-5">
+          <button class="main__btn rounded-circle text-white d-flex align-items-center" @click="handleOpenForm">+</button>
           <h1>Приходы / {{ state.countOrders }}</h1>
         </div>
-        <OrderProducts :handleDelete="handleDelete" :orders="state.dataOrders" />
+        <OrdersList :handleDelete="handleDelete" :orders="state.dataOrders" />
       </div>
     </main>
     <ConfirmModal :show="showModal" :message="fetchMessage" name="приход" @confirm="handleConfirmDelete"
@@ -113,17 +115,22 @@ onMounted(async () => {
 <style scoped>
 .main {
   max-width: 1440px;
+  overflow-y: hidden;
 }
 
 .main__inner {
-  min-width: 780px;
+ overflow-x: auto;
 }
 
-.title__btn {
+.main__btn {
   background-color: #80B548;
   border: 5px solid #7BAB4B;
   width: 30px;
   height: 30px;
+}
+
+.main__btn:active {
+  transform: scale(0.90);
 }
 
 .modal-element {

@@ -4,7 +4,6 @@ import type { IProduct } from '../../types/product';
 
 const { products } = defineProps<{ products: IProduct[] }>();
 
-
 const defaultCurrency = computed(() => {
     for (const product of products) {
         const defaultPrice = product.price.find(p => p.isDefault);
@@ -38,14 +37,14 @@ const totalUAH = computed(() => {
 
 <template>
     <div class="price d-flex flex-column ">
-        <span v-if="totalUSD" class="price__usd text-nowrap" :class="defaultCurrency !== 'USD' ? 'price__first' : 'price__last'"
+        <span class="price__usd text-nowrap" :class="defaultCurrency !== 'USD' ? 'price__first' : 'price__last'"
             :style="{ order: defaultCurrency === 'USD' ? 2 : 1 }">
-            {{ totalUSD }} $
+            {{ totalUSD !== null ? totalUSD + ' $' : '—' }}
         </span>
 
-        <span v-if="totalUAH" class="price__uah text-nowrap" :class="defaultCurrency !== 'UAH' ? 'price__first' : 'price__last'"
+        <span class="price__uah text-nowrap" :class="defaultCurrency !== 'UAH' ? 'price__first' : 'price__last'"
             :style="{ order: defaultCurrency === 'UAH' ? 2 : 1 }">
-            {{ totalUAH }} UAH
+            {{ totalUAH !== null ? totalUAH + ' UAH' : '—' }}
         </span>
     </div>
 </template>

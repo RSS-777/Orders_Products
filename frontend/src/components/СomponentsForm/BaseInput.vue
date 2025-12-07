@@ -23,7 +23,7 @@ const updateValue = (e: Event) => {
 <template>
     <div class="form-group mb-3 px-4 ">
         <label :for="id" class="form-group__label fw-bold">{{ label }}</label>
-        <input :id="id" :type="type || 'text'" class="form-group__input rounded p-1 mt-1 w-50"
+        <input :id="id" :type="type || 'text'" class="form-group__input rounded p-1 mt-1 w-100"
             :placeholder="placeholder" :value="modelValue" @input="updateValue" />
     </div>
 </template>

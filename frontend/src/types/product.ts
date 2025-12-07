@@ -21,4 +21,6 @@ export interface IProduct {
   price: IPrice[];
   order: number;
   date: string; 
+  owner: string;
+  status: string;
 }

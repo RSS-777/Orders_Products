@@ -31,7 +31,7 @@ watch(() => tempScroll, (newIndex) => {
 </script>
 <template>
     <div :style="maxHeight" class="mt-5 overflow-y-auto">
-        <Grid ї
+        <Grid 
             :length="items.length" 
             :pageProvider="pageProvider" 
             :pageSize="20" 

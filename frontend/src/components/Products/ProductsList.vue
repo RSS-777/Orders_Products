@@ -1,117 +1,116 @@
 <script setup lang="ts">
 import { useStore } from "vuex";
-import { ref, computed, watch, nextTick } from "vue";
+import { ref, watch, onMounted, computed, reactive, nextTick } from "vue";
+import { searchProductDate } from "../../utils/searchProductDate";
+import type { IProduct } from "../../types/product";
+import type { IOrder } from "../../types/order";
 import ProductNewIndicator from "./ProductNewIndicator.vue";
 import ProductImage from "./ProductImage.vue";
 import ProductStatusWork from "./ProductStatusWork.vue";
 import ProductNewStatus from "./ProductNewStatus.vue";
-
-import { formatDate } from "../../utils/DateTimeFormat";
-import CustomButton from "../CustomButton.vue";
+import { getOrders } from "../../api/data"; // mock
+// import { getOrders } from "../../api/ordersApi";
+import DateStartEnd from "./DateStartEnd.vue";
 import EllipsisText from "../EllipsisText.vue";
+import BaseButton from "../BaseButton.vue";
+import OrderStats from "../Arrival/OrderStats.vue";
 import VirtualGrid from "../VirtualGrid.vue";
 import PriceDisplay from "../Arrival/PriceDisplay.vue";
-import BaseButton from "../BaseButton.vue";
-
-import type { IProduct } from "../../types/product";
-
-import imageBacket from "../../assets/basket.png";
+import imageBacket from "../../assets/basket.png"
 
 const { products, handleDelete } = defineProps<{
     products: IProduct[];
     handleDelete?: (id: number) => void;
 }>();
 
-watch(() => products, (val) => {
-    console.log("UPDATED products:", JSON.parse(JSON.stringify(val)));
-}, { deep: true, immediate: true });
+const state = reactive({
+    dataOrders: [] as IOrder[],
+});
 
 const store = useStore()
-const tempScroll = ref<number | undefined>(undefined)
+const tempScroll = ref<number | undefined>(undefined)  // Знаю ноооо! Здесь обязательно должно быть именно undefined! 
+const searchText = computed(() => store.getters['search/text']);
 
-// const searchText = computed(() => store.getters['search/text']);
+const getProductsFromOrder = (element: IProduct) => {
+    if (!state.dataOrders.length) return [];
+    const order = state.dataOrders.find(o => o.id === element.order);
+    return order?.products || [];
+}
 
-// const findOrder = async () => {
-//   if (!searchText.value) return;
-//   const index = orders.findIndex(order =>
-//     order.title.toLowerCase().includes(searchText.value.toLowerCase())
-//   );
+const getCarrentOrder = (element: IProduct): IOrder | null => {
+    return state.dataOrders.find(o => o.id === element.order) || null;
+}
 
-// if (index !== -1) {
-//     await nextTick();
-//     tempScroll.value = index;
-//   }
-// }
+onMounted(async () => {
+    const res = await getOrders();
 
+    if (res.success) {
+        state.dataOrders = res.data || [];
+    } else {
+        console.error("Error orders:", res.error);
+    }
+});
 
-const getProductStatus = (product: IProduct) => {
-  return product.order > 0 ? 'В ремонте' : 'Свободен';
-};
+const findProduct = async () => {
+    if (!searchText.value) return;
 
+    const query = searchText.value.toLowerCase();
+    const index = products.findIndex(product => {
+        const order = getCarrentOrder(product)
+        return (
+            product.title.toLowerCase().includes(query) ||
+            product.type.toLowerCase().includes(query) ||
+            product.specification.toLowerCase().includes(query) ||
+            product.owner.toLowerCase().includes(query) ||
+            String(product.serialNumber).includes(query) ||
+            (order?.date ? searchProductDate(order.date, query) : false)
+        );
+    });
+
+    if (index !== -1) {
+        tempScroll.value = index;
+        await nextTick();
+        setTimeout(() => { tempScroll.value = undefined }, 1000)
+    }
+}
+
+watch(searchText, (newValue) => {
+    if (newValue) findProduct();
+});
 </script>
 <template>
-    <VirtualGrid :items="products" :tempScroll="tempScroll" classGrid="d-grid gap-2" :maxHeightGrid=600
-        :heightElement=60>
+    <VirtualGrid :items="products" :tempScroll="tempScroll ? tempScroll : undefined" classGrid="d-grid gap-2"
+        :maxHeightGrid=650 :heightElement=60>
         <template #default="{ item: element }">
-            <div class="order__block d-grid align-items-center border rounded-2  gap-3 p-2 px-4 bg-white">
-                <ProductNewIndicator :isNew="!!element.isNew" />
-                <ProductImage />
+            <div class="product d-grid border rounded-2  gap-4 p-2 px-3 bg-white">
+                <ProductNewIndicator :status=element.status />
+                <ProductImage :src="element.photo" />
                 <EllipsisText :title="element.title" />
-                <ProductStatusWork :order="element.order"/>
-                <ProductNewStatus :isNew="!!element.isNew"/>
-        <div class="d-flex justify-content-start">
-                    <PriceDisplay :products="element.price" />
+                <ProductStatusWork :status="element.status" />
+                <DateStartEnd :start="element.guarantee.start" :end="element.guarantee.end" />
+                <ProductNewStatus :isNew="!!element.isNew" />
+                <div class="d-flex justify-content-start">
+                    <PriceDisplay :products="getProductsFromOrder(element)" />
                 </div>
-                <!-- <div class="order__products d-flex align-items-center gap-3 justify-content-start">
-                    <CustomButton @click="() => handleOpenProducts(element.id)" />
-                    <div class="d-flex flex-column">
-                        <span class="fs-5 lh-1">{{ element.products.length }}</span>
-                        <span class="order__products-title">Продукта</span>
-                    </div>
-                </div> -->
-
-        
-
-
-
-                <!-- <div class="d-flex align-items-start">
-                    <div class="order__date d-flex flex-column align-items-center">
-                        <span class="order__date-count text-nowrap">{{element.products.filter((p: IProduct) => p.isNew
-                            === 1).length}} /
-                            {{
-                                element.products.length }}</span>
-                        <span class="order__date-time text-nowrap">{{ formatDate(element.date.split(' ')[0]) }}</span>
-                    </div>
-                </div> -->
-
-                <!-- <BaseButton @click="() => handleDelete?.(element.id)">
+                <EllipsisText :title="element.type" />
+                <EllipsisText :title="element.owner"  />
+                <EllipsisText :title="getCarrentOrder(element)?.title" />
+                <OrderStats :order="getCarrentOrder(element)" />
+                <BaseButton @click="() => handleDelete?.(element.id)">
                     <img :src="imageBacket" alt="Delete icon" width="16" height="16">
-                </BaseButton> -->
+                </BaseButton>
             </div>
         </template>
     </VirtualGrid>
 </template>
 
 <style scoped>
-.order {
-    grid-template-columns: 1fr;
+.product {
+    grid-template-columns: auto minmax(40px, 1fr) minmax(150px, 3fr) minmax(80px, 1fr) minmax(120px, 1fr) minmax(50px, 1fr) minmax(110px, 1fr) minmax(110px, 1fr) minmax(120px, 2fr) minmax(150px, 3fr) minmax(120px, 1fr) auto;
+    align-items: center;
 }
 
-.order__block {
-    grid-template-columns: 3fr 1fr 1fr 1fr auto;
-}
-
-.order__block:hover {
+.product:hover {
     box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, 0.702);
-}
-
-.order__products-title {
-    font-size: 14px;
-    color: rgb(158, 158, 158);
-}
-
-.order__date-count {
-    font-size: 12px;
-    color: rgb(158, 158, 158);
 }
 </style>

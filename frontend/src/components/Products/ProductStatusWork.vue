@@ -1,27 +1,27 @@
 <script setup lang="ts">
-const { order } = defineProps<{
-  order: number;
+const { status } = defineProps<{
+  status: string;
 }>();
 
-const workStatus = order > 0 ? 'В ремонте' : 'Свободен';
+const workStatus = status === 'in_repair' ? 'В ремонте' : 'Свободен';
 </script>
 
 <template>
   <div>
     <span 
-    class="status"
-    :class="order > 0  ? 'status--active' : 'status--inActive'"
+    class="status text-nowrap"
+    :class="status === 'in_repair'  ? 'status--repair' : 'status--ready'"
     >{{ workStatus }}
   </span>
     </div>
 </template>
 
 <style scoped>
-.status--active {
+.status--repair {
   color: #2C3C44;
 }
 
-.status--inActive {
+.status--ready {
   color: #D7E36E;
 }
 </style>

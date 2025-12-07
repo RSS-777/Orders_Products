@@ -1,13 +1,13 @@
 <script setup lang="ts">
-const { isNew } = defineProps<{
-    isNew: boolean;
+const { status } = defineProps<{
+    status: string;
 }>();
 </script>
 
 <template>
     <div class="product__status rounded-circle ms-4"
-        :class="isNew ? 'product__status--new' : 'product__status--used'"
-        :aria-label="isNew ? 'Новый продукт' : 'Бывший в употреблении'"></div>
+        :class="status === 'ready' ? 'product__status--ready' : 'product__status--repair'"
+        :aria-label="status === 'ready' ? 'Свободен' : 'В ремонте'"></div>
 </template>
 
 <style scoped>
@@ -16,11 +16,11 @@ const { isNew } = defineProps<{
     height: 8px;
 }
 
-.product__status--new {
+.product__status--ready {
     background-color: #D7E36E;
 }
 
-.product__status--used {
+.product__status--repair {
     background-color: #2C3C44;
 }
 </style>
