@@ -1,19 +1,19 @@
 <script setup lang="ts">
 const { isNew } = defineProps<{
-    isNew: boolean;
+  isNew: boolean;
 }>();
 
-const statusProdust =  isNew ? 'новый' : 'Б/У'
+const statusProdust = isNew ? 'новый' : 'Б/У';
 </script>
 
 <template>
-    <div>
-        <span class="product text-nowrap">{{statusProdust}}</span>
-    </div>
+  <div>
+    <span class="product text-nowrap">{{ statusProdust }}</span>
+  </div>
 </template>
 
 <style scoped>
 .product {
-    color: #58707C;
+  color: #58707c;
 }
 </style>

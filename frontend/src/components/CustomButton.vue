@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const emit = defineEmits<{
-  (e: 'click'): void
+  (e: 'click'): void;
 }>();
 
 const handleClick = () => {
@@ -9,8 +9,7 @@ const handleClick = () => {
 </script>
 
 <template>
-  <button class="custom-button btn d-flex align-items-center justify-content-center rounded-circle p-0"
-    @click="handleClick">
+  <button class="custom-button btn d-flex align-items-center justify-content-center rounded-circle p-0" @click="handleClick">
     <div class="custom-button__lines d-flex flex-column ms-1">
       <div class="custom-button__line position-relative rounded"></div>
       <div class="custom-button__line position-relative rounded"></div>
@@ -34,7 +33,7 @@ const handleClick = () => {
 
 .custom-button__line {
   height: 3px;
-  background-color: #4D6875;
+  background-color: #4d6875;
 }
 
 .custom-button__line::before {
@@ -46,6 +45,6 @@ const handleClick = () => {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background-color: #4D6875;
+  background-color: #4d6875;
 }
 </style>

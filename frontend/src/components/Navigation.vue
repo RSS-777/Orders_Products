@@ -2,21 +2,21 @@
 import { RouterLink, useRoute } from 'vue-router';
 import { ref, nextTick } from 'vue';
 import { useStore } from 'vuex';
-import personDefaultImg from '../assets/default.png'
-import settingsImage from '../assets/settings.png'
+import personDefaultImg from '../assets/default.png';
+import settingsImage from '../assets/settings.png';
 import { updateUserPhoto } from '../api/userApi';
 
-const route = useRoute()
+const route = useRoute();
 const store = useStore();
 const token: string = store.getters['auth/token'];
 const userId: number = store.getters['auth/userId'];
 const userImage: string = store.getters['auth/photoUrl'];
-const isOpen = ref<boolean>(false)
+const isOpen = ref<boolean>(false);
 
-const fileInput = ref<HTMLInputElement | null>(null)
+const fileInput = ref<HTMLInputElement | null>(null);
 const openFileDialog = () => {
-  fileInput.value?.click()
-}
+  fileInput.value?.click();
+};
 
 const changePhoto = async (e: Event) => {
   const file = (e.target as HTMLInputElement).files?.[0];
@@ -27,73 +27,61 @@ const changePhoto = async (e: Event) => {
   if (response.success && response.data?.photoUrl) {
     store.commit('auth/setPhotoUrl', response.data.photoUrl);
   } else {
-    console.error("Error updating photo");
+    console.error('Error updating photo');
   }
 };
 
 const closeMenu = () => {
-  isOpen.value = false
-  document.removeEventListener('click', handleClickOutside)
-}
+  isOpen.value = false;
+  document.removeEventListener('click', handleClickOutside);
+};
 
 const handleClickOutside = (event: MouseEvent) => {
-  const menu = document.querySelector('.navigation')
-  const button = document.querySelector('.btn-navbar')
+  const menu = document.querySelector('.navigation');
+  const button = document.querySelector('.btn-navbar');
 
-  if (
-    menu &&
-    !menu.contains(event.target as Node) &&
-    button &&
-    !button.contains(event.target as Node)
-  ) {
-    closeMenu()
+  if (menu && !menu.contains(event.target as Node) && button && !button.contains(event.target as Node)) {
+    closeMenu();
   }
-}
-
+};
 
 const toggleMenu = () => {
-  isOpen.value = !isOpen.value
+  isOpen.value = !isOpen.value;
   if (isOpen.value) {
     nextTick(() => {
-      document.addEventListener('click', handleClickOutside)
-    })
+      document.addEventListener('click', handleClickOutside);
+    });
   } else {
-    document.removeEventListener('click', handleClickOutside)
+    document.removeEventListener('click', handleClickOutside);
   }
-}
+};
 </script>
 
 <template>
   <input ref="fileInput" type="file" class="d-none" accept="image/*" @change="changePhoto" />
 
-  <button class="btn-navbar position-fixed z-5 pt-1 ps-2 fs-3 top-3 start-3 focus-none border-0 bg-transparent" @click="toggleMenu">
-    ☰
-  </button>
+  <button class="btn-navbar position-fixed z-5 pt-1 ps-2 fs-3 top-3 start-3 focus-none border-0 bg-transparent" @click="toggleMenu">☰</button>
 
   <div class="navigation z-1 p-2 w-100 bg-white border" :class="{ open: isOpen }" @click.stop>
     <div class="navigation__image position-relative rounded-circle border mx-auto my-4">
-      <img :src="userImage ? userImage : personDefaultImg" alt="Image person" class="img-fluid">
-      <button @click="openFileDialog"
-        class="navigation__settings position-absolute rounded-circle bg-white d-flex align-items-center justify-content-center shadow border-0 focus-none">
-        <img :src="settingsImage" alt="Icon settings" width="18" height="18" class="img-fluid">
+      <img :src="userImage ? userImage : personDefaultImg" alt="Image person" class="img-fluid" />
+      <button
+        @click="openFileDialog"
+        class="navigation__settings position-absolute rounded-circle bg-white d-flex align-items-center justify-content-center shadow border-0 focus-none"
+      >
+        <img :src="settingsImage" alt="Icon settings" width="18" height="18" class="img-fluid" />
       </button>
     </div>
     <nav>
-      <RouterLink to="/arrival" class="nav-link mx-auto" :class="{ 'active-link': route.path === '/arrival' }"
-        @click="closeMenu">приход
-      </RouterLink>
-      <RouterLink to="/groups" class="nav-link mx-auto" :class="{ 'active-link': route.path === '/groups' }"
-        @click="closeMenu">группы
-      </RouterLink>
-      <RouterLink to="/products" class="nav-link mx-auto" :class="{ 'active-link': route.path === '/products' }"
-        @click="closeMenu">
+      <RouterLink to="/arrival" class="nav-link mx-auto" :class="{ 'active-link': route.path === '/arrival' }" @click="closeMenu">приход </RouterLink>
+      <RouterLink to="/groups" class="nav-link mx-auto" :class="{ 'active-link': route.path === '/groups' }" @click="closeMenu">группы </RouterLink>
+      <RouterLink to="/products" class="nav-link mx-auto" :class="{ 'active-link': route.path === '/products' }" @click="closeMenu">
         продукты
       </RouterLink>
-      <RouterLink to="/users" class="nav-link mx-auto" :class="{ 'active-link': route.path === '/users' }"
-        @click="closeMenu">пользователи
+      <RouterLink to="/users" class="nav-link mx-auto" :class="{ 'active-link': route.path === '/users' }" @click="closeMenu"
+        >пользователи
       </RouterLink>
-      <RouterLink to="/settings" class="nav-link mx-auto" :class="{ 'active-link': route.path === '/settings' }"
-        @click="closeMenu">
+      <RouterLink to="/settings" class="nav-link mx-auto" :class="{ 'active-link': route.path === '/settings' }" @click="closeMenu">
         настройки
       </RouterLink>
     </nav>
@@ -102,7 +90,7 @@ const toggleMenu = () => {
 
 <style scoped>
 .btn-navbar {
-  color: #80B548;
+  color: #80b548;
   z-index: 1000;
 }
 
@@ -134,14 +122,14 @@ const toggleMenu = () => {
 
 a {
   margin-bottom: 10px;
-  color: #1E2F38;
+  color: #1e2f38;
   font-weight: 500;
   width: fit-content;
 }
 
 .active-link {
-  border-bottom: 2px solid #80B548;
-  color: #1E2F38;
+  border-bottom: 2px solid #80b548;
+  color: #1e2f38;
 }
 
 @media (min-width: 1025px) {

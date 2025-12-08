@@ -1,14 +1,25 @@
 const db = require('../db');
-
 const DEFAULT_PHOTO = '/images/default.png';
+
+const parseJSONSafe = (value) => {
+  if (!value) return null;
+  if (typeof value === 'string') {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return null; 
+    }
+  }
+  return value; 
+};
 
 const getAllProducts = async () => {
   const [rows] = await db.query('SELECT * FROM products');
   return rows.map(p => ({
     ...p,
     photo: p.photo || DEFAULT_PHOTO,
-    guarantee: p.guarantee_json ? JSON.parse(p.guarantee_json) : null,
-    price: p.price_json ? JSON.parse(p.price_json) : []
+    guarantee: parseJSONSafe(p.guarantee_json),
+    price: parseJSONSafe(p.price_json) || []
   }));
 };
 
@@ -17,8 +28,8 @@ const getProductsByOrderId = async (orderId) => {
   return rows.map(p => ({
     ...p,
     photo: p.photo || DEFAULT_PHOTO,
-    guarantee: p.guarantee_json ? JSON.parse(p.guarantee_json) : null,
-    price: p.price_json ? JSON.parse(p.price_json) : []
+    guarantee: parseJSONSafe(p.guarantee_json),
+    price: parseJSONSafe(p.price_json) || []
   }));
 };
 
@@ -45,4 +56,3 @@ const deleteById = async (id) => {
 };
 
 module.exports = { getAllProducts, getProductsByOrderId, create, deleteById };
-

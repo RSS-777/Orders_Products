@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Navigation from './components/Navigation.vue';
 import Header from './components/Header.vue';
-import { useStore } from "vuex";
+import { useStore } from 'vuex';
 
 const store = useStore();
 </script>
@@ -22,6 +22,6 @@ const store = useStore();
 }
 
 .wrapper__pages {
-  background-color: #F0F3F5;
+  background-color: #f0f3f5;
 }
 </style>

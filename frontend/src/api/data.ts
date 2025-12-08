@@ -1,4 +1,4 @@
-import type {IProduct} from '../types/product'
+import type { IProduct } from '../types/product';
 import type { IApiResponse } from '../types/api';
 import type { IOrder } from '../types/order';
 import type { IUser } from '../types/user';
@@ -15,12 +15,12 @@ export const products: IProduct[] = [
     guarantee: { start: '2017-06-28 09:15:10', end: '2018-06-28 09:15:10' },
     price: [
       { value: 100, symbol: 'USD', isDefault: 1 },
-      { value: 2600, symbol: 'UAH', isDefault: 0 }
+      { value: 2600, symbol: 'UAH', isDefault: 0 },
     ],
     order: 1,
     date: '2017-06-28 09:15:10',
     owner: 'Иванов Иван',
-    status: 'in_repair'
+    status: 'in_repair',
   },
   {
     id: 2,
@@ -33,12 +33,12 @@ export const products: IProduct[] = [
     guarantee: { start: '2017-06-29 11:22:44', end: '2018-06-29 11:22:44' },
     price: [
       { value: 100, symbol: 'USD', isDefault: 0 },
-      { value: 2600, symbol: 'UAH', isDefault: 1 }
+      { value: 2600, symbol: 'UAH', isDefault: 1 },
     ],
     order: 2,
     date: '2017-06-29 11:22:44',
     owner: 'Петров Пётр',
-    status: 'ready'
+    status: 'ready',
   },
   {
     id: 3,
@@ -51,12 +51,12 @@ export const products: IProduct[] = [
     guarantee: { start: '2017-07-01 14:03:55', end: '2018-07-01 14:03:55' },
     price: [
       { value: 0, symbol: 'USD', isDefault: 0 },
-      { value: 5200, symbol: 'UAH', isDefault: 1 }
+      { value: 5200, symbol: 'UAH', isDefault: 1 },
     ],
     order: 2,
     date: '2017-07-01 14:03:55',
     owner: 'Сидоров Сергей',
-    status: 'ready'
+    status: 'ready',
   },
   {
     id: 4,
@@ -69,12 +69,12 @@ export const products: IProduct[] = [
     guarantee: { start: '2017-07-02 08:44:12', end: '2018-07-02 08:44:12' },
     price: [
       { value: 100, symbol: 'USD', isDefault: 1 },
-      { value: 0, symbol: 'UAH', isDefault: 0 }
+      { value: 0, symbol: 'UAH', isDefault: 0 },
     ],
     order: 4,
     date: '2017-07-02 08:44:12',
     owner: '',
-    status: 'in_repair'
+    status: 'in_repair',
   },
   {
     id: 5,
@@ -87,12 +87,12 @@ export const products: IProduct[] = [
     guarantee: { start: '2017-07-03 16:11:20', end: '2018-07-03 16:11:20' },
     price: [
       { value: 0, symbol: 'USD', isDefault: 0 },
-      { value: 2400.788, symbol: 'UAH', isDefault: 1 }
+      { value: 2400.788, symbol: 'UAH', isDefault: 1 },
     ],
     order: 1,
     date: '2017-07-03 16:11:20',
     owner: '',
-    status: 'in_repair'
+    status: 'in_repair',
   },
   {
     id: 6,
@@ -105,12 +105,12 @@ export const products: IProduct[] = [
     guarantee: { start: '2017-07-04 10:55:01', end: '2018-07-04 10:55:01' },
     price: [
       { value: 0, symbol: 'USD', isDefault: 0 },
-      { value: 2400.788, symbol: 'UAH', isDefault: 1 }
+      { value: 2400.788, symbol: 'UAH', isDefault: 1 },
     ],
     order: 2,
     date: '2017-07-04 10:55:01',
     owner: 'Кузнецов Алексей',
-    status: 'ready'
+    status: 'ready',
   },
   {
     id: 7,
@@ -123,12 +123,12 @@ export const products: IProduct[] = [
     guarantee: { start: '2017-07-05 09:18:44', end: '2018-07-05 09:18:44' },
     price: [
       { value: 0, symbol: 'USD', isDefault: 0 },
-      { value: 2400.788, symbol: 'UAH', isDefault: 1 }
+      { value: 2400.788, symbol: 'UAH', isDefault: 1 },
     ],
     order: 2,
     date: '2017-07-05 09:18:44',
     owner: 'Новиков Дмитрий',
-    status: 'in_repair'
+    status: 'in_repair',
   },
   {
     id: 8,
@@ -141,12 +141,12 @@ export const products: IProduct[] = [
     guarantee: { start: '2017-07-06 18:22:30', end: '2018-07-06 18:22:30' },
     price: [
       { value: 0, symbol: 'USD', isDefault: 0 },
-      { value: 2400.788, symbol: 'UAH', isDefault: 1 }
+      { value: 2400.788, symbol: 'UAH', isDefault: 1 },
     ],
     order: 2,
     date: '2017-07-06 18:22:30',
     owner: 'Семенов Владимир',
-    status: 'ready'
+    status: 'ready',
   },
   {
     id: 9,
@@ -159,12 +159,12 @@ export const products: IProduct[] = [
     guarantee: { start: '2017-07-07 12:09:40', end: '2018-07-07 12:09:40' },
     price: [
       { value: 0, symbol: 'USD', isDefault: 0 },
-      { value: 2400.788, symbol: 'UAH', isDefault: 1 }
+      { value: 2400.788, symbol: 'UAH', isDefault: 1 },
     ],
     order: 2,
     date: '2017-07-07 12:09:40',
     owner: '',
-    status: 'in_repair'
+    status: 'in_repair',
   },
   {
     id: 10,
@@ -177,12 +177,12 @@ export const products: IProduct[] = [
     guarantee: { start: '2017-07-08 15:31:22', end: '2018-07-08 15:31:22' },
     price: [
       { value: 0, symbol: 'USD', isDefault: 0 },
-      { value: 2400.788, symbol: 'UAH', isDefault: 1 }
+      { value: 2400.788, symbol: 'UAH', isDefault: 1 },
     ],
     order: 2,
     date: '2017-07-08 15:31:22',
     owner: '',
-    status: 'in_repair'
+    status: 'in_repair',
   },
   {
     id: 11,
@@ -195,12 +195,12 @@ export const products: IProduct[] = [
     guarantee: { start: '2017-08-01 10:02:11', end: '2018-08-01 10:02:11' },
     price: [
       { value: 1200, symbol: 'USD', isDefault: 1 },
-      { value: 36000, symbol: 'UAH', isDefault: 0 }
+      { value: 36000, symbol: 'UAH', isDefault: 0 },
     ],
     order: 4,
     date: '2017-08-01 10:02:11',
     owner: 'Федоров Николай',
-    status: 'in_repair'
+    status: 'in_repair',
   },
   {
     id: 12,
@@ -213,12 +213,12 @@ export const products: IProduct[] = [
     guarantee: { start: '2017-08-02 11:40:33', end: '2018-08-02 11:40:33' },
     price: [
       { value: 450, symbol: 'USD', isDefault: 1 },
-      { value: 13500, symbol: 'UAH', isDefault: 0 }
+      { value: 13500, symbol: 'UAH', isDefault: 0 },
     ],
     order: 6,
     date: '2017-08-02 11:40:33',
     owner: '',
-    status: 'ready'
+    status: 'ready',
   },
   {
     id: 13,
@@ -231,12 +231,12 @@ export const products: IProduct[] = [
     guarantee: { start: '2017-08-03 13:55:48', end: '2018-08-03 13:55:48' },
     price: [
       { value: 100, symbol: 'USD', isDefault: 1 },
-      { value: 3000, symbol: 'UAH', isDefault: 0 }
+      { value: 3000, symbol: 'UAH', isDefault: 0 },
     ],
     order: 6,
     date: '2017-08-03 13:55:48',
     owner: 'Морозова Анна',
-    status: 'in_repair'
+    status: 'in_repair',
   },
   {
     id: 14,
@@ -249,12 +249,12 @@ export const products: IProduct[] = [
     guarantee: { start: '2017-08-04 09:29:17', end: '2018-08-04 09:29:17' },
     price: [
       { value: 300, symbol: 'USD', isDefault: 1 },
-      { value: 9000, symbol: 'UAH', isDefault: 0 }
+      { value: 9000, symbol: 'UAH', isDefault: 0 },
     ],
     order: 7,
     date: '2017-08-04 09:29:17',
     owner: 'Васильев Сергей',
-    status: 'ready'
+    status: 'ready',
   },
   {
     id: 15,
@@ -267,12 +267,12 @@ export const products: IProduct[] = [
     guarantee: { start: '2017-08-05 14:48:01', end: '2018-08-05 14:48:01' },
     price: [
       { value: 120, symbol: 'USD', isDefault: 1 },
-      { value: 3600, symbol: 'UAH', isDefault: 0 }
+      { value: 3600, symbol: 'UAH', isDefault: 0 },
     ],
     order: 8,
     date: '2017-08-05 14:48:01',
     owner: '',
-    status: 'in_repair'
+    status: 'in_repair',
   },
   {
     id: 16,
@@ -285,12 +285,12 @@ export const products: IProduct[] = [
     guarantee: { start: '2017-08-10 13:33:55', end: '2018-08-10 13:33:55' },
     price: [
       { value: 400, symbol: 'USD', isDefault: 1 },
-      { value: 12000, symbol: 'UAH', isDefault: 0 }
+      { value: 12000, symbol: 'UAH', isDefault: 0 },
     ],
     order: 8,
     date: '2017-08-10 13:33:55',
     owner: 'Киселев Дмитрий',
-    status: 'ready'
+    status: 'ready',
   },
   {
     id: 17,
@@ -303,21 +303,21 @@ export const products: IProduct[] = [
     guarantee: { start: '2017-08-12 16:12:44', end: '2018-08-12 16:12:44' },
     price: [
       { value: 150, symbol: 'USD', isDefault: 1 },
-      { value: 4500, symbol: 'UAH', isDefault: 0 }
+      { value: 4500, symbol: 'UAH', isDefault: 0 },
     ],
     order: 11,
     date: '2017-08-12 16:12:44',
     owner: '',
-    status: 'in_repair'
-  }
+    status: 'in_repair',
+  },
 ];
 
-export const getProducts = ():IApiResponse<IProduct[]> => {
-    return {
-      success: true,
-      data: products,
-    };
-}
+export const getProducts = (): IApiResponse<IProduct[]> => {
+  return {
+    success: true,
+    data: products,
+  };
+};
 
 export const orders: IOrder[] = [
   {
@@ -325,114 +325,114 @@ export const orders: IOrder[] = [
     title: 'Поставка офисной техники и комплектующих',
     date: '2017-06-29 12:09:33',
     description: 'desc',
-    products: products.filter(p => p.order === 1)
+    products: products.filter((p) => p.order === 1),
   },
   {
     id: 2,
     title: 'Заказ канцелярских товаров для нового отдела',
     date: '2017-07-02 09:15:12',
     description: 'Заказ содержит 10 продуктов: коробки, книги, канцтовары.',
-    products: products.filter(p => p.order === 2)
+    products: products.filter((p) => p.order === 2),
   },
   {
     id: 3,
     title: 'Закупка мониторов и периферийных устройств',
     date: '2017-07-06 14:22:50',
     description: 'desc',
-    products: products.filter(p => p.order === 3)
+    products: products.filter((p) => p.order === 3),
   },
   {
     id: 4,
     title: 'Поставка ноутбуков для новых сотрудников',
     date: '2017-07-10 11:47:02',
     description: 'desc',
-    products: products.filter(p => p.order === 4)
+    products: products.filter((p) => p.order === 4),
   },
   {
     id: 5,
     title: 'Заказ серверного оборудования и комплектующих',
     date: '2017-07-14 16:05:18',
     description: 'desc',
-    products: products.filter(p => p.order === 5)
+    products: products.filter((p) => p.order === 5),
   },
   {
     id: 6,
     title: 'Закупка мебели для конференц-зала',
     date: '2017-07-18 10:33:27',
     description: 'desc',
-    products: products.filter(p => p.order === 6)
+    products: products.filter((p) => p.order === 6),
   },
   {
     id: 7,
     title: 'Поставка принтеров и расходных материалов',
     date: '2017-07-21 13:56:41',
     description: 'desc',
-    products: products.filter(p => p.order === 7)
+    products: products.filter((p) => p.order === 7),
   },
   {
     id: 8,
     title: 'Заказ программного обеспечения для бухгалтерии',
     date: '2017-07-25 15:12:09',
     description: 'desc',
-    products: products.filter(p => p.order === 8)
+    products: products.filter((p) => p.order === 8),
   },
   {
     id: 9,
     title: 'Поставка сетевого оборудования и роутеров',
     date: '2017-07-28 09:44:55',
     description: 'desc',
-    products: products.filter(p => p.order === 9)
+    products: products.filter((p) => p.order === 9),
   },
   {
     id: 10,
     title: 'Закупка кабельной продукции и аксессуаров',
     date: '2017-08-01 17:20:14',
     description: 'desc',
-    products: products.filter(p => p.order === 10)
+    products: products.filter((p) => p.order === 10),
   },
   {
     id: 11,
     title: 'Заказ офисной электроники для отдела продаж',
     date: '2017-08-05 08:11:03',
     description: 'desc',
-    products: products.filter(p => p.order === 11)
+    products: products.filter((p) => p.order === 11),
   },
   {
     id: 12,
     title: 'Поставка мониторов и док-станций для сотрудников',
     date: '2017-08-08 12:39:48',
     description: 'desc',
-    products: products.filter(p => p.order === 12)
+    products: products.filter((p) => p.order === 12),
   },
   {
     id: 13,
     title: 'Закупка проекторов и экранов для конференц-залов',
     date: '2017-08-12 10:02:25',
     description: 'desc',
-    products: products.filter(p => p.order === 13)
+    products: products.filter((p) => p.order === 13),
   },
   {
     id: 14,
     title: 'Поставка ноутбуков с предустановленным ПО',
     date: '2017-08-16 14:55:37',
     description: 'desc',
-    products: products.filter(p => p.order === 14)
+    products: products.filter((p) => p.order === 14),
   },
   {
     id: 15,
     title: 'Заказ периферийных устройств и аксессуаров',
     date: '2017-08-20 09:28:51',
     description: 'desc',
-    products: products.filter(p => p.order === 15)
-  }
+    products: products.filter((p) => p.order === 15),
+  },
 ];
 
-export const  getOrders = (): IApiResponse<IOrder[]> => {
-  return { 
-    success: true, 
-    data : orders
+export const getOrders = (): IApiResponse<IOrder[]> => {
+  return {
+    success: true,
+    data: orders,
   };
-}
+};
 
 export const users: IUser[] = [
   {
@@ -441,7 +441,7 @@ export const users: IUser[] = [
     email: 'admin@example.com',
     password: 'admin',
     role: 'admin',
-    photoUrl: ''
+    photoUrl: '',
   },
   {
     id: 2,
@@ -449,7 +449,7 @@ export const users: IUser[] = [
     email: 'john@example.com',
     password: 'admin',
     role: 'manager',
-    photoUrl: ''
+    photoUrl: '',
   },
   {
     id: 3,
@@ -457,31 +457,31 @@ export const users: IUser[] = [
     email: 'mark@example.com',
     password: 'admin',
     role: 'viewer',
-    photoUrl: ''
-  }
+    photoUrl: '',
+  },
 ];
 
 export const login = (email: string, password: string) => {
-  const user = users[0]; 
+  const user = users[0];
 
-    if (!user) {
+  if (!user) {
     return {
       success: false,
-      message: "No users found"
+      message: 'No users found',
     };
   }
 
-  if(email !== user.email || password !== user.password) {
+  if (email !== user.email || password !== user.password) {
     return {
       success: false,
-      message: 'Incorrect email or password.'
-    }
+      message: 'Incorrect email or password.',
+    };
   }
-  
+
   return {
     success: true,
-    token: "mock-token-" + user.id, 
+    token: 'mock-token-' + user.id,
     userId: user.id,
-    photoUrl: user.photoUrl
+    photoUrl: user.photoUrl,
   };
 };

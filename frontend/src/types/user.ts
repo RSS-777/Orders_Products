@@ -3,6 +3,6 @@ export interface IUser {
   name: string;
   email: string;
   password: string;
-  role: 'admin' | 'manager' | 'viewer'; 
-  photoUrl?: string; 
+  role: 'admin' | 'manager' | 'viewer';
+  photoUrl?: string;
 }

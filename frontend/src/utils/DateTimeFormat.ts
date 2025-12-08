@@ -7,8 +7,5 @@ export const formatDate = (dateString?: string, format?: 'slash' | 'space') => {
   const day = String(date.getDate()).padStart(2, '0');
   const month = months[date.getMonth()];
   const year = date.getFullYear();
-  return format === 'slash'
-    ? `${day} / ${month} / ${year}`
-    : `${day}  ${month}  ${year}`;
-
+  return format === 'slash' ? `${day} / ${month} / ${year}` : `${day}  ${month}  ${year}`;
 };

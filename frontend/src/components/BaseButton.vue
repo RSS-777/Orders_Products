@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const emit = defineEmits<{
-  (e: 'click'): void
+  (e: 'click'): void;
 }>();
 
 const handleClick = () => {
@@ -9,8 +9,7 @@ const handleClick = () => {
 </script>
 
 <template>
-  <button class="button d-flex align-items-center justify-content-center p-2 bg-transparent border-0"
-    @click="handleClick">
+  <button class="button d-flex align-items-center justify-content-center p-2 bg-transparent border-0" @click="handleClick">
     <slot></slot>
   </button>
 </template>

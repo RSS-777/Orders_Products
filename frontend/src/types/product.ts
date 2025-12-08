@@ -5,7 +5,7 @@ export interface IPrice {
 }
 
 export interface IGuarantee {
-  start: string; 
+  start: string;
   end: string;
 }
 
@@ -19,8 +19,8 @@ export interface IProduct {
   specification: string;
   guarantee: IGuarantee;
   price: IPrice[];
-  order: number;
-  date: string; 
+  order_id: number;
+  date: string;
   owner: string;
   status: string;
 }

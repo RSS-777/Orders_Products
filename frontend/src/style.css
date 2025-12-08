@@ -22,7 +22,7 @@ h6 {
   margin: 0;
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
-  color: #2A3A42;
+  color: #2a3a42;
 }
 
 h1 {
@@ -34,6 +34,6 @@ p {
 }
 
 .active-element {
-  box-shadow: 1px 1px 3px 0 #a4ff49;;
+  box-shadow: 1px 1px 3px 0 #a4ff49;
   border-radius: 5px;
 }

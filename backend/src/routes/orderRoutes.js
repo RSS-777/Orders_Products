@@ -7,5 +7,4 @@ router.get('/get', authMiddleware, orderController.getOrders);
 router.post('/create', authMiddleware, orderController.createOrder);
 router.delete('/:id/delete', authMiddleware, orderController.deleteOrder);
 
-
 module.exports = router;

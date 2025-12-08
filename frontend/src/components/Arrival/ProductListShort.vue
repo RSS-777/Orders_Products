@@ -5,11 +5,15 @@ import ProductImage from '../Products/ProductImage.vue';
 import ProductStatus from '../Products/ProductNewIndicator.vue';
 import SecondaryText from '../SecondaryText.vue';
 
-const { showProducts, order, version = 'modal' } = defineProps<{
+const {
+  showProducts,
+  order,
+  version = 'modal',
+} = defineProps<{
   showProducts: boolean;
   order: IOrder;
   version?: 'modal' | 'expanded';
-}>()
+}>();
 </script>
 
 <template>
@@ -17,12 +21,18 @@ const { showProducts, order, version = 'modal' } = defineProps<{
     <div v-if="version === 'expanded'" class="product-header">
       <slot name="header"></slot>
     </div>
-    <ul class="product list-unstyled mt-2 overflow-y-auto"
-      :style="{ maxHeight: (!showProducts && version === 'modal') ? '5px' : undefined }"
-      :class="version === 'modal' ? 'product--modal' : 'product--expanded'">
-      <li v-for="product in order?.products" :key="product.id" class="product__list gap-3 py-1"
-        :class="version === 'modal' ? 'product__list--modal' : 'product__list--expanded'">
-        <ProductStatus :status=product.status />
+    <ul
+      class="product list-unstyled mt-2 overflow-y-auto"
+      :style="{ maxHeight: !showProducts && version === 'modal' ? '5px' : undefined }"
+      :class="version === 'modal' ? 'product--modal' : 'product--expanded'"
+    >
+      <li
+        v-for="product in order?.products"
+        :key="product.id"
+        class="product__list gap-3 py-1"
+        :class="version === 'modal' ? 'product__list--modal' : 'product__list--expanded'"
+      >
+        <ProductStatus :status="product.status" />
         <ProductImage />
         <div class="product__information overflow-hidden">
           <EllipsisText :title="product.title" :maxWidth="version === 'expanded' ? '100%' : ''" />

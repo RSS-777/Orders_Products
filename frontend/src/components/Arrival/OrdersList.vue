@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { useStore } from "vuex";
-import { ref, computed, watch, nextTick } from "vue";
-import type { IOrder } from "../../types/order";
-import CustomButton from "../CustomButton.vue";
-import EllipsisText from "../EllipsisText.vue";
-import VirtualGrid from "../VirtualGrid.vue";
-import PriceDisplay from "./PriceDisplay.vue";
-import BaseButton from "../BaseButton.vue";
-import OrderStats from "./OrderStats.vue";
-import ProductListShort from "./ProductListShort.vue";
-import imageBacket from "../../assets/basket.png";
+import { useStore } from 'vuex';
+import { ref, computed, watch, nextTick } from 'vue';
+import type { IOrder } from '../../types/order';
+import CustomButton from '../CustomButton.vue';
+import EllipsisText from '../EllipsisText.vue';
+import VirtualGrid from '../VirtualGrid.vue';
+import PriceDisplay from './PriceDisplay.vue';
+import BaseButton from '../BaseButton.vue';
+import OrderStats from './OrderStats.vue';
+import ProductListShort from './ProductListShort.vue';
+import imageBacket from '../../assets/basket.png';
 
 const { orders, handleDelete } = defineProps<{
   orders: IOrder[];
@@ -21,52 +21,50 @@ const emptyOrder: IOrder = {
   title: '',
   date: '',
   description: '',
-  products: []
+  products: [],
 };
 
-const store = useStore()
-const tempScroll = ref<number | undefined>(undefined) //Знаю ноооо!  Здесь обязательно должно быть именно undefined!!! (По другому не-а \|/) 
+const store = useStore();
+const tempScroll = ref<number | undefined>(undefined); // Здесь обязательно должно быть именно undefined!!! 
 const searchText = computed(() => store.getters['search/text']);
 const orderChoice = ref<IOrder | null>(null);
-const openListProducts = ref<boolean>(false)
+const openListProducts = ref<boolean>(false);
 
 const findOrder = async () => {
   if (!searchText.value) return;
-  const index = orders.findIndex(order =>
-    order.title.toLowerCase().includes(searchText.value.toLowerCase())
-  );
+  const index = orders.findIndex((order) => order.title.toLowerCase().includes(searchText.value.toLowerCase()));
 
   if (index !== -1) {
     tempScroll.value = index;
     await nextTick();
-    setTimeout(() => { tempScroll.value = undefined }, 1000)
+    setTimeout(() => {
+      tempScroll.value = undefined;
+    }, 1000);
   }
-}
+};
 
 const handleOpenProducts = (id: number) => {
-  const order =  orders.find(el => el.id === id) || null
-  if (!order || !order.products?.length) return
-  orderChoice.value = order
+  const order = orders.find((el) => el.id === id) || null;
+  if (!order || !order.products?.length) return;
+  orderChoice.value = order;
   nextTick(() => {
-    openListProducts.value = true
-  })
-}
+    openListProducts.value = true;
+  });
+};
 
 const handleCloseProducts = () => {
-  openListProducts.value = false
-}
+  openListProducts.value = false;
+};
 
 watch(searchText, (newValue) => {
   if (newValue) findOrder();
 });
-
 </script>
 <template>
-  <VirtualGrid :items="orders" :tempScroll="tempScroll ? tempScroll : undefined" classGrid="d-grid gap-2"
-    :maxHeightGrid=650 :heightElement=60>
+  <VirtualGrid :items="orders" :tempScroll="tempScroll ? tempScroll : undefined" classGrid="d-grid gap-2" :maxHeightGrid="650" :heightElement="60">
     <template #default="{ item: element }">
-      <div class="order d-grid align-items-center border rounded-2  gap-3 p-2 px-4 bg-white">
-        <EllipsisText :title="element.title"/>
+      <div class="order d-grid align-items-center border rounded-2 gap-3 p-2 px-4 bg-white">
+        <EllipsisText :title="element.title" />
         <div class="order__products d-flex align-items-center gap-3 justify-content-start">
           <CustomButton @click="() => handleOpenProducts(element.id)" />
           <div class="d-flex flex-column">
@@ -79,18 +77,20 @@ watch(searchText, (newValue) => {
           <PriceDisplay :products="element.products" />
         </div>
         <BaseButton @click="() => handleDelete?.(element.id)">
-          <img :src="imageBacket" alt="Delete icon" width="16" height="16">
+          <img :src="imageBacket" alt="Delete icon" width="16" height="16" />
         </BaseButton>
       </div>
     </template>
   </VirtualGrid>
-  <div
-     class="choice-product bg-white w-100 h-100 start-0 position-absolute"
-    :class="{ 'choice-product--open': openListProducts }"
-    >
-    <ProductListShort  :order="orderChoice ?? emptyOrder" :showProducts="true" version="expanded">
+  <div class="choice-product bg-white w-100 h-100 start-0 position-absolute" :class="{ 'choice-product--open': openListProducts }">
+    <ProductListShort :order="orderChoice ?? emptyOrder" :showProducts="true" version="expanded">
       <template #header>
-        <button class="button position-absolute top-0 end-0 me-2 mt-1 text-danger border-0 bg-transparent fs-5 fw-semibold" @click="handleCloseProducts">✕</button>
+        <button
+          class="button position-absolute top-0 end-0 me-2 mt-1 text-danger border-0 bg-transparent fs-5 fw-semibold"
+          @click="handleCloseProducts"
+        >
+          ✕
+        </button>
       </template>
     </ProductListShort>
   </div>
@@ -112,19 +112,21 @@ watch(searchText, (newValue) => {
 
 .choice-product {
   top: 126px;
-  transform: translateY(120%); 
+  transform: translateY(120%);
   opacity: 0;
-  transition: transform 1s ease, opacity 1s ease;
-  pointer-events: none; 
+  transition:
+    transform 1s ease,
+    opacity 1s ease;
+  pointer-events: none;
 }
 
 .choice-product--open {
-  transform: translateY(0); 
+  transform: translateY(0);
   opacity: 1;
   pointer-events: auto;
 }
 
 .button:active {
- transform: scale(0.95);
+  transform: scale(0.95);
 }
 </style>

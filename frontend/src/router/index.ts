@@ -10,8 +10,8 @@ import Register from '../views/Register.vue';
 import NotFound from '../views/NotFound.vue';
 
 const routes = [
-  { path: "/login", component: Login },
-  { path: "/register", component: Register },
+  { path: '/login', component: Login },
+  { path: '/register', component: Register },
   {
     path: '/',
     redirect: '/arrival',
@@ -54,13 +54,11 @@ const router = createRouter({
 });
 
 router.beforeEach((to, _from, next) => {
-  const isAuth = store.getters["auth/isAuth"];
-  const publicPages = ["/login", "/register"];
+  const isAuth = store.getters['auth/isAuth'];
+  const publicPages = ['/login', '/register'];
 
   if (!isAuth && !publicPages.includes(to.path)) {
-    next("/login");
-  } else if (isAuth && to.path === "/login") {
-    next("/arrival");
+    next('/login');
   } else {
     next();
   }

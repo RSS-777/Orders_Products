@@ -8,20 +8,16 @@ const workStatus = status === 'in_repair' ? 'В ремонте' : 'Свобод�
 
 <template>
   <div>
-    <span 
-    class="status text-nowrap"
-    :class="status === 'in_repair'  ? 'status--repair' : 'status--ready'"
-    >{{ workStatus }}
-  </span>
-    </div>
+    <span class="status text-nowrap" :class="status === 'in_repair' ? 'status--repair' : 'status--ready'">{{ workStatus }} </span>
+  </div>
 </template>
 
 <style scoped>
 .status--repair {
-  color: #2C3C44;
+  color: #2c3c44;
 }
 
 .status--ready {
-  color: #D7E36E;
+  color: #d7e36e;
 }
 </style>
