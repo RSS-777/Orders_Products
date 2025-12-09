@@ -106,7 +106,7 @@ watch(searchText, (newValue) => {
         <EllipsisText :title="getCarrentOrder(element)?.title" />
         <OrderStats v-if="getCarrentOrder(element)" :order="getCarrentOrder(element)" />
         <BaseButton @click="() => handleDelete?.(element.id)">
-          <img :src="imageBacket" alt="Delete icon" width="16" height="16" />
+          <img :src="imageBacket" alt="Delete" width="16" height="16" />
         </BaseButton>
       </div>
     </template>

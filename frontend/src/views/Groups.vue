@@ -1,94 +1,78 @@
 <script setup lang="ts">
-import { onMounted, computed, reactive, ref } from 'vue';
+import { onMounted, computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
-import { getOrders } from "../api/ordersApi";
-import { deleteOrder } from '../api/ordersApi';
-import type { IOrder } from '../types/order';
+import type { IProduct } from '../types/product';
 import GroupsList from '../components/Groups/GroupsList.vue';
+import { deleteProduct } from '../api/productsApi';
 import ConfirmModal from '../components/ConfirmModal.vue';
 import WrapperMain from '../components/WrapperMain.vue';
 import EllipsisText from '../components/EllipsisText.vue';
-import ProductListShort from '../components/Arrival/ProductListShort.vue';
 import FormCreateOrder from '../components/Arrival/FormCreateOrder.vue';
+import FormCreateProduct from '../components/Groups/FormCreateProduct.vue';
+import ButtonOpenForm from '../components/СomponentsForm/ButtonOpenForm.vue';
+import ProductNewIndicator from '../components/Products/ProductNewIndicator.vue';
+import ProductImage from '../components/Products/ProductImage.vue';
+import SecondaryText from '../components/SecondaryText.vue';
 
-const state = reactive({
-  countOrders: 0,
-  dataOrders: [] as IOrder[],
-});
+import { fetchOrders, cachedOrders } from '../services/orders';
+import { fetchProducts, chooseProductById } from '../services/product';
+
 const store = useStore();
-const token = computed(() => store.getters['auth/token']);
-const isLoading = ref<boolean>();
-const orderId = ref<number | null>(null);
-const showModal = ref<boolean>(false);
-const fetchMessage = ref<string>('');
-const showProducts = ref<boolean>(false);
-const openForm = ref<boolean>(false);
 
-const toggleProducts = () => {
-  showProducts.value = !showProducts.value;
-};
+const isLoading = ref<boolean>(false);
+const massage = ref<string | null>(null);
+const createOrder = ref<boolean>(false);
+const createProduct = ref<boolean>(false);
 
-const currentOrder = computed(() => {
-  if (orderId.value === null) return null;
-  return state.dataOrders.find((o) => o.id === orderId.value) || null;
+const orders = computed(() => cachedOrders.value);
+const idProduct = computed(() => store.getters['products/idProduct']);
+const idOrder = computed(() => store.getters['order/orderId']);
+const countOrders = computed(() => store.getters['order/countOrders'])
+const currentProduct = computed<IProduct | null>(() => store.getters['products/currentProduct'] as IProduct | null);
+
+watch(idProduct, (id) => {
+  chooseProductById(id);
 });
 
-const handleConfirmDelete = async () => {
-  if (orderId.value === null) return;
+const submitDeleteProduct = async () => {
+  const token = store.getters['auth/token'];
+  const productId = idProduct.value;
+
+  if (!token || !productId) {
+    return console.error('There is no token or product ID for deletion.');
+  }
 
   isLoading.value = true;
-  try {
-    const res = await deleteOrder(orderId.value, token.value);
+  const res = await deleteProduct(productId, token);
 
-    if (res.error) {
-      fetchMessage.value = res.error;
-      setTimeout(() => {
-        fetchMessage.value = '';
-      }, 2000);
-      return;
-    }
-
-    orderId.value = null;
-    showModal.value = false;
-  } catch (err) {
-    fetchMessage.value = err instanceof Error ? err.message : 'Unexpected error';
-    setTimeout(() => {
-      fetchMessage.value = '';
-    }, 2000);
-  } finally {
-    isLoading.value = false;
+  if (res.success) {
+    massage.value = "Продукт успішно видалено!";
+    await fetchOrders(true);
+    store.commit('products/clearCurrentProduct');
+    setTimeout(() => (massage.value = null), 3000);
+  } else {
+    massage.value = "Помилка при видаленні продукту.";
   }
+
+  isLoading.value = false;
+};
+
+
+const handleCreateOpenProduct = () => {
+  createProduct.value = !createProduct.value;
+};
+
+const handleCreateOpenOrder = () => {
+  createOrder.value = !createOrder.value;
 };
 
 const handleCancelDelete = () => {
-  showModal.value = false;
-};
-
-const handleDelete = (id: number) => {
-  orderId.value = id;
-  showModal.value = true;
-};
-
-const handleOpenForm = () => {
-  openForm.value = !openForm.value;
+  store.commit('products/clearProductId');
 };
 
 onMounted(async () => {
-  const store = useStore();
-  const token: string = store.getters['auth/token'];
-
-  if (!token) {
-    return console.error('No token found. Please log in.')
-  }
-
-  const res = await getOrders(token);
-
-  if (res.success) {
-    state.dataOrders = res.data || [];
-    state.countOrders = state.dataOrders.length;
-  } else {
-    console.error('Error orders:', res.error);
-  }
+  await fetchOrders();
+  await fetchProducts();
 });
 </script>
 
@@ -97,28 +81,30 @@ onMounted(async () => {
     <main class="main pb-2 mx-auto position-relative">
       <div class="main__inner mx-3">
         <div class="d-flex gap-3 align-items-center justify-content-start pt-5">
-          <button class="main__btn rounded-circle text-white d-flex align-items-center"
-            @click="handleOpenForm">+</button>
-          <h1>Приходы / {{ state.countOrders }}</h1>
+          <ButtonOpenForm :onclick="handleCreateOpenOrder" />
+          <h1>Приходы / {{ countOrders }}</h1>
         </div>
-        <GroupsList :handleDelete="handleDelete" :orders="state.dataOrders" />
+        <GroupsList :orders="orders" />
       </div>
     </main>
-    <ConfirmModal :show="showModal" :message="fetchMessage" name="приход" @confirm="handleConfirmDelete"
-      @cancel="handleCancelDelete" :isLoading="isLoading">
-      <div class="modal-element p-4">
-        <EllipsisText v-if="currentOrder" :title="currentOrder.title" className="fs-5 border-0 fw-medium" />
-        <p class="fd-2 lh-sm my-2">{{ currentOrder?.description }}</p>
-        <div v-if="currentOrder?.products.length">
-          <button class="modal-element__btn border-0 bg-transparent p-0 d-flex align-items-center"
-            @click="toggleProducts">
-            <span>Продукти</span> <span>{{ showProducts ? '▲' : '▼' }}</span>
-          </button>
-          <ProductListShort :order="currentOrder" :showProducts="showProducts" />
+    <FormCreateOrder v-if="createOrder" @close="handleCreateOpenOrder" />
+    <FormCreateProduct v-if="createProduct" :idOrder="idOrder" @close="handleCreateOpenProduct" />
+    <ConfirmModal
+      v-if="idProduct !== null"
+      :message="massage"
+      name="продукт"
+      @confirm="submitDeleteProduct"
+      @cancel="handleCancelDelete"
+    >
+      <div class="modal-element d-grid align-items-center gap-2 py-2">
+        <ProductNewIndicator v-if="currentProduct" :status="currentProduct.status" />
+        <ProductImage :src="currentProduct?.photo" />
+        <div class="d-flex flex-column w-100 overflow-hidden">
+          <EllipsisText v-if="currentProduct" :title="currentProduct.title" className="border-0 fw-medium" />
+          <SecondaryText v-if="currentProduct" :text="currentProduct?.serialNumber" />
         </div>
       </div>
     </ConfirmModal>
-    <FormCreateOrder v-if="openForm" @close="handleOpenForm" />
   </WrapperMain>
 </template>
 

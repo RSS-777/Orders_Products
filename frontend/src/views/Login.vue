@@ -36,7 +36,7 @@ const onSubmit = async () => {
     const res = await login(email.value, password.value);
 
     if (!res.success) {
-      message.value = 'Incorrect login or password';
+      message.value = 'Неверный логин или пароль';
       setTimeout(() => (message.value = ''), 3000);
       return;
     }
@@ -49,7 +49,7 @@ const onSubmit = async () => {
 
     router.push('/arrival');
   } catch {
-    message.value = 'Incorrect login or password';
+    message.value = 'Неверный логин или пароль';
     setTimeout(() => (message.value = ''), 3000);
   }
 };

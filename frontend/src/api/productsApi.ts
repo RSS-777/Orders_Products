@@ -92,44 +92,50 @@ export const deleteProduct = async (id: number, token: string): Promise<IProduct
   }
 };
 
-export const createProduct = async (product: Partial<IProduct>, token: string): Promise<IProductResponse> => {
+type IProductWithFile = Partial<IProduct> & { photoFile?: File };
+
+export const createProduct = async (product: IProductWithFile, token: string): Promise<IProductResponse> => {
   try {
+    const formData = new FormData();
+
+    formData.append('name', product.title || '');
+    formData.append('type', product.type || '');
+    formData.append('specification', product.specification || '');
+    formData.append('order_id', String(product.order_id));
+    if (product.guarantee) {
+      formData.append('guarantee', JSON.stringify(product.guarantee));
+    }
+    if (product.price) {
+      formData.append('price', JSON.stringify(product.price));
+    }
+    formData.append('isNew', String(product.isNew));
+    if (product.photoFile) {
+      formData.append('photo', product.photoFile);
+    }
+
     const response = await fetch(`${BASE_URL}/api/products/create`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(product),
+      body: formData,
     });
 
     if (!response.ok) {
-      if (response.status === 400) {
-        throw new Error('Invalid product data.');
-      }
-      if (response.status === 401) {
-        throw new Error('Unauthorized. Please log in again.');
-      }
-      if (response.status === 500) {
-        throw new Error('Server error while creating product.');
-      }
+      if (response.status === 400) throw new Error('Invalid product data.');
+      if (response.status === 401) throw new Error('Unauthorized. Please log in again.');
+      if (response.status === 500) throw new Error('Server error while creating product.');
       throw new Error('Unexpected server response.');
     }
 
     const data: IProduct = await response.json();
 
-    return {
-      success: true,
-      data,
-    };
+    return { success: true, data };
   } catch (err) {
     if (import.meta.env.VITE_APP_MODE === 'development') {
       console.error('Error creating product:', err);
     }
-
-    return {
-      success: false,
-      error: err instanceof Error ? err.message : 'Unknown error occurred.',
-    };
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error occurred.' };
   }
 };
+

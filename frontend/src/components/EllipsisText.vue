@@ -1,14 +1,20 @@
 <script setup lang="ts">
-const { title, className, maxWidth, minWidth } = defineProps<{
+const { title, className, maxWidth, minWidth, classBlock } = defineProps<{
   title?: string;
   className?: string;
   maxWidth?: string;
   minWidth?: string;
+  classBlock?: string;
 }>();
 </script>
 
 <template>
-  <p class="ellipsis text-truncate flex-grow-1" :title="title" :style="{ maxWidth: maxWidth || '400px', minWidth: minWidth || '100px' }">
+  <p 
+    class="ellipsis text-truncate flex-grow-1" 
+    :class="classBlock"
+    :title="title" 
+    :style="{ maxWidth: maxWidth || '400px', minWidth: minWidth || '100px' }"
+  >
     <span :class="[title ? 'ellipsis--text' : 'ellipsis--notext', className]">
       {{ title || '—' }}
     </span>

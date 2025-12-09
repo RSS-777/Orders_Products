@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import basketImage from '../assets/basket.png';
+import basket from '../assets/basket.png';
 import FormButtons from './СomponentsForm/FormButtons.vue';
 
-const { show } = defineProps<{
-  show: boolean;
-  message?: string;
+const { message, name, isLoading } = defineProps<{
+  message?: string | null;
   name: string;
   isLoading?: boolean;
 }>();
@@ -14,7 +13,7 @@ const emit = defineEmits<{
   (e: 'cancel'): void;
 }>();
 
-const handleCansel = () => {
+const handleCancel = () => {
   emit('cancel');
 };
 
@@ -24,7 +23,7 @@ const handleConfirm = () => {
 </script>
 
 <template>
-  <div v-if="show" class="modal position-absolute d-flex justify-content-center align-items-center bg-dark bg-opacity-50">
+  <div class="modal position-absolute d-flex justify-content-center align-items-center bg-dark bg-opacity-50">
     <div class="modal__content w-100 rounded shadow bg-white overflow-hidden relative mx-3">
       <p class="modal__title p-4 text-black fs-5">
         <strong>Вы уверены, что хотите удалить этот {{ name }}?</strong>
@@ -34,9 +33,9 @@ const handleConfirm = () => {
         :isLoading="isLoading"
         nameConfirm="Удалить"
         typeBtnConfirm="button"
-        @cancel="handleCansel"
-        @confirmClick="handleConfirm"
-        :imageConfirm="basketImage"
+        @cancel="handleCancel"
+        @confirm="handleConfirm"
+        :imageConfirm="basket"
       />
       <p v-if="message" class="modal__message text-center">{{ message }}</p>
     </div>

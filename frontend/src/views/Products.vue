@@ -83,7 +83,7 @@ onMounted(async () => {
         <ProductsList :handleDelete="handleDelete" :products="state.dataProducts" />
       </div>
     </main>
-    <ConfirmModal :show="showModal" :message="fetchMessage" name="продукт" @confirm="handleConfirmDelete"
+    <ConfirmModal v-if="showModal" :message="fetchMessage" name="продукт" @confirm="handleConfirmDelete"
       @cancel="handleCancelDelete">
       <div class="modal-element d-grid align-items-center gap-2 py-2">
         <ProductNewIndicator v-if="currentProduct" :status="currentProduct.status" />

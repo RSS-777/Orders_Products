@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const emit = defineEmits(['cancel', 'confirmClick']);
+const emit = defineEmits(['cancel', 'confirm']);
 
 const { isLoading, nameConfirm, typeBtnConfirm, imageConfirm } = defineProps<{
   isLoading?: boolean;
@@ -10,7 +10,7 @@ const { isLoading, nameConfirm, typeBtnConfirm, imageConfirm } = defineProps<{
 
 const handleClick = () => {
   if (typeBtnConfirm === 'button') {
-    emit('confirmClick');
+    emit('confirm');
   }
 };
 

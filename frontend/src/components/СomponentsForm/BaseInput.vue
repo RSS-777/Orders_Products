@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 const { modelValue, label, placeholder, id, type } = defineProps<{
-  modelValue: string;
+  modelValue: string | number;
   label: string;
   placeholder?: string;
   id?: string;
@@ -10,7 +10,7 @@ const { modelValue, label, placeholder, id, type } = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string): void;
+  (e: 'update:modelValue', value: string | number): void;
 }>();
 
 const updateValue = (e: Event) => {

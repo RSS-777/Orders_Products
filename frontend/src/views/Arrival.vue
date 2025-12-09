@@ -10,6 +10,7 @@ import WrapperMain from '../components/WrapperMain.vue';
 import EllipsisText from '../components/EllipsisText.vue';
 import ProductListShort from '../components/Arrival/ProductListShort.vue';
 import FormCreateOrder from '../components/Arrival/FormCreateOrder.vue';
+import ButtonOpenForm from '../components/СomponentsForm/ButtonOpenForm.vue';
 
 const state = reactive({
   countOrders: 0,
@@ -97,14 +98,13 @@ onMounted(async () => {
     <main class="main pb-2 mx-auto position-relative">
       <div class="main__inner mx-3">
         <div class="d-flex gap-3 align-items-center justify-content-start pt-5">
-          <button class="main__btn rounded-circle text-white d-flex align-items-center"
-            @click="handleOpenForm">+</button>
+          <ButtonOpenForm  :onclick="handleOpenForm"/>
           <h1>Приходы / {{ state.countOrders }}</h1>
         </div>
         <OrdersList :handleDelete="handleDelete" :orders="state.dataOrders" />
       </div>
     </main>
-    <ConfirmModal :show="showModal" :message="fetchMessage" name="приход" @confirm="handleConfirmDelete"
+    <ConfirmModal v-if="showModal" :message="fetchMessage" name="приход" @confirm="handleConfirmDelete"
       @cancel="handleCancelDelete" :isLoading="isLoading">
       <div class="modal-element p-4">
         <EllipsisText v-if="currentOrder" :title="currentOrder.title" className="fs-5 border-0 fw-medium" />

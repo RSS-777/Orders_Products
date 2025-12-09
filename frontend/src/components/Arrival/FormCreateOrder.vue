@@ -21,8 +21,8 @@ const dataForm = ref({
 });
 
 const schema = yup.object({
-  title: yup.string().required('Title is required'),
-  description: yup.string().max(500, 'Description is too long').required('Description is required'),
+  title: yup.string().required('Название обязательно.'),
+  description: yup.string().max(500, 'Описание слишком длинное.').required('Описание обязательно.'),
 });
 
 const handleSubmit = async (e: Event) => {
@@ -42,7 +42,7 @@ const handleSubmit = async (e: Event) => {
     const res = await createOrder(token, payload);
 
     if (!res.success) {
-      message.value = res.error ?? 'Error creating order.';
+      message.value = res.error ?? 'Ошибка при создании заказа.';
       setTimeout(() => (message.value = ''), 2000);
       return;
     }
