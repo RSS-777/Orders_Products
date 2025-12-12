@@ -12,7 +12,7 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void;
 }>();
 
-const idGeneration = ref( id || `text-area-${Math.random().toString(36).slice(2)}-${label.replace(/\s+/g, '-')}`);
+const idGeneration = ref(id || `text-area-${Math.random().toString(36).slice(2)}-${label.replace(/\s+/g, '-')}`);
 
 const handleInput = (e: Event) => {
   const target = e.target as HTMLTextAreaElement;

@@ -16,15 +16,9 @@ const password = ref<string>('admin');
 const message = ref<string>('');
 
 const schema = yup.object({
-  email: yup
-    .string()
-    .required('Введите email')
-    .email('Некорректный email'),
+  email: yup.string().required('Введите email').email('Некорректный email'),
 
-  password: yup
-    .string()
-    .required('Введите пароль')
-    .min(3, 'Минимум 3 символа'),
+  password: yup.string().required('Введите пароль').min(3, 'Минимум 3 символа'),
 });
 
 const onSubmit = async () => {
@@ -61,8 +55,7 @@ const onSubmit = async () => {
       <FetchMessage :message="message" type="error" />
       <form @submit.prevent="onSubmit" class="mb-3 mt-2">
         <BaseInput v-model="email" label="Email" type="email" autocomplete="email" id="login-email" />
-        <BaseInput v-model="password" label="Password" type="password" autocomplete="current-password"
-          id="login-pass" />
+        <BaseInput v-model="password" label="Password" type="password" autocomplete="current-password" id="login-pass" />
         <ButtonAuth name="Войти" />
       </form>
       <AuthLink text="Нет аккаунта?" link="/register" name="Зарегистрироваться" />

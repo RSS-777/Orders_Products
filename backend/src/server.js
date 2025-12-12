@@ -22,12 +22,10 @@ const io = new Server(server, {
 
 app.use(cors());
 app.use(express.json());
-
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/uploads/products', express.static(path.join(__dirname, 'uploads/products')));
 app.use('/uploads/user', express.static(path.join(__dirname, 'uploads/users')));
-
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/products', productRoutes);

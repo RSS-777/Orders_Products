@@ -31,18 +31,18 @@ const orders: Module<IOrdersState, IRootState> = {
       state.currentOrder = null;
     },
     setOrderId(state, id: number) {
-      state.orderId = id
+      state.orderId = id;
     },
     clearOrderId(state) {
-      state.orderId = null
-    }
+      state.orderId = null;
+    },
   },
 
   getters: {
     count: (state) => state.count,
     lastFetch: (state) => state.lastFetch,
     currentOrder: (state) => state.currentOrder,
-    orderId: (state) => state.orderId
+    orderId: (state) => state.orderId,
   },
 };
 

@@ -13,8 +13,8 @@ import imageBacket from '../../assets/basket.png';
 import { cachedOrders, chooseOrderById } from '../../services/orders';
 
 const handleDelete = (id: number) => {
-  store.commit('orders/setOrderId', id)
-}
+  store.commit('orders/setOrderId', id);
+};
 
 const emptyOrder: IOrder = {
   id: 0,
@@ -26,13 +26,13 @@ const emptyOrder: IOrder = {
 
 const store = useStore();
 const orders = computed<IOrder[]>(() => cachedOrders.value);
-const tempScroll = ref<number | undefined>(undefined); 
+const tempScroll = ref<number | undefined>(undefined);  // Использую undefined вместо null, потому что vue-virtual-scroll-grid !!!
 const searchText = computed(() => store.getters['search/text']);
-const orderChoice = computed(() => store.getters['orders/currentOrder'])
+const orderChoice = computed(() => store.getters['orders/currentOrder']);
 const openListProducts = ref<boolean>(false);
 
 watch(searchText, async () => {
-   await nextTick();
+  await nextTick();
   findOrder();
 });
 
@@ -44,20 +44,17 @@ const findOrder = async () => {
     return;
   }
 
-  const index = orders.value.findIndex(order =>
-    order.title.toLowerCase().includes(q)
-  );
+  const index = orders.value.findIndex((order) => order.title.toLowerCase().includes(q));
 
   if (index !== -1) {
     tempScroll.value = index;
     await nextTick();
-    setTimeout(() => tempScroll.value = undefined, 1000);
+    setTimeout(() => (tempScroll.value = undefined), 1000);
   }
 };
 
-
 const handleOpenProducts = (id: number) => {
-  chooseOrderById(id)
+  chooseOrderById(id);
 
   nextTick(() => {
     openListProducts.value = true;
@@ -66,9 +63,8 @@ const handleOpenProducts = (id: number) => {
 
 const handleCloseProducts = () => {
   openListProducts.value = false;
-  store.commit('orders/clearCurrentOrder')
+  store.commit('orders/clearCurrentOrder');
 };
-
 </script>
 <template>
   <VirtualGrid :items="orders" :tempScroll="tempScroll ? tempScroll : undefined" classGrid="d-grid gap-2" :maxHeightGrid="650" :heightElement="60">

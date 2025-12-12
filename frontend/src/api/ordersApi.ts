@@ -32,7 +32,7 @@ export const getOrders = async (token: string): Promise<IOrdersResponse> => {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
-      }
+      },
     });
 
     const data: IOrdersResponse = await response.json();
@@ -118,7 +118,7 @@ export const createOrder = async (token: string, order: { title: string; descrip
       throw new Error(result.error || 'Failed to create order.');
     }
 
-    return { success: true, message: 'Order created successfully'};
+    return { success: true, message: 'Order created successfully' };
   } catch (err) {
     if (import.meta.env.VITE_APP_MODE === 'development') {
       console.error('Error creating order:', err);

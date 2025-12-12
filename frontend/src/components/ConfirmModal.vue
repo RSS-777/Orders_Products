@@ -39,7 +39,7 @@ const handleConfirm = () => {
         @confirm="handleConfirm"
         :imageConfirm="basket"
       />
-      <FetchMessage :message="message" :type="success ? 'success' : 'error'"/>
+      <FetchMessage :message="message" :type="success ? 'success' : 'error'" />
     </div>
   </div>
 </template>

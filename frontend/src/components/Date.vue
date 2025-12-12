@@ -2,12 +2,12 @@
 import { formatDate } from '../utils/dateTimeFormat';
 
 const { date, className } = defineProps<{
-  date: string
+  date: string;
   className?: string;
 }>();
 
-const dateSm = formatDate(date.split(' ')[0], 'slash') || '—'; 
-const dateBg = formatDate(date.split(' ')[0], 'long') || '—';  
+const dateSm = formatDate(date.split(' ')[0], 'slash') || '—';
+const dateBg = formatDate(date.split(' ')[0], 'long') || '—';
 </script>
 
 <template>
@@ -25,8 +25,8 @@ const dateBg = formatDate(date.split(' ')[0], 'long') || '—';
   color: rgb(158, 158, 158);
 }
 
-.date__sm--space, 
+.date__sm--space,
 .date__bg--space {
- letter-spacing: 1px;
+  letter-spacing: 1px;
 }
 </style>

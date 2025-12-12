@@ -5,8 +5,19 @@ type ProductWithDate = {
 };
 
 const months: Record<string, string> = {
-  янв: '01', фев: '02', мар: '03', апр: '04', май: '05', июн: '06',
-  июл: '07', июля: '07', авг: '08', сен: '09', окт: '10', ноя: '11', дек: '12'
+  янв: '01',
+  фев: '02',
+  мар: '03',
+  апр: '04',
+  май: '05',
+  июн: '06',
+  июл: '07',
+  июля: '07',
+  авг: '08',
+  сен: '09',
+  окт: '10',
+  ноя: '11',
+  дек: '12',
 };
 
 const parseDateString = (str?: string): Date | null => {
@@ -59,8 +70,8 @@ export const findIdByDate = (items: ProductWithDate[], query: string): number | 
 
   for (const item of items) {
     if (!item.date) continue;
-    
-     const itemDate = new Date(item.date);
+
+    const itemDate = new Date(item.date);
     if (isNaN(itemDate.getTime())) continue;
 
     if (
@@ -74,4 +85,3 @@ export const findIdByDate = (items: ProductWithDate[], query: string): number | 
   }
   return undefined;
 };
-

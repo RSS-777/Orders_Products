@@ -32,7 +32,7 @@ const schema = yup.object({
 const handleSubmit = async (e: Event) => {
   e.preventDefault();
 
-  if (isSubmitting) return; 
+  if (isSubmitting) return;
   isSubmitting = true;
   isLoading.value = true;
 
@@ -53,17 +53,16 @@ const handleSubmit = async (e: Event) => {
       return;
     }
 
-    fetchOrders(true)
-    seccessFetch.value = true
-    message.value = 'Приход успешно создан.'
+    fetchOrders(true);
+    seccessFetch.value = true;
+    message.value = 'Приход успешно создан.';
 
     setTimeout(() => {
-      seccessFetch.value = false
-      message.value = ''
+      seccessFetch.value = false;
+      message.value = '';
       closeForm();
       console.log('Form closed after success');
-    }, 3000)
-
+    }, 3000);
   } catch (err) {
     if (err instanceof yup.ValidationError) {
       message.value = err.errors[0] || err.message || 'Ошибка при создании заказа.';
@@ -71,7 +70,7 @@ const handleSubmit = async (e: Event) => {
     }
   } finally {
     isLoading.value = false;
-    console
+    console;
   }
 };
 
@@ -86,8 +85,7 @@ const closeForm = () => {
       <h2 class="form__title text-center py-3">Создать заказ</h2>
       <div class="px-4">
         <BaseInput v-model="dataForm.title" label="Название заказа" placeholder="Введите название" id="form__title" />
-        <BaseTextarea v-model="dataForm.description" label="Описание" id="form__textarea" placeholder="Введите описание"
-          :rows="4" />
+        <BaseTextarea v-model="dataForm.description" label="Описание" id="form__textarea" placeholder="Введите описание" :rows="4" />
       </div>
       <FormButtons :isLoading="isLoading" nameConfirm="Создать" typeBtnConfirm="submit" @cancel="closeForm" />
       <FetchMessage :message="message" :type="seccessFetch ? 'success' : 'error'" />

@@ -3,7 +3,7 @@ import store from '../store/index';
 import { getProducts } from '../api/productsApi';
 import type { IProduct } from '../types/product';
 
-export const cachedProducts = ref<IProduct[]>([]); 
+export const cachedProducts = ref<IProduct[]>([]);
 
 const CACHE_LIFETIME = 60 * 5000;
 
@@ -29,17 +29,17 @@ export const fetchProducts = async (forceReload = false) => {
   }
 
   cachedProducts.value = res.data ?? [];
-                                             
+
   store.commit('products/setProductsMeta', {
-    count: cachedProducts.value.length
+    count: cachedProducts.value.length,
   });
 
   return cachedProducts.value;
-}
+};
 
 export const chooseProductById = (id: number) => {
-  const product = cachedProducts.value.find(o => o.id === id) ?? null;
+  const product = cachedProducts.value.find((o) => o.id === id) ?? null;
   if (product) {
     store.commit('products/setCurrentProduct', product);
   }
-}
+};

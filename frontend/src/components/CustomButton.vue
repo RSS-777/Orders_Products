@@ -54,7 +54,7 @@ const handleClick = () => {
 
 @media (hover: hover) and (pointer: fine) {
   .btn--flex:hover {
-    border: 1px solid #80B548;
+    border: 1px solid #80b548;
   }
 }
 </style>

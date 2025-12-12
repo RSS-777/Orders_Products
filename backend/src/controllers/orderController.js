@@ -35,7 +35,7 @@ const createOrder = async (req, res) => {
 
     await Order.createOrder({ title, description, date });
 
-     res.status(201).json({ success: true });
+    res.status(201).json({ success: true });
   } catch (err) {
     logger.error(`Failed to create order: ${err.message}`);
     res.status(500).json({ success: false, error: 'Server error' });

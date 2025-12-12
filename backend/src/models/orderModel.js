@@ -20,7 +20,7 @@ const createOrder = async ({ title, description, date }) => {
     'INSERT INTO orders (title, description, date) VALUES (?, ?, ?)',
     [title, description || null, date]
   );
-  return result.insertId; 
+  return result.insertId;
 };
 
 module.exports = { getAllOrders, getOrderById, deleteById, createOrder };

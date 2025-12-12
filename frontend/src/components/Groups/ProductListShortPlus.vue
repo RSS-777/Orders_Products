@@ -10,7 +10,7 @@ import BaseButton from '../BaseButton.vue';
 import type { IOrder } from '../../types/order';
 import imageBacket from '../../assets/basket.png';
 
-const store = useStore()
+const store = useStore();
 const order = computed<IOrder>(() => store.getters['orders/currentOrder']);
 
 const onDelete = (id: number) => {
@@ -25,7 +25,7 @@ const onDelete = (id: number) => {
     </div>
 
     <ul class="product list-unstyled mt-2 overflow-y-auto" v-if="order">
-      <li v-for="product in order?.products" :key="product.id" class="product__list  gap-4 py-1">
+      <li v-for="product in order?.products" :key="product.id" class="product__list gap-4 py-1">
         <ProductStatus :status="product.status" />
         <ProductImage />
         <div class="product__information overflow-hidden">
@@ -40,7 +40,6 @@ const onDelete = (id: number) => {
     </ul>
   </div>
 </template>
-
 
 <style scoped>
 .product {

@@ -2,11 +2,15 @@
   "name": "frontend",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "type-check": "vue-tsc --noEmit"
+    "type-check": "vue-tsc --noEmit",
+    "lint": "eslint . --ext .ts,.tsx,.vue",
+    "lint:fix": "eslint . --ext .ts,.tsx,.vue --fix",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
@@ -18,9 +22,16 @@
     "yup": "^1.7.1"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.49.0",
+    "@typescript-eslint/parser": "^8.49.0",
     "@vitejs/plugin-vue": "^5.2.4",
     "@vue/compiler-sfc": "^3.5.25",
     "@vue/tsconfig": "^0.8.1",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-vue": "^10.6.2",
+    "prettier": "^3.7.4",
     "typescript": "^5.9.3",
     "vite": "^6.4.1",
     "vue-tsc": "^3.1.5"

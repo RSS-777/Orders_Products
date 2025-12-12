@@ -9,10 +9,10 @@ const { title, className, maxWidth, minWidth, classBlock } = defineProps<{
 </script>
 
 <template>
-  <p 
-    class="ellipsis text-truncate flex-grow-1" 
+  <p
+    class="ellipsis text-truncate flex-grow-1"
     :class="classBlock"
-    :title="title" 
+    :title="title"
     :style="{ maxWidth: maxWidth || '400px', minWidth: minWidth || '100px' }"
   >
     <span :class="[title ? 'ellipsis--text' : 'ellipsis--notext', className]">

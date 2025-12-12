@@ -15,20 +15,18 @@ const store = useStore();
 const token = computed(() => store.getters['auth/token']);
 const showModal = ref<boolean>(false);
 const fetchMessage = ref<string>('');
-
 const countProducts = computed(() => store.getters['products/count']);
 const productId = computed(() => store.getters['products/idProduct']);
 const currentProduct = computed(() => store.getters['products/currentProduct']);
-
-const isLoading = ref<boolean>(false)
-const successDelete = ref<boolean>(false)
+const isLoading = ref<boolean>(false);
+const successDelete = ref<boolean>(false);
 
 watch(productId, (newId) => {
   if (newId !== null) {
-    chooseProductById(newId)
-    openDeleteModal()
+    chooseProductById(newId);
+    openDeleteModal();
   }
-})
+});
 
 const openDeleteModal = () => {
   showModal.value = true;
@@ -40,19 +38,19 @@ const handleConfirmDelete = async () => {
   const res = await deleteProduct(productId.value, token.value);
 
   if (res.success) {
-    fetchMessage.value = "Продукт успешно удалён!";
-    successDelete.value = true
+    fetchMessage.value = 'Продукт успешно удалён!';
+    successDelete.value = true;
     await fetchProducts(true);
 
     setTimeout(() => {
       showModal.value = false;
       store.commit('products/clearCurrentProduct');
-      store.commit('products/clearProductId')
-      fetchMessage.value = "";
-      successDelete.value = false
-    }, 2000)
+      store.commit('products/clearProductId');
+      fetchMessage.value = '';
+      successDelete.value = false;
+    }, 2000);
   } else {
-    fetchMessage.value = res.error || "Произошла ошибка";
+    fetchMessage.value = res.error || 'Произошла ошибка';
 
     setTimeout(() => {
       fetchMessage.value = '';
@@ -74,7 +72,6 @@ onBeforeUnmount(() => {
   store.commit('products/clearProductId');
   store.commit('products/clearCurrentProduct');
 });
-
 </script>
 
 <template>
@@ -87,8 +84,15 @@ onBeforeUnmount(() => {
         <ProductsList />
       </div>
     </main>
-    <ConfirmModal v-if="showModal" :message="fetchMessage" :isLoading="isLoading" :success="successDelete"
-      name="продукт" @confirm="handleConfirmDelete" @cancel="handleCancelDelete">
+    <ConfirmModal
+      v-if="showModal"
+      :message="fetchMessage"
+      :isLoading="isLoading"
+      :success="successDelete"
+      name="продукт"
+      @confirm="handleConfirmDelete"
+      @cancel="handleCancelDelete"
+    >
       <div class="modal-element d-grid align-items-center gap-2 py-2">
         <ProductNewIndicator v-if="currentProduct" :status="currentProduct.status" />
         <ProductImage :src="currentProduct?.photo" />

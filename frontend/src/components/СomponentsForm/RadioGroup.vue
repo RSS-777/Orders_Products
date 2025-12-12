@@ -41,8 +41,7 @@ const updateValue = (value: string | number) => {
 </template>
 
 <style scoped>
-input[type="radio"]:checked {
+input[type='radio']:checked {
   accent-color: #5c961d;
 }
 </style>
-

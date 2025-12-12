@@ -26,7 +26,7 @@ const placeholderText = computed(() => {
 
 watch(searchValue, (newVal) => {
   if (!newVal?.trim() && route.path === '/products') {
-    store.commit('search/clearSearch')
+    store.commit('search/clearSearch');
   }
 });
 
@@ -46,18 +46,24 @@ const handleKeyPress = (e: KeyboardEvent) => {
 </script>
 
 <template>
-  <header
-    class="header container-fluid d-flex align-items-center justify-content-around px-2 py-2 w-100 position-relative z-2 bg-white">
-    <div
-      class="block block--width d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between w-100">
+  <header class="header container-fluid d-flex align-items-center justify-content-around px-2 py-2 w-100 position-relative z-2 bg-white">
+    <div class="block block--width d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between w-100">
       <div class="header__brand d-flex align-items-center gap-1">
         <img class="header__brand-logo me-2 object-fit-contain" width="45" height="45" :src="logo" alt="Logo" />
         <span class="header__brand-title">inventory</span>
       </div>
 
       <div class="header__search flex-grow-1 my-2 my-sm-0 mx-sm-3">
-        <input class="header__search-input px-2 w-100" type="search" id="header-search" :placeholder="placeholderText"
-          aria-label="Search" name="headerSearch" v-model="searchValue" @keypress="handleKeyPress" />
+        <input
+          class="header__search-input px-2 w-100"
+          type="search"
+          id="header-search"
+          :placeholder="placeholderText"
+          aria-label="Search"
+          name="headerSearch"
+          v-model="searchValue"
+          @keypress="handleKeyPress"
+        />
       </div>
     </div>
 
@@ -69,7 +75,7 @@ const handleKeyPress = (e: KeyboardEvent) => {
           <img :src="clock" alt="Image clock" width="18" class="mx-2" />
           <span>{{ formattedTime }}</span>
           <div class="d-flex gap-1 align-items-center ms-3">
-            <img :src="person" alt="" width="14" height="14"><span>{{ activeSessions }}</span>
+            <img :src="person" alt="" width="14" height="14" /><span>{{ activeSessions }}</span>
           </div>
         </div>
       </div>

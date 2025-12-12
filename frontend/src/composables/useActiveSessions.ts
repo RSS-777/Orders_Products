@@ -20,5 +20,3 @@ export function useActiveSessions() {
 
   return { activeSessions };
 }
-
-

@@ -18,7 +18,7 @@ const products: Module<IProductsState, IRootState> = {
     lastFetch: null,
     currentProduct: null,
     idProduct: null,
-    createProductFormOpen: false
+    createProductFormOpen: false,
   }),
 
   mutations: {
@@ -36,7 +36,7 @@ const products: Module<IProductsState, IRootState> = {
       state.idProduct = id;
     },
     clearProductId(state) {
-      state.idProduct = null
+      state.idProduct = null;
     },
     openCreateProductForm(state) {
       state.createProductFormOpen = true;
@@ -51,7 +51,7 @@ const products: Module<IProductsState, IRootState> = {
     lastFetch: (state) => state.lastFetch,
     currentProduct: (state) => state.currentProduct,
     idProduct: (state) => state.idProduct,
-    isCreateProductFormOpen: (state) => state.createProductFormOpen
+    isCreateProductFormOpen: (state) => state.createProductFormOpen,
   },
 };
 

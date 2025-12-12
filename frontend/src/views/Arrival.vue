@@ -13,27 +13,28 @@ import ButtonOpenForm from '../components/СomponentsForm/ButtonOpenForm.vue';
 
 const store = useStore();
 const token = computed(() => store.getters['auth/token']);
-const orderId = computed(() => store.getters['orders/orderId'])
-const countOrders = computed(() => store.getters['orders/count'])
-const currentOrder = computed(() => store.getters['orders/currentOrder'])
-
+const orderId = computed(() => store.getters['orders/orderId']);
+const countOrders = computed(() => store.getters['orders/count']);
+const currentOrder = computed(() => store.getters['orders/currentOrder']);
 const isLoading = ref<boolean>(false);
 const isSuccessDelete = ref<boolean>(false);
 const showModal = ref<boolean>(false);
 const fetchMessage = ref<string>('');
 const showProducts = ref<boolean>(false);
 const openForm = ref<boolean>(false);
-
 const toggleProducts = () => {
   showProducts.value = !showProducts.value;
 };
 
-watch(() => orderId.value, (id: number) => {
-  if (id !== null) {
-    chooseOrderById(id);
-    handleDelete();
-  }
-});
+watch(
+  () => orderId.value,
+  (id: number) => {
+    if (id !== null) {
+      chooseOrderById(id);
+      handleDelete();
+    }
+  },
+);
 
 const handleDelete = () => {
   showModal.value = true;
@@ -47,21 +48,20 @@ const handleConfirmDelete = async () => {
     const res = await deleteOrder(orderId.value, token.value);
 
     if (res.success) {
-      fetchMessage.value = 'Удаление прихода прошло успешно!'
-      isSuccessDelete.value = true
+      fetchMessage.value = 'Удаление прихода прошло успешно!';
+      isSuccessDelete.value = true;
 
       setTimeout(() => {
         showModal.value = false;
-        store.commit('orders/clearOrderId')
-        store.commit('orders/clearCurrentOrder')
-        fetchOrders(true)
-        fetchMessage.value = ''
-        isSuccessDelete.value = false
-      }, 3000)
+        store.commit('orders/clearOrderId');
+        store.commit('orders/clearCurrentOrder');
+        fetchOrders(true);
+        fetchMessage.value = '';
+        isSuccessDelete.value = false;
+      }, 3000);
     }
-
   } catch (err: any) {
-    fetchMessage.value = err.error || "Произошла ошибка";
+    fetchMessage.value = err.error || 'Произошла ошибка';
 
     setTimeout(() => {
       fetchMessage.value = '';
@@ -73,9 +73,9 @@ const handleConfirmDelete = async () => {
 
 const handleCancelDelete = () => {
   showModal.value = false;
-  showProducts.value = false
-  store.commit('orders/clearOrderId')
-  store.commit('orders/clearCurrentOrder')
+  showProducts.value = false;
+  store.commit('orders/clearOrderId');
+  store.commit('orders/clearCurrentOrder');
 };
 
 const handleOpenForm = () => {
@@ -83,7 +83,7 @@ const handleOpenForm = () => {
 };
 
 onMounted(async () => {
-  await fetchOrders()
+  await fetchOrders();
 });
 </script>
 
@@ -98,14 +98,20 @@ onMounted(async () => {
         <OrdersList />
       </div>
     </main>
-    <ConfirmModal v-if="showModal" :message="fetchMessage" :success="isSuccessDelete" name="приход"
-      @confirm="handleConfirmDelete" @cancel="handleCancelDelete" :isLoading="isLoading">
+    <ConfirmModal
+      v-if="showModal"
+      :message="fetchMessage"
+      :success="isSuccessDelete"
+      name="приход"
+      @confirm="handleConfirmDelete"
+      @cancel="handleCancelDelete"
+      :isLoading="isLoading"
+    >
       <div class="modal-element p-4">
         <EllipsisText v-if="currentOrder" :title="currentOrder.title" className="fs-5 border-0 fw-medium" />
         <p class="fd-2 lh-sm my-2">{{ currentOrder?.description }}</p>
         <div v-if="currentOrder?.products.length">
-          <button class="modal-element__btn border-0 bg-transparent p-0 d-flex align-items-center"
-            @click="toggleProducts">
+          <button class="modal-element__btn border-0 bg-transparent p-0 d-flex align-items-center" @click="toggleProducts">
             <span>Продукти</span> <span>{{ showProducts ? '▲' : '▼' }}</span>
           </button>
           <ProductListShort :order="currentOrder" :showProducts="showProducts" />

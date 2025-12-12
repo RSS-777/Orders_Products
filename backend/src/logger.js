@@ -13,20 +13,17 @@ const logger = createLogger({
   defaultMeta: { service: 'orders-products-backend' },
   transports: [
     new transports.Console(),
-
-
     new DailyRotateFile({
       filename: path.join(__dirname, '../logs/error-%DATE%.log'),
       datePattern: 'YYYY-MM-DD',
       level: 'error',
-      maxSize: '5m',      
-      maxFiles: '14d',     
+      maxSize: '5m',
+      maxFiles: '14d',
     }),
-
     new DailyRotateFile({
       filename: path.join(__dirname, '../logs/combined-%DATE%.log'),
       datePattern: 'YYYY-MM-DD',
-      maxSize: '5m',       
+      maxSize: '5m',
       maxFiles: '14d',
     }),
   ],

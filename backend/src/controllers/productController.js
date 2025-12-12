@@ -47,7 +47,7 @@ const createProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const productId = parseInt(req.params.id, 10);
-   const product = await Product.getById(productId);
+    const product = await Product.getById(productId);
 
     if (!product) {
       return res.status(404).json({ success: false, error: 'Product not found' });

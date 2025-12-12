@@ -32,7 +32,7 @@ export const updateUserPhoto = async (userId: number, file: File, token: string)
 
     return {
       success: true,
-      data: data.data.photoUrl
+      data: data.data.photoUrl,
     };
   } catch (err) {
     if (import.meta.env.VITE_APP_MODE === 'development') {
@@ -45,5 +45,3 @@ export const updateUserPhoto = async (userId: number, file: File, token: string)
     };
   }
 };
-
-

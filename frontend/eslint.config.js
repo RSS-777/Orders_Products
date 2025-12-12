@@ -1,4 +1,3 @@
-// eslint.config.js
 import js from '@eslint/js';
 import pluginVue from 'eslint-plugin-vue';
 import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin';
@@ -8,7 +7,7 @@ import vueParser from 'vue-eslint-parser';
 
 export default [
   {
-    ignores: ['dist/', 'node_modules/', '.vite/', '.vscode/', '.idea/', '**/*.d.ts']
+    ignores: ['dist/', 'node_modules/', '.vite/', '.vscode/', '.idea/', '**/*.d.ts'],
   },
   {
     files: ['**/*.ts', '**/*.tsx'],
@@ -16,17 +15,18 @@ export default [
       parser: typescriptParser,
       ecmaVersion: 2021,
       sourceType: 'module',
-      globals: browserGlobals.browser
+      globals: browserGlobals.browser,
     },
     plugins: {
-      '@typescript-eslint': typescriptEslintPlugin
+      '@typescript-eslint': typescriptEslintPlugin,
     },
     rules: {
       ...js.configs.recommended.rules,
       ...(typescriptEslintPlugin.configs.recommended?.rules || {}),
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-      'no-console': 'off'
-    }
+      'no-console': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
   },
   {
     files: ['**/*.vue'],
@@ -35,17 +35,19 @@ export default [
       parserOptions: {
         parser: typescriptParser,
         ecmaVersion: 2021,
-        sourceType: 'module'
+        sourceType: 'module',
       },
-      globals: browserGlobals.browser
+      globals: browserGlobals.browser,
     },
     plugins: {
-      vue: pluginVue
+      vue: pluginVue,
     },
     rules: {
       'vue/multi-word-component-names': 'off',
       'vue/max-attributes-per-line': 'off',
-      'vue/html-self-closing': 'off'
-    }
-  }
+      'vue/html-self-closing': 'off',
+      'prettier/prettier': 'error',
+    },
+    extends: ['plugin:prettier/recommended'],
+  },
 ];

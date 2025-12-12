@@ -36,20 +36,10 @@ const token = store.getters['auth/token'];
 const message = ref<string>('');
 const isLoading = ref<boolean>(false);
 const defaultCurrency = ref<'USD' | 'UAH'>('UAH');
-const seccessFetch = ref<boolean>(false)
+const seccessFetch = ref<boolean>(false);
 let isSubmitting = false;
 
-const fieldsOrder = [
-  'serialNumber',
-  'date',
-  'status',
-  'title',
-  'type',
-  'specification',
-  'guarantee.start',
-  'guarantee.end',
-  'price'
-];
+const fieldsOrder = ['serialNumber', 'date', 'status', 'title', 'type', 'specification', 'guarantee.start', 'guarantee.end', 'price'];
 
 const dataForm = ref<IFormData>({
   serialNumber: 0,
@@ -80,13 +70,13 @@ const schema = yup.object({
     start: yup
       .date()
       .nullable()
-      .transform((value, originalValue) => originalValue === '' ? null : value)
+      .transform((value, originalValue) => (originalValue === '' ? null : value))
       .required('Дата начала гарантии обязательна'),
 
     end: yup
       .date()
       .nullable()
-      .transform((value, originalValue) => originalValue === '' ? null : value)
+      .transform((value, originalValue) => (originalValue === '' ? null : value))
       .required('Дата окончания гарантии обязательна')
       .test('is-after-start', 'Дата окончания должна быть позже начала', function (value) {
         const { start } = this.parent;
@@ -101,7 +91,7 @@ const schema = yup.object({
         value: yup.number().min(0, 'Цена должна быть положительной').required(),
         symbol: yup.string().required(),
         isDefault: yup.number().oneOf([0, 1]),
-      })
+      }),
     )
     .required('Цены обязательны'),
   photoFile: yup
@@ -126,7 +116,7 @@ const handleSubmit = async (e: Event) => {
     }
 
     isLoading.value = true;
-    dataForm.value.price.forEach(p => {
+    dataForm.value.price.forEach((p) => {
       p.isDefault = p.symbol === defaultCurrency.value ? 1 : 0;
     });
 
@@ -149,17 +139,17 @@ const handleSubmit = async (e: Event) => {
       return;
     }
 
-    fetchProducts(true)
-    fetchOrders(true)
+    fetchProducts(true);
+    fetchOrders(true);
     resetForm();
-    seccessFetch.value = true
-    message.value = 'Продукт успешно создан.'
+    seccessFetch.value = true;
+    message.value = 'Продукт успешно создан.';
 
     setTimeout(() => {
-      message.value = ''
-      seccessFetch.value = false
+      message.value = '';
+      seccessFetch.value = false;
       closeForm();
-    }, 3000)
+    }, 3000);
   } catch (err: any) {
     message.value = err.errors ? err.errors[0] : err.message || 'Unknown error';
     setTimeout(() => (message.value = ''), 3000);
@@ -195,8 +185,7 @@ const closeForm = () => {
 </script>
 
 <template>
-  <div
-    class="modal position-absolute d-flex justify-content-center align-items-center bg-dark bg-opacity-50 border py-4">
+  <div class="modal position-absolute d-flex justify-content-center align-items-center bg-dark bg-opacity-50 border py-4">
     <form class="form w-100 overflow-y-auto rounded shadow bg-white mx-3" @submit="handleSubmit">
       <div>
         <h2 class="form__title text-center py-3">Создать продукт</h2>
@@ -204,28 +193,38 @@ const closeForm = () => {
           <BaseInput v-model="dataForm.date" label="Дата" type="datetime-local" />
           <BaseInput v-model="dataForm.serialNumber" label="Серийный номер" type="number" />
           <BaseInput v-model="dataForm.owner" label="Владелец" />
-          <RadioGroup label="Статус" :options="[
-            { label: 'В ремонте', value: 'in_repair' },
-            { label: 'Готов', value: 'ready' }
-          ]" v-model="dataForm.status" />
-          <BaseInput v-model="dataForm.title" label="Название продукта" placeholder="Введите название"
-            id="form__title" />
+          <RadioGroup
+            label="Статус"
+            :options="[
+              { label: 'В ремонте', value: 'in_repair' },
+              { label: 'Готов', value: 'ready' },
+            ]"
+            v-model="dataForm.status"
+          />
+          <BaseInput v-model="dataForm.title" label="Название продукта" placeholder="Введите название" id="form__title" />
           <BaseInput v-model="dataForm.type" label="Тип продукта" placeholder="Введите тип" id="form__type" />
-          <BaseInput v-model="dataForm.specification" label="Спецификация" placeholder="Введите спецификацию"
-            id="form__spec" />
+          <BaseInput v-model="dataForm.specification" label="Спецификация" placeholder="Введите спецификацию" id="form__spec" />
           <BaseInput v-model="dataForm.guarantee.start" label="Гарантия с" type="date" />
           <BaseInput v-model="dataForm.guarantee.end" label="Гарантия до" type="date" />
           <BaseInput v-model="dataForm.price[0].value" label="Цена USD" type="number" />
           <BaseInput v-model="dataForm.price[1].value" label="Цена UAH" type="number" />
           <div class="d-flex justify-content-between">
-            <RadioGroup label="Основная" :options="[
-              { label: 'USD', value: 'USD' },
-              { label: 'UAH', value: 'UAH' }
-            ]" v-model="defaultCurrency" />
-            <RadioGroup label="Состояние" :options="[
-              { label: 'Новый', value: 1 },
-              { label: 'Б/У', value: 0 }
-            ]" v-model="dataForm.isNew" />
+            <RadioGroup
+              label="Основная"
+              :options="[
+                { label: 'USD', value: 'USD' },
+                { label: 'UAH', value: 'UAH' },
+              ]"
+              v-model="defaultCurrency"
+            />
+            <RadioGroup
+              label="Состояние"
+              :options="[
+                { label: 'Новый', value: 1 },
+                { label: 'Б/У', value: 0 },
+              ]"
+              v-model="dataForm.isNew"
+            />
           </div>
           <ButtonFile v-model="dataForm.photoFile" :message.sync="message" />
         </div>
@@ -243,7 +242,7 @@ const closeForm = () => {
   max-height: 100%;
 }
 
-input[type="radio"]:checked {
+input[type='radio']:checked {
   accent-color: #5c961d;
 }
 </style>

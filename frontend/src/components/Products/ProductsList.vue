@@ -34,14 +34,12 @@ watchEffect(() => {
 const filter = (query: string) => {
   const q = query?.trim().toLowerCase() || '';
 
-  filteredProducts.value = products.value.filter(
-    product => product.type?.trim().toLowerCase().includes(q)
-  );
+  filteredProducts.value = products.value.filter((product) => product.type?.trim().toLowerCase().includes(q));
 };
 
 const handleDelete = (id: number) => {
-  store.commit('products/setProductId', id)
-}
+  store.commit('products/setProductId', id);
+};
 
 const getCarrentOrder = (element: IProduct): IOrder | null => {
   return dataOrders.value.find((o) => o.id === element.order_id) || null;
@@ -53,8 +51,7 @@ onMounted(async () => {
 });
 </script>
 <template>
-  <VirtualGrid :items="filteredProducts" :tempScroll="undefined" classGrid="d-grid gap-2" :maxHeightGrid="650"
-    :heightElement="60">
+  <VirtualGrid :items="filteredProducts" :tempScroll="undefined" classGrid="d-grid gap-2" :maxHeightGrid="650" :heightElement="60">
     <template #default="{ item: element }">
       <div class="product d-grid border rounded-2 gap-4 p-2 px-3 bg-white">
         <ProductNewIndicator :status="element.status" />
@@ -80,8 +77,9 @@ onMounted(async () => {
 
 <style scoped>
 .product {
-  grid-template-columns: auto minmax(40px, 1fr) minmax(150px, 3fr) minmax(80px, 1fr) minmax(120px, 1fr) minmax(50px, 1fr) minmax(110px, 1fr) minmax(110px,
-      1fr) minmax(120px, 2fr) minmax(150px, 3fr) minmax(120px, 1fr) auto;
+  grid-template-columns:
+    auto minmax(40px, 1fr) minmax(150px, 3fr) minmax(80px, 1fr) minmax(120px, 1fr) minmax(50px, 1fr) minmax(110px, 1fr) minmax(110px, 1fr)
+    minmax(120px, 2fr) minmax(150px, 3fr) minmax(120px, 1fr) auto;
   align-items: center;
 }
 

@@ -2,8 +2,8 @@
 import { computed } from 'vue';
 import type { IProduct } from '../../types/product';
 
-const { products: rawProducts, } = defineProps<{ 
-  products: IProduct | IProduct[],
+const { products: rawProducts } = defineProps<{
+  products: IProduct | IProduct[];
 }>();
 
 const products = Array.isArray(rawProducts) ? rawProducts : [rawProducts];

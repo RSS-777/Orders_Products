@@ -20,14 +20,13 @@ export interface IProductResponse {
 }
 
 export const getProducts = async (token: string): Promise<IProductsResponse> => {
-
   try {
     const response = await fetch(`${BASE_URL}/api/products/get`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
-      }
+      },
     });
 
     if (!response.ok) {
@@ -110,7 +109,7 @@ export const createProduct = async (product: IProductWithFile, token: string): P
       formData.append('guarantee', JSON.stringify(product.guarantee));
     }
     if (product.price) {
-      const normalizedPrice = product.price.map(p => ({
+      const normalizedPrice = product.price.map((p) => ({
         ...p,
         value: Number(p.value),
         isDefault: Number(p.isDefault),
@@ -147,4 +146,3 @@ export const createProduct = async (product: IProductWithFile, token: string): P
     return { success: false, error: err instanceof Error ? err.message : 'Unknown error occurred.' };
   }
 };
-
