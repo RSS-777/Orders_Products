@@ -59,16 +59,16 @@ export const findIdByDate = (items: ProductWithDate[], query: string): number | 
 
   for (const item of items) {
     if (!item.date) continue;
-
-    const dateStr = item.date.split(' ')[0];
-    const itemDate = parseDateString(dateStr);
-    if (!itemDate) continue;
+    
+     const itemDate = new Date(item.date);
+    if (isNaN(itemDate.getTime())) continue;
 
     if (
       itemDate.getFullYear() === queryDate.getFullYear() &&
       itemDate.getMonth() === queryDate.getMonth() &&
       itemDate.getDate() === queryDate.getDate()
     ) {
+      console.log('Match found:', item);
       return item.id;
     }
   }

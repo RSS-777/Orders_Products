@@ -37,6 +37,7 @@ const message = ref<string>('');
 const isLoading = ref<boolean>(false);
 const defaultCurrency = ref<'USD' | 'UAH'>('UAH');
 const seccessFetch = ref<boolean>(false)
+let isSubmitting = false;
 
 const fieldsOrder = [
   'serialNumber',
@@ -116,6 +117,9 @@ const schema = yup.object({
 const handleSubmit = async (e: Event) => {
   e.preventDefault();
 
+  if (isSubmitting) return;
+  isSubmitting = true;
+
   try {
     for (const field of fieldsOrder) {
       await schema.validateAt(field, dataForm.value);
@@ -191,7 +195,8 @@ const closeForm = () => {
 </script>
 
 <template>
-  <div class="modal position-absolute d-flex justify-content-center align-items-center bg-dark bg-opacity-50 border py-4">
+  <div
+    class="modal position-absolute d-flex justify-content-center align-items-center bg-dark bg-opacity-50 border py-4">
     <form class="form w-100 overflow-y-auto rounded shadow bg-white mx-3" @submit="handleSubmit">
       <div>
         <h2 class="form__title text-center py-3">Создать продукт</h2>

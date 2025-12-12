@@ -17,6 +17,7 @@ const token = store.getters['auth/token'];
 const message = ref<string>('');
 const isLoading = ref<boolean>(false);
 const seccessFetch = ref<boolean>(false);
+let isSubmitting = false;
 
 const dataForm = ref({
   title: '',
@@ -31,10 +32,12 @@ const schema = yup.object({
 const handleSubmit = async (e: Event) => {
   e.preventDefault();
 
+  if (isSubmitting) return; 
+  isSubmitting = true;
+  isLoading.value = true;
+
   try {
     await schema.validate(dataForm.value, { abortEarly: true });
-
-    isLoading.value = true;
 
     const payload = {
       title: dataForm.value.title,
@@ -58,6 +61,7 @@ const handleSubmit = async (e: Event) => {
       seccessFetch.value = false
       message.value = ''
       closeForm();
+      console.log('Form closed after success');
     }, 3000)
 
   } catch (err) {
@@ -67,6 +71,7 @@ const handleSubmit = async (e: Event) => {
     }
   } finally {
     isLoading.value = false;
+    console
   }
 };
 

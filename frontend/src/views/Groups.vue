@@ -29,7 +29,7 @@ const createProduct = computed<boolean>(() => store.getters['products/isCreatePr
 const orders = computed(() => cachedOrders.value);
 const idProduct = computed(() => store.getters['products/idProduct']);
 const idOrder = computed(() => store.getters['orders/orderId']);
-const countOrders = computed(() => store.getters['order/countOrders'])
+const countOrders = computed(() => store.getters['orders/count']);
 const currentProduct = computed<IProduct | null>(() => store.getters['products/currentProduct'] as IProduct | null);
 
 watch(idProduct, (id) => {

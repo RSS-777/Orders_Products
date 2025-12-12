@@ -128,13 +128,13 @@ const toggleMenu = () => {
   height: 42px;
   bottom: -5px;
   right: -5px;
-  box-shadow: 0 0 5px 0 rgb(85, 85, 85);
+  box-shadow: 0 0 5px 0 rgb(148, 148, 148);
   animation: rotate360 5s linear infinite;
   transition: box-shadow 0.2s ease;
 }
 
 .navigation__settings:active {
-  box-shadow: 0 0 2px 0 rgb(85, 85, 85);
+  box-shadow: 0 0 2px 0 rgb(148, 148, 148);
 }
 
 a {

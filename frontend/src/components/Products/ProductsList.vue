@@ -2,6 +2,7 @@
 import { useStore } from 'vuex';
 import { ref, onMounted, computed, watchEffect } from 'vue';
 import { fetchOrders, cachedOrders } from '../../services/orders';
+import { cachedProducts } from '../../services/product';
 import type { IProduct } from '../../types/product';
 import type { IOrder } from '../../types/order';
 import ProductNewIndicator from './ProductNewIndicator.vue';
@@ -15,7 +16,6 @@ import Date from '../Date.vue';
 import VirtualGrid from '../VirtualGrid.vue';
 import PriceDisplay from '../Arrival/PriceDisplay.vue';
 import imageBacket from '../../assets/basket.png';
-import { cachedProducts } from '../../services/product';
 
 const store = useStore();
 const products = computed<IProduct[]>(() => cachedProducts.value);

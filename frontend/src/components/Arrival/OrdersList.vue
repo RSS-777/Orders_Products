@@ -31,8 +31,7 @@ const searchText = computed(() => store.getters['search/text']);
 const orderChoice = computed(() => store.getters['orders/currentOrder'])
 const openListProducts = ref<boolean>(false);
 
-watch(searchText, async (v) => {
-  console.log('search', v)
+watch(searchText, async () => {
    await nextTick();
   findOrder();
 });
