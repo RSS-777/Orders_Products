@@ -7,14 +7,14 @@ import EllipsisText from '../EllipsisText.vue';
 import VirtualGrid from '../VirtualGrid.vue';
 import PriceDisplay from './PriceDisplay.vue';
 import BaseButton from '../BaseButton.vue';
-import OrderStats from './OrderStats.vue';
+import Date from '../Date.vue';
 import ProductListShort from './ProductListShort.vue';
 import imageBacket from '../../assets/basket.png';
+import { cachedOrders, chooseOrderById } from '../../services/orders';
 
-const { orders, handleDelete } = defineProps<{
-  orders: IOrder[];
-  handleDelete?: (id: number) => void;
-}>();
+const handleDelete = (id: number) => {
+  store.commit('orders/setOrderId', id)
+}
 
 const emptyOrder: IOrder = {
   id: 0,
@@ -25,28 +25,41 @@ const emptyOrder: IOrder = {
 };
 
 const store = useStore();
-const tempScroll = ref<number | undefined>(undefined); // Здесь обязательно должно быть именно undefined!!! 
+const orders = computed<IOrder[]>(() => cachedOrders.value);
+const tempScroll = ref<number | undefined>(undefined); 
 const searchText = computed(() => store.getters['search/text']);
-const orderChoice = ref<IOrder | null>(null);
+const orderChoice = computed(() => store.getters['orders/currentOrder'])
 const openListProducts = ref<boolean>(false);
 
+watch(searchText, async (v) => {
+  console.log('search', v)
+   await nextTick();
+  findOrder();
+});
+
 const findOrder = async () => {
-  if (!searchText.value) return;
-  const index = orders.findIndex((order) => order.title.toLowerCase().includes(searchText.value.toLowerCase()));
+  const q = searchText.value?.trim().toLowerCase() || '';
+
+  if (!q) {
+    tempScroll.value = undefined;
+    return;
+  }
+
+  const index = orders.value.findIndex(order =>
+    order.title.toLowerCase().includes(q)
+  );
 
   if (index !== -1) {
     tempScroll.value = index;
     await nextTick();
-    setTimeout(() => {
-      tempScroll.value = undefined;
-    }, 1000);
+    setTimeout(() => tempScroll.value = undefined, 1000);
   }
 };
 
+
 const handleOpenProducts = (id: number) => {
-  const order = orders.find((el) => el.id === id) || null;
-  if (!order || !order.products?.length) return;
-  orderChoice.value = order;
+  chooseOrderById(id)
+
   nextTick(() => {
     openListProducts.value = true;
   });
@@ -54,11 +67,9 @@ const handleOpenProducts = (id: number) => {
 
 const handleCloseProducts = () => {
   openListProducts.value = false;
+  store.commit('orders/clearCurrentOrder')
 };
 
-watch(searchText, (newValue) => {
-  if (newValue) findOrder();
-});
 </script>
 <template>
   <VirtualGrid :items="orders" :tempScroll="tempScroll ? tempScroll : undefined" classGrid="d-grid gap-2" :maxHeightGrid="650" :heightElement="60">
@@ -72,11 +83,11 @@ watch(searchText, (newValue) => {
             <span class="order__products-title">Продукта</span>
           </div>
         </div>
-        <OrderStats :order="element" />
+        <Date :date="element.date" />
         <div class="d-flex justify-content-start">
           <PriceDisplay :products="element.products" />
         </div>
-        <BaseButton @click="() => handleDelete?.(element.id)">
+        <BaseButton @click="() => handleDelete(element.id)">
           <img :src="imageBacket" alt="Delete icon" width="16" height="16" />
         </BaseButton>
       </div>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { message, type } = defineProps<{
-  message?: string;
+  message?: string | null;
   type?: 'error' | 'info' | 'success';
 }>();
 </script>

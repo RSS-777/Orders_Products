@@ -14,8 +14,9 @@ export interface IProductsResponse {
 
 export interface IProductResponse {
   success: boolean;
-  data?: IProduct;
+  data?: { id: number };
   error?: string;
+  message?: string;
 }
 
 export const getProducts = async (token: string): Promise<IProductsResponse> => {
@@ -77,9 +78,9 @@ export const deleteProduct = async (id: number, token: string): Promise<IProduct
       throw new Error('Unexpected server response.');
     }
 
-    const data: IProduct = await response.json();
+    const data = await response.json();
 
-    return { success: true, data };
+    return { success: true, message: data.message };
   } catch (err) {
     if (import.meta.env.VITE_APP_MODE === 'development') {
       console.error('Error deleting product:', err);
@@ -97,8 +98,11 @@ type IProductWithFile = Partial<IProduct> & { photoFile?: File };
 export const createProduct = async (product: IProductWithFile, token: string): Promise<IProductResponse> => {
   try {
     const formData = new FormData();
-
-    formData.append('name', product.title || '');
+    formData.append('serialNumber', String(product.serialNumber || 0));
+    formData.append('date', product.date || '');
+    formData.append('owner', product.owner || '');
+    formData.append('status', product.status || 'in_repair');
+    formData.append('title', product.title || '');
     formData.append('type', product.type || '');
     formData.append('specification', product.specification || '');
     formData.append('order_id', String(product.order_id));
@@ -106,7 +110,12 @@ export const createProduct = async (product: IProductWithFile, token: string): P
       formData.append('guarantee', JSON.stringify(product.guarantee));
     }
     if (product.price) {
-      formData.append('price', JSON.stringify(product.price));
+      const normalizedPrice = product.price.map(p => ({
+        ...p,
+        value: Number(p.value),
+        isDefault: Number(p.isDefault),
+      }));
+      formData.append('price', JSON.stringify(normalizedPrice));
     }
     formData.append('isNew', String(product.isNew));
     if (product.photoFile) {
@@ -128,9 +137,9 @@ export const createProduct = async (product: IProductWithFile, token: string): P
       throw new Error('Unexpected server response.');
     }
 
-    const data: IProduct = await response.json();
+    const responseData = await response.json();
 
-    return { success: true, data };
+    return { success: true, data: { id: responseData.data.id } };
   } catch (err) {
     if (import.meta.env.VITE_APP_MODE === 'development') {
       console.error('Error creating product:', err);

@@ -27,15 +27,15 @@ const getOrders = async (req, res) => {
 
 const createOrder = async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const { title, description, date } = req.body;
 
-    if (!title) {
-      return res.status(400).json({ success: false, error: 'Title is required' });
+    if (!title || !date) {
+      return res.status(400).json({ success: false, error: 'Title and date are required' });
     }
 
-    const [result] = await Order.create({ title, description });
+    await Order.createOrder({ title, description, date });
 
-    res.status(201).json({ success: true, data: result });
+     res.status(201).json({ success: true });
   } catch (err) {
     logger.error(`Failed to create order: ${err.message}`);
     res.status(500).json({ success: false, error: 'Server error' });

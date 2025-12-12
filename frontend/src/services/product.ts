@@ -29,7 +29,7 @@ export const fetchProducts = async (forceReload = false) => {
   }
 
   cachedProducts.value = res.data ?? [];
-
+                                             
   store.commit('products/setProductsMeta', {
     count: cachedProducts.value.length
   });

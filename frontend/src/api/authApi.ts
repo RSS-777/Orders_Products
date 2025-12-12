@@ -32,7 +32,7 @@ export const login = async (email: string, password: string): Promise<ILoginResp
       if (response.status === 500) throw new Error('Internal server error');
       throw new Error(data.error || 'Unknown error');
     }
-
+    
     return {
       success: true,
       token: data.data.token,

@@ -12,3 +12,7 @@ const app = createApp(App);
 app.use(router);
 app.use(store);
 app.mount('#app');
+
+if (import.meta.env.VITE_APP_MODE === 'development') {
+  (window as any).store = store
+}

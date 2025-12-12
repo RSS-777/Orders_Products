@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+import { ref } from 'vue';
 const { modelValue, label, id, placeholder, rows } = defineProps<{
   modelValue: string;
   label: string;
@@ -12,6 +12,8 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void;
 }>();
 
+const idGeneration = ref( id || `text-area-${Math.random().toString(36).slice(2)}-${label.replace(/\s+/g, '-')}`);
+
 const handleInput = (e: Event) => {
   const target = e.target as HTMLTextAreaElement;
   emit('update:modelValue', target.value);
@@ -20,9 +22,9 @@ const handleInput = (e: Event) => {
 
 <template>
   <div class="form-group mb-3">
-    <label :for="id" class="form-group__label fw-medium">{{ label }}</label>
+    <label :for="idGeneration" class="form-group__label fw-medium">{{ label }}</label>
     <textarea
-      :id="id"
+      :id="idGeneration"
       :rows="rows ?? 3"
       class="form-group__textarea w-100 rounded py-1 px-2 mt-1"
       :placeholder="placeholder"

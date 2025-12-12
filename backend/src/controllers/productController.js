@@ -27,21 +27,16 @@ const getProducts = async (req, res) => {
 
 const createProduct = async (req, res) => {
   try {
-    const { name, price, description } = req.body;
+    const { serialNumber, date, owner, status, title, type, specification, order_id, guarantee, price, isNew, photo } = req.body;
 
-    if (!name || price == null) {
-      return res.status(400).json({ success: false, error: 'Missing product fields' });
+    if (!title || price == null || guarantee == null || !serialNumber || !date || !status || !order_id) {
+      return res.status(400).json({ success: false, error: 'Missing required product fields' });
     }
 
-    const photoUrl = req.file ? `/images/products/${req.file.filename}` : null;
-    const newProduct = await Product.create({
-      name,
-      price,
-      description,
-      photo: photoUrl
-    });
+    const photoUrl = req.file ? `/uploads/products/${req.file.filename}` : null;
+    const newProduct = await Product.create({ serialNumber, date, owner, status, title, type, specification, order_id, guarantee, price, isNew, photoUrl });
 
-    return res.status(201).json({ success: true, data: newProduct });
+    return res.status(201).json({ success: true, data: { id: newProduct } });
 
   } catch (err) {
     logger.error('Error creating product: %o', err);
@@ -52,14 +47,14 @@ const createProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const productId = parseInt(req.params.id, 10);
-    const product = await Product.getProductsByOrderId(productId); 
+   const product = await Product.getById(productId);
 
-    if (!product || product.length === 0) {
+    if (!product) {
       return res.status(404).json({ success: false, error: 'Product not found' });
     }
 
-    const photoPath = product[0].photo
-      ? path.join(__dirname, '../uploads/products', path.basename(product[0].photo))
+    const photoPath = product.photo
+      ? path.join(__dirname, '../uploads/products', path.basename(product.photo))
       : null;
 
     const deleted = await Product.deleteById(productId);

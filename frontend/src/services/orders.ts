@@ -29,10 +29,15 @@ export const fetchOrders = async (forceReload = false) => {
   }
 
   cachedOrders.value = res.data ?? [];
-
+                                         
   store.commit('orders/setOrdersMeta', {
     count: cachedOrders.value.length
   });
+
+  const currentOrder = store.getters['orders/currentOrder'];
+  if (currentOrder) {
+    chooseOrderById(currentOrder.id)
+  }
 
   return cachedOrders.value;
 }

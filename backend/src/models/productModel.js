@@ -7,10 +7,10 @@ const parseJSONSafe = (value) => {
     try {
       return JSON.parse(value);
     } catch {
-      return null; 
+      return null;
     }
   }
-  return value; 
+  return value;
 };
 
 const getAllProducts = async () => {
@@ -33,21 +33,34 @@ const getProductsByOrderId = async (orderId) => {
   }));
 };
 
-const create = async ({ name, price, description, photo, guarantee }) => {
-  const guarantee_json = guarantee ? JSON.stringify(guarantee) : null;
-  const price_json = price ? JSON.stringify(price) : null;
+const getById = async (id) => {
+  const [rows] = await db.query('SELECT * FROM products WHERE id = ?', [id]);
+  return rows.length ? rows[0] : null;
+};
+
+const create = async ({ serialNumber, owner, date, status, title, type, specification, order_id, guarantee, price, isNew, photoUrl }) => {
+
   const [result] = await db.query(
-    'INSERT INTO products (name, description, photo, guarantee_json, price_json) VALUES (?, ?, ?, ?, ?)',
-    [name, description, photo || null, guarantee_json, price_json]
+    `INSERT INTO products 
+    (serialNumber, date, owner, status, title, type, specification, order_id, guarantee_json, price_json, isNew, photo) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      serialNumber,
+      date,
+      owner,
+      status,
+      title,
+      type,
+      specification,
+      order_id,
+      guarantee,
+      price,
+      isNew,
+      photoUrl || null
+    ]
   );
-  return {
-    id: result.insertId,
-    name,
-    description,
-    photo: photo || DEFAULT_PHOTO,
-    guarantee,
-    price
-  };
+
+  return result.insertId;
 };
 
 const deleteById = async (id) => {
@@ -55,4 +68,4 @@ const deleteById = async (id) => {
   return result.affectedRows > 0;
 };
 
-module.exports = { getAllProducts, getProductsByOrderId, create, deleteById };
+module.exports = { getAllProducts, getProductsByOrderId, create, getById, deleteById };

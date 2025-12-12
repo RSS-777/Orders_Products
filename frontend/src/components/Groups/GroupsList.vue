@@ -1,64 +1,57 @@
 <script setup lang="ts">
 import { useStore } from 'vuex';
 import { ref, computed, watch, nextTick } from 'vue';
-import type { IOrder } from '../../types/order';
 import CustomButton from '../CustomButton.vue';
 import iconArrow from '../../assets/arrow-icon.png'
 import EllipsisText from '../EllipsisText.vue';
 import VirtualGrid from '../VirtualGrid.vue';
-import OrderStats from '../Arrival/OrderStats.vue';
+import Date from '../Date.vue';
 import ProductListShortPlus from './ProductListShortPlus.vue';
 import { chooseOrderById } from '../../services/orders';
+import { cachedOrders } from '../../services/orders';
+import { findIdByDate } from '../../utils/findIdByDate';
 
-const { orders } = defineProps<{
-  orders: IOrder[];
-}>();
-
-const emptyOrder: IOrder = {
-  id: 0,
-  title: '',
-  date: '',
-  description: '',
-  products: [],
-};
-
-const store = useStore();
-const tempScroll = ref<number | undefined>(undefined);
+const orders = computed(() => cachedOrders.value);
 const searchText = computed(() => store.getters['search/text']);
 const orderChoice = computed(() => store.getters['orders/currentOrder']);
+const store = useStore();
+const tempScroll = ref<number | undefined>(undefined);
 const openListProducts = ref<boolean>(false);
-
-const handleOpenFormProduct = (id: number) => {
-  store.commit('orders/setOrderId', id);
-}
-
-const handleOpenProducts = (id: number) => {
-  chooseOrderById(id); 
-  nextTick(() => openListProducts.value = true);
-};
-
-const handleCloseProducts = () => {
-  openListProducts.value = false;
-  store.commit('orders/clearCurrentOrder');
-};
-
-
-const findOrder = async () => {
-  if (!searchText.value) return;
-  const index = orders.findIndex((order) => order.title.toLowerCase().includes(searchText.value.toLowerCase()));
-
-  if (index !== -1) {
-    tempScroll.value = index;
-    await nextTick();
-    setTimeout(() => {
-      tempScroll.value = undefined;
-    }, 1000);
-  }
-};
 
 watch(searchText, (newValue) => {
   if (newValue) findOrder();
 });
+
+const findOrder = async () => {
+  if (!searchText.value || !orders.value) return;
+
+  const id = findIdByDate(orders.value, searchText.value);
+  if (!id) return;
+
+  tempScroll.value = id - 1;
+  await nextTick();
+  setTimeout(() => {
+    tempScroll.value = undefined;
+  }, 1000);
+};
+
+
+const handleOpenProductForm = (id: number) => {
+  if (!id) return;
+  store.commit('orders/setOrderId', id)
+  store.commit('products/openCreateProductForm')
+}
+
+const handleOpenProductList = (id: number) => {
+  chooseOrderById(id);
+  nextTick(() => openListProducts.value = true);
+};
+
+const handleCloseProductList = () => {
+  openListProducts.value = false;
+  store.commit('orders/clearCurrentOrder');
+};
+
 </script>
 <template>
   <div class="wrapper">
@@ -70,13 +63,13 @@ watch(searchText, (newValue) => {
           <div class="order relative d-grid align-items-center border rounded-2 gap-3 p-2 px-4 bg-white"
             :class="{ 'order--active': element.id === orderChoice?.id }">
             <div class="order__products d-flex align-items-center gap-3 justify-content-start">
-              <CustomButton @click="() => handleOpenProducts(element.id)" />
+              <CustomButton @click="() => handleOpenProductList(element.id)" />
               <div class="d-flex flex-column">
                 <span class="fs-5 lh-1">{{ element.products.length }}</span>
                 <span class="order__products-title">Продукта</span>
               </div>
             </div>
-            <OrderStats :order="element" :classNameCounter="'align-self-start'" />
+            <Date :date="element.date" :className="'align-self-start'" />
             <img v-if="element.id === orderChoice?.id" :src="iconArrow" alt="button" height="100%"
               class="order__btn position-absolute top-50 ">
           </div>
@@ -89,14 +82,13 @@ watch(searchText, (newValue) => {
 
         <button type="button"
           class="btn rounded-circle-btn shadow-sm rounded-circle d-flex align-items-center justify-content-center ms-4 mt-3 text-white border-0"
-          @click="() => handleOpenFormProduct(orderChoice.id)">
+          @click="handleOpenProductForm(orderChoice?.id)">
           +
         </button>
-        <ProductListShortPlus :order="orderChoice ?? emptyOrder">
+        <ProductListShortPlus>
           <template #header>
-            <button
-              class="button position-absolute top-0 end-0 me-2 mt-1 text-danger border-0 bg-transparent fs-5 fw-semibold"
-              @click="handleCloseProducts">
+            <button class="button position-absolute rounded-circle shadow  border-0 fw-semibold bg-white"
+              @click="handleCloseProductList">
               ✕
             </button>
           </template>
@@ -160,6 +152,15 @@ watch(searchText, (newValue) => {
     transform 1s ease,
     opacity 1s ease;
   pointer-events: none;
+}
+
+.button {
+  color: rgb(192, 192, 192);
+  font-size: 12px;
+  width: 32px;
+  height: 32px;
+  top: -15px;
+  right: -15px;
 }
 
 .button:active {

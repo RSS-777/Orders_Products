@@ -5,7 +5,6 @@ const path = require('path');
 const http = require('http');
 const { Server } = require('socket.io');
 
-
 const authRoutes = require('./routes/authRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 const productRoutes = require('./routes/productRoutes');
@@ -26,6 +25,8 @@ app.use(express.json());
 
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads/products', express.static(path.join(__dirname, 'uploads/products')));
+app.use('/uploads/user', express.static(path.join(__dirname, 'uploads/users')));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);

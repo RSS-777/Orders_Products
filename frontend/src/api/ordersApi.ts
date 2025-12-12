@@ -16,6 +16,7 @@ export interface IOrderResponse {
   success: boolean;
   data?: IOrder;
   error?: string;
+  message?: string;
 }
 
 interface IDeleteOrderResponse {
@@ -117,7 +118,7 @@ export const createOrder = async (token: string, order: { title: string; descrip
       throw new Error(result.error || 'Failed to create order.');
     }
 
-    return { success: true, data: result.data };
+    return { success: true, message: 'Order created successfully'};
   } catch (err) {
     if (import.meta.env.VITE_APP_MODE === 'development') {
       console.error('Error creating order:', err);

@@ -1,95 +1,60 @@
 <script setup lang="ts">
 import { useStore } from 'vuex';
-import { ref, watch, onMounted, computed, reactive, nextTick } from 'vue';
-import { searchProductDate } from '../../utils/searchProductDate';
+import { ref, onMounted, computed, watchEffect } from 'vue';
+import { fetchOrders, cachedOrders } from '../../services/orders';
 import type { IProduct } from '../../types/product';
 import type { IOrder } from '../../types/order';
 import ProductNewIndicator from './ProductNewIndicator.vue';
 import ProductImage from './ProductImage.vue';
 import ProductStatusWork from './ProductStatusWork.vue';
 import ProductNewStatus from './ProductNewStatus.vue';
-import { getOrders } from "../../api/ordersApi";
 import DateStartEnd from './DateStartEnd.vue';
 import EllipsisText from '../EllipsisText.vue';
 import BaseButton from '../BaseButton.vue';
-import OrderStats from '../Arrival/OrderStats.vue';
+import Date from '../Date.vue';
 import VirtualGrid from '../VirtualGrid.vue';
 import PriceDisplay from '../Arrival/PriceDisplay.vue';
 import imageBacket from '../../assets/basket.png';
-
-const { products, handleDelete } = defineProps<{
-  products: IProduct[];
-  handleDelete?: (id: number) => void;
-}>();
-
-const state = reactive({
-  dataOrders: [] as IOrder[],
-});
+import { cachedProducts } from '../../services/product';
 
 const store = useStore();
-const tempScroll = ref<number | undefined>(undefined); //  Здесь обязательно должно быть именно undefined!
+const products = computed<IProduct[]>(() => cachedProducts.value);
+const dataOrders = computed<IOrder[]>(() => cachedOrders.value);
 const searchText = computed(() => store.getters['search/text']);
+const filteredProducts = ref<IProduct[]>([]);
 
-const getProductsFromOrder = (element: IProduct) => {
-  if (!state.dataOrders.length) return [];
-  const order = state.dataOrders.find((o) => o.id === element.order_id);
-  return order?.products || [];
+watchEffect(() => {
+  if (!searchText.value?.trim()) {
+    filteredProducts.value = products.value;
+  } else {
+    filter(searchText.value);
+  }
+});
+
+const filter = (query: string) => {
+  const q = query?.trim().toLowerCase() || '';
+
+  filteredProducts.value = products.value.filter(
+    product => product.type?.trim().toLowerCase().includes(q)
+  );
 };
 
+const handleDelete = (id: number) => {
+  store.commit('products/setProductId', id)
+}
+
 const getCarrentOrder = (element: IProduct): IOrder | null => {
-  return state.dataOrders.find((o) => o.id === element.order_id) || null;
+  return dataOrders.value.find((o) => o.id === element.order_id) || null;
 };
 
 onMounted(async () => {
-  const store = useStore();
-  const token: string = store.getters['auth/token'];
-  
-  if (!token) {
-    return console.error('No token found. Please log in.')
-  } 
-
-  const res = await getOrders(token);
-
-  if (res.success) {
-    state.dataOrders = res.data || [];
-  } else {
-    console.error('Error orders:', res.error);
-  }
-});
-
-const findProduct = async () => {
-  if (!searchText.value) return;
-
-  const query = searchText.value.toLowerCase();
-  const index = products.findIndex((product) => {
-    const order = getCarrentOrder(product);
-
-    return (
-      product.title.toLowerCase().includes(query) ||
-      product.type.toLowerCase().includes(query) ||
-      product.specification.toLowerCase().includes(query) ||
-      product.owner.toLowerCase().includes(query) ||
-      String(product.serialNumber).includes(query) ||
-      (order?.date ? searchProductDate(order.date, query) : false)
-    );
-  });
-
-  if (index !== -1) {
-    tempScroll.value = index;
-    await nextTick();
-    setTimeout(() => {
-      tempScroll.value = undefined;
-    }, 1000);
-  }
-};
-
-watch(searchText, (newValue) => {
-  if (newValue) findProduct();
+  await fetchOrders();
+  filteredProducts.value = products.value;
 });
 </script>
 <template>
-  <VirtualGrid :items="products" :tempScroll="tempScroll ? tempScroll : undefined" classGrid="d-grid gap-2"
-    :maxHeightGrid="650" :heightElement="60">
+  <VirtualGrid :items="filteredProducts" :tempScroll="undefined" classGrid="d-grid gap-2" :maxHeightGrid="650"
+    :heightElement="60">
     <template #default="{ item: element }">
       <div class="product d-grid border rounded-2 gap-4 p-2 px-3 bg-white">
         <ProductNewIndicator :status="element.status" />
@@ -99,12 +64,12 @@ watch(searchText, (newValue) => {
         <DateStartEnd :start="element.guarantee.start" :end="element.guarantee.end" />
         <ProductNewStatus :isNew="!!element.isNew" />
         <div class="d-flex justify-content-start">
-          <PriceDisplay :products="getProductsFromOrder(element)" />
+          <PriceDisplay :products="element" />
         </div>
         <EllipsisText :title="element.type" />
         <EllipsisText :title="element.owner" />
         <EllipsisText :title="getCarrentOrder(element)?.title" />
-        <OrderStats v-if="getCarrentOrder(element)" :order="getCarrentOrder(element)" />
+        <Date :date="element.date" />
         <BaseButton @click="() => handleDelete?.(element.id)">
           <img :src="imageBacket" alt="Delete" width="16" height="16" />
         </BaseButton>

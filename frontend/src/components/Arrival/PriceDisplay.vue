@@ -2,7 +2,17 @@
 import { computed } from 'vue';
 import type { IProduct } from '../../types/product';
 
-const { products } = defineProps<{ products: IProduct[] }>();
+const { products: rawProducts, } = defineProps<{ 
+  products: IProduct | IProduct[],
+}>();
+
+const products = Array.isArray(rawProducts) ? rawProducts : [rawProducts];
+
+const formatNumber = (num: number) => {
+  const [intPart = '0', decPart = '00'] = num.toFixed(2).split('.');
+  const intWithSpaces = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  return decPart === '00' ? intWithSpaces : `${intWithSpaces}.${decPart}`;
+};
 
 const defaultCurrency = computed(() => {
   for (const product of products) {
@@ -18,7 +28,7 @@ const totalUSD = computed(() => {
     return acc + price;
   }, 0);
   if (sum === 0) return null;
-  return Number.isInteger(sum) ? sum.toLocaleString() : sum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return formatNumber(sum);
 });
 
 const totalUAH = computed(() => {
@@ -27,7 +37,7 @@ const totalUAH = computed(() => {
     return acc + price;
   }, 0);
   if (sum === 0) return null;
-  return Number.isInteger(sum) ? sum.toLocaleString() : sum.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return formatNumber(sum);
 });
 </script>
 

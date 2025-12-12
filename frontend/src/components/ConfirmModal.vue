@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import basket from '../assets/basket.png';
 import FormButtons from './СomponentsForm/FormButtons.vue';
+import FetchMessage from './СomponentsForm/FetchMessage.vue';
 
-const { message, name, isLoading } = defineProps<{
+const { message, name, isLoading, success } = defineProps<{
   message?: string | null;
   name: string;
   isLoading?: boolean;
+  success?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -30,14 +32,14 @@ const handleConfirm = () => {
       </p>
       <slot></slot>
       <FormButtons
-        :isLoading="isLoading"
+        :isLoading="isLoading || success"
         nameConfirm="Удалить"
         typeBtnConfirm="button"
         @cancel="handleCancel"
         @confirm="handleConfirm"
         :imageConfirm="basket"
       />
-      <p v-if="message" class="modal__message text-center">{{ message }}</p>
+      <FetchMessage :message="message" :type="success ? 'success' : 'error'"/>
     </div>
   </div>
 </template>
@@ -50,10 +52,5 @@ const handleConfirm = () => {
 
 .modal__title {
   letter-spacing: 1px;
-}
-
-.modal__message {
-  color: #e33545;
-  background-color: #ffcfd4;
 }
 </style>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
 import { useDate } from '../composables/useDate';
 import { useTime } from '../composables/useTime';
 import { useActiveSessions } from '../composables/useActiveSessions';
@@ -9,19 +10,37 @@ import clock from '../assets/clock.png';
 import person from '../assets/person.png';
 
 const store = useStore();
+const route = useRoute();
 const searchValue = ref<string>('');
 
 const { formattedDate, formattedDay } = useDate('slash');
 const { formattedTime } = useTime();
 const { activeSessions } = useActiveSessions();
 
+const placeholderText = computed(() => {
+  if (route.path === '/products') return 'Фильтр по типу';
+  if (route.path === '/arrival') return 'Поиск по названию';
+  if (route.path === '/groups') return 'Поиск по дате';
+  return 'Поиск';
+});
+
+watch(searchValue, (newVal) => {
+  if (!newVal?.trim() && route.path === '/products') {
+    store.commit('search/clearSearch')
+  }
+});
+
 const handleKeyPress = (e: KeyboardEvent) => {
-  if (e.key === 'Enter' && searchValue.value.trim() !== '') {
+  if (e.key === 'Enter') {
     store.commit('search/setSearch', { text: searchValue.value.trim() });
-    searchValue.value = '';
-    setTimeout(() => {
-      store.commit('search/clearSearch');
-    }, 3000);
+
+    if (route.path !== '/products') {
+      searchValue.value = '';
+
+      setTimeout(() => {
+        store.commit('search/clearSearch');
+      }, 1000);
+    }
   }
 };
 </script>
@@ -37,8 +56,8 @@ const handleKeyPress = (e: KeyboardEvent) => {
       </div>
 
       <div class="header__search flex-grow-1 my-2 my-sm-0 mx-sm-3">
-        <input class="header__search-input px-2" type="search" placeholder="Поиск" aria-label="Search"
-          v-model="searchValue" @keypress="handleKeyPress" />
+        <input class="header__search-input px-2 w-100" type="search" id="header-search" :placeholder="placeholderText"
+          aria-label="Search" name="headerSearch" v-model="searchValue" @keypress="handleKeyPress" />
       </div>
     </div>
 
@@ -80,7 +99,6 @@ const handleKeyPress = (e: KeyboardEvent) => {
 }
 
 .header__search-input {
-  width: 100%;
   border-radius: 5px;
   border: 1px solid #c0c8d1;
   background-color: #f0f3f5;

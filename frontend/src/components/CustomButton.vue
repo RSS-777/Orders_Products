@@ -9,34 +9,38 @@ const handleClick = () => {
 </script>
 
 <template>
-  <button class="custom-button btn d-flex align-items-center justify-content-center rounded-circle p-0" @click="handleClick">
-    <div class="custom-button__lines d-flex flex-column ms-1">
-      <div class="custom-button__line position-relative rounded"></div>
-      <div class="custom-button__line position-relative rounded"></div>
-      <div class="custom-button__line position-relative rounded"></div>
+  <button class="btn--flex d-flex align-items-center justify-content-center rounded-circle p-0" @click="handleClick">
+    <div class="btn__lines d-flex flex-column ms-1">
+      <div class="btn__line position-relative rounded"></div>
+      <div class="btn__line position-relative rounded"></div>
+      <div class="btn__line position-relative rounded"></div>
     </div>
   </button>
 </template>
 
 <style scoped>
-.custom-button {
+.btn--flex {
   background: none;
   border: 1px solid gray;
   width: 30px;
   height: 30px;
 }
 
-.custom-button__lines {
+.btn--flex:active {
+  transform: scale(0.95);
+}
+
+.btn__lines {
   width: 14px;
   gap: 2px;
 }
 
-.custom-button__line {
+.btn__line {
   height: 3px;
   background-color: #4d6875;
 }
 
-.custom-button__line::before {
+.btn__line::before {
   content: '';
   position: absolute;
   left: -5px;
@@ -46,5 +50,11 @@ const handleClick = () => {
   height: 4px;
   border-radius: 50%;
   background-color: #4d6875;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn--flex:hover {
+    border: 1px solid #80B548;
+  }
 }
 </style>

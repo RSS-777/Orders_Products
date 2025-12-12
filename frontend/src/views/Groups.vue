@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, computed, ref, watch } from 'vue';
+import { onMounted, onBeforeUnmount, computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import type { IProduct } from '../types/product';
 import GroupsList from '../components/Groups/GroupsList.vue';
@@ -22,19 +22,40 @@ const store = useStore();
 const isLoading = ref<boolean>(false);
 const massage = ref<string | null>(null);
 const createOrder = ref<boolean>(false);
-const createProduct = ref<boolean>(false);
+const isDeleteProduct = ref<boolean>(false)
+const showDeleteModal = ref<boolean>(false);
 
+const createProduct = computed<boolean>(() => store.getters['products/isCreateProductFormOpen']);
 const orders = computed(() => cachedOrders.value);
 const idProduct = computed(() => store.getters['products/idProduct']);
-const idOrder = computed(() => store.getters['order/orderId']);
+const idOrder = computed(() => store.getters['orders/orderId']);
 const countOrders = computed(() => store.getters['order/countOrders'])
 const currentProduct = computed<IProduct | null>(() => store.getters['products/currentProduct'] as IProduct | null);
 
 watch(idProduct, (id) => {
-  chooseProductById(id);
+  if (!id) return
+    openDeleteModal(id)
 });
 
-const submitDeleteProduct = async () => {
+const handleCloseProductForm = () => {
+  store.commit('products/closeCreateProductForm')
+};
+
+const handleToggleOrderForm = () => {
+  createOrder.value = !createOrder.value;
+};
+
+const openDeleteModal = (id: number) => {
+  chooseProductById(id);
+  showDeleteModal.value = true;
+};
+
+const handleCenselDeleteProduct = () => {
+  showDeleteModal.value = false;
+  store.commit('products/clearProductId');
+};
+
+const handleSubmitDeleteProduct = async () => {
   const token = store.getters['auth/token'];
   const productId = idProduct.value;
 
@@ -46,33 +67,37 @@ const submitDeleteProduct = async () => {
   const res = await deleteProduct(productId, token);
 
   if (res.success) {
-    massage.value = "Продукт успішно видалено!";
-    await fetchOrders(true);
-    store.commit('products/clearCurrentProduct');
-    setTimeout(() => (massage.value = null), 3000);
+    massage.value = "Продукт успешно удалён!";
+    isDeleteProduct.value = true
+
+    setTimeout(() => {
+      showDeleteModal.value = false;
+      fetchOrders(true);
+      store.commit('products/clearCurrentProduct');
+      store.commit('products/clearProductId')
+      massage.value = null
+      isDeleteProduct.value = false
+    }, 3000);
   } else {
-    massage.value = "Помилка при видаленні продукту.";
+    massage.value = "Ошибка при удалении продукта.";
+
+    setTimeout(() => {
+      massage.value = null;
+    }, 2000)
   }
 
   isLoading.value = false;
 };
 
-
-const handleCreateOpenProduct = () => {
-  createProduct.value = !createProduct.value;
-};
-
-const handleCreateOpenOrder = () => {
-  createOrder.value = !createOrder.value;
-};
-
-const handleCancelDelete = () => {
-  store.commit('products/clearProductId');
-};
-
 onMounted(async () => {
   await fetchOrders();
   await fetchProducts();
+});
+
+onBeforeUnmount(() => {
+  store.commit('products/clearProductId');
+  store.commit('products/clearCurrentProduct');
+  store.commit('products/closeCreateProductForm')
 });
 </script>
 
@@ -81,22 +106,17 @@ onMounted(async () => {
     <main class="main pb-2 mx-auto position-relative">
       <div class="main__inner mx-3">
         <div class="d-flex gap-3 align-items-center justify-content-start pt-5">
-          <ButtonOpenForm :onclick="handleCreateOpenOrder" />
+          <ButtonOpenForm :onclick="handleToggleOrderForm" />
           <h1>Приходы / {{ countOrders }}</h1>
         </div>
         <GroupsList :orders="orders" />
       </div>
     </main>
-    <FormCreateOrder v-if="createOrder" @close="handleCreateOpenOrder" />
-    <FormCreateProduct v-if="createProduct" :idOrder="idOrder" @close="handleCreateOpenProduct" />
-    <ConfirmModal
-      v-if="idProduct !== null"
-      :message="massage"
-      name="продукт"
-      @confirm="submitDeleteProduct"
-      @cancel="handleCancelDelete"
-    >
-      <div class="modal-element d-grid align-items-center gap-2 py-2">
+    <FormCreateOrder v-if="createOrder" @close="handleToggleOrderForm" />
+    <FormCreateProduct v-if="createProduct && idOrder" :idOrder="idOrder" @close="handleCloseProductForm" />
+    <ConfirmModal v-if="showDeleteModal" :message="massage" :success="isDeleteProduct" name="продукт"
+      :isLoading="isLoading" @confirm="handleSubmitDeleteProduct" @cancel="handleCenselDeleteProduct">
+      <div class="modal-element d-grid align-items-center gap-4 py-2">
         <ProductNewIndicator v-if="currentProduct" :status="currentProduct.status" />
         <ProductImage :src="currentProduct?.photo" />
         <div class="d-flex flex-column w-100 overflow-hidden">
@@ -131,6 +151,7 @@ onMounted(async () => {
 
 .modal-element {
   border-top: 1px solid rgb(189, 189, 189);
+  grid-template-columns: auto auto 5fr;
 }
 
 .modal-element__btn {

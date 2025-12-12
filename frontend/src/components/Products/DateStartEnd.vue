@@ -20,11 +20,11 @@ const formatDate = (dateStr: string) => {
   <div class="date">
     <div class="date__block d-grid gap-1 text-nowrap">
       <SecondaryText text="с" />
-      <span :class="className">{{ formatDate(start) }}</span>
+      <span :class="className"  class="date__span">{{ formatDate(start) }}</span>
     </div>
     <div class="date__block d-grid gap-1">
       <SecondaryText text="по" />
-      <span :class="className">{{ formatDate(end) }}</span>
+      <span :class="className" class="date__span">{{ formatDate(end) }}</span>
     </div>
   </div>
 </template>
@@ -33,5 +33,9 @@ const formatDate = (dateStr: string) => {
 .date__block {
   grid-template-columns: 1fr 1fr;
   align-items: baseline;
+}
+
+.date__span {
+ letter-spacing: 1px;
 }
 </style>

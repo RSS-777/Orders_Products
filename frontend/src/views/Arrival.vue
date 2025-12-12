@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { onMounted, computed, reactive, ref } from 'vue';
+import { onMounted, computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
-import { getOrders } from "../api/ordersApi";
+import { fetchOrders, chooseOrderById } from '../services/orders';
 import { deleteOrder } from '../api/ordersApi';
-import type { IOrder } from '../types/order';
 import OrdersList from '../components/Arrival/OrdersList.vue';
 import ConfirmModal from '../components/ConfirmModal.vue';
 import WrapperMain from '../components/WrapperMain.vue';
@@ -12,14 +11,14 @@ import ProductListShort from '../components/Arrival/ProductListShort.vue';
 import FormCreateOrder from '../components/Arrival/FormCreateOrder.vue';
 import ButtonOpenForm from '../components/СomponentsForm/ButtonOpenForm.vue';
 
-const state = reactive({
-  countOrders: 0,
-  dataOrders: [] as IOrder[],
-});
 const store = useStore();
 const token = computed(() => store.getters['auth/token']);
-const isLoading = ref<boolean>();
-const orderId = ref<number | null>(null);
+const orderId = computed(() => store.getters['orders/orderId'])
+const countOrders = computed(() => store.getters['orders/count'])
+const currentOrder = computed(() => store.getters['orders/currentOrder'])
+
+const isLoading = ref<boolean>(false);
+const isSuccessDelete = ref<boolean>(false);
 const showModal = ref<boolean>(false);
 const fetchMessage = ref<string>('');
 const showProducts = ref<boolean>(false);
@@ -29,30 +28,41 @@ const toggleProducts = () => {
   showProducts.value = !showProducts.value;
 };
 
-const currentOrder = computed(() => {
-  if (orderId.value === null) return null;
-  return state.dataOrders.find((o) => o.id === orderId.value) || null;
+watch(() => orderId.value, (id: number) => {
+  if (id !== null) {
+    chooseOrderById(id);
+    handleDelete();
+  }
 });
+
+const handleDelete = () => {
+  showModal.value = true;
+};
 
 const handleConfirmDelete = async () => {
   if (orderId.value === null) return;
-
   isLoading.value = true;
+
   try {
     const res = await deleteOrder(orderId.value, token.value);
 
-    if (res.error) {
-      fetchMessage.value = res.error;
+    if (res.success) {
+      fetchMessage.value = 'Удаление прихода прошло успешно!'
+      isSuccessDelete.value = true
+
       setTimeout(() => {
-        fetchMessage.value = '';
-      }, 2000);
-      return;
+        showModal.value = false;
+        store.commit('orders/clearOrderId')
+        store.commit('orders/clearCurrentOrder')
+        fetchOrders(true)
+        fetchMessage.value = ''
+        isSuccessDelete.value = false
+      }, 3000)
     }
 
-    orderId.value = null;
-    showModal.value = false;
-  } catch (err) {
-    fetchMessage.value = err instanceof Error ? err.message : 'Unexpected error';
+  } catch (err: any) {
+    fetchMessage.value = err.error || "Произошла ошибка";
+
     setTimeout(() => {
       fetchMessage.value = '';
     }, 2000);
@@ -63,11 +73,9 @@ const handleConfirmDelete = async () => {
 
 const handleCancelDelete = () => {
   showModal.value = false;
-};
-
-const handleDelete = (id: number) => {
-  orderId.value = id;
-  showModal.value = true;
+  showProducts.value = false
+  store.commit('orders/clearOrderId')
+  store.commit('orders/clearCurrentOrder')
 };
 
 const handleOpenForm = () => {
@@ -75,21 +83,7 @@ const handleOpenForm = () => {
 };
 
 onMounted(async () => {
-  const store = useStore();
-  const token: string = store.getters['auth/token'];
-
-  if (!token) {
-    return console.error('No token found. Please log in.')
-  }
-
-  const res = await getOrders(token);
-
-  if (res.success) {
-    state.dataOrders = res.data || [];
-    state.countOrders = state.dataOrders.length;
-  } else {
-    console.error('Error orders:', res.error);
-  }
+  await fetchOrders()
 });
 </script>
 
@@ -98,14 +92,14 @@ onMounted(async () => {
     <main class="main pb-2 mx-auto position-relative">
       <div class="main__inner mx-3">
         <div class="d-flex gap-3 align-items-center justify-content-start pt-5">
-          <ButtonOpenForm  :onclick="handleOpenForm"/>
-          <h1>Приходы / {{ state.countOrders }}</h1>
+          <ButtonOpenForm :onclick="handleOpenForm" />
+          <h1>Приходы / {{ countOrders }}</h1>
         </div>
-        <OrdersList :handleDelete="handleDelete" :orders="state.dataOrders" />
+        <OrdersList />
       </div>
     </main>
-    <ConfirmModal v-if="showModal" :message="fetchMessage" name="приход" @confirm="handleConfirmDelete"
-      @cancel="handleCancelDelete" :isLoading="isLoading">
+    <ConfirmModal v-if="showModal" :message="fetchMessage" :success="isSuccessDelete" name="приход"
+      @confirm="handleConfirmDelete" @cancel="handleCancelDelete" :isLoading="isLoading">
       <div class="modal-element p-4">
         <EllipsisText v-if="currentOrder" :title="currentOrder.title" className="fs-5 border-0 fw-medium" />
         <p class="fd-2 lh-sm my-2">{{ currentOrder?.description }}</p>

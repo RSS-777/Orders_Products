@@ -22,5 +22,5 @@ export interface IProduct {
   order_id: number;
   date: string;
   owner: string;
-  status: string;
+  status: 'ready' | 'in_repair';
 }

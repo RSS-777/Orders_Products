@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IOrder } from '../../types/order';
+import { computed } from 'vue';
 import { useStore } from 'vuex';
 import EllipsisText from '../EllipsisText.vue';
 import ProductImage from '../Products/ProductImage.vue';
@@ -7,13 +7,11 @@ import ProductStatus from '../Products/ProductNewIndicator.vue';
 import SecondaryText from '../SecondaryText.vue';
 import ProductStatusWork from '../Products/ProductStatusWork.vue';
 import BaseButton from '../BaseButton.vue';
+import type { IOrder } from '../../types/order';
 import imageBacket from '../../assets/basket.png';
 
 const store = useStore()
-
-const { order } = defineProps<{
-  order: IOrder;
-}>();
+const order = computed<IOrder>(() => store.getters['orders/currentOrder']);
 
 const onDelete = (id: number) => {
   store.commit('products/setProductId', id);
@@ -26,12 +24,8 @@ const onDelete = (id: number) => {
       <slot name="header"></slot>
     </div>
 
-    <ul class="product list-unstyled mt-2 overflow-y-auto product--expanded">
-      <li
-        v-for="product in order.products"
-        :key="product.id"
-        class="product__list  gap-4 py-1"
-      >
+    <ul class="product list-unstyled mt-2 overflow-y-auto" v-if="order">
+      <li v-for="product in order?.products" :key="product.id" class="product__list  gap-4 py-1">
         <ProductStatus :status="product.status" />
         <ProductImage />
         <div class="product__information overflow-hidden">
@@ -40,12 +34,7 @@ const onDelete = (id: number) => {
         </div>
         <ProductStatusWork :status="product.status" />
         <BaseButton @click="onDelete(product.id)">
-          <img
-            :src="imageBacket"
-            alt="Delete icon"
-            width="16"
-            height="16"
-          />
+          <img :src="imageBacket" alt="Delete icon" width="16" height="16" />
         </BaseButton>
       </li>
     </ul>
@@ -56,9 +45,6 @@ const onDelete = (id: number) => {
 <style scoped>
 .product {
   transition: max-height 0.5s ease;
-}
-
-.product--expanded {
   max-height: 480px;
   padding-top: 10px;
 }

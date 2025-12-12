@@ -7,6 +7,8 @@ import FormButtons from '../СomponentsForm/FormButtons.vue';
 import BaseInput from '../СomponentsForm/BaseInput.vue';
 import BaseTextarea from '../СomponentsForm/BaseTextarea.vue';
 import FetchMessage from '../СomponentsForm/FetchMessage.vue';
+import { formatDateForDB } from '../../utils/dateFormateForDB';
+import { fetchOrders } from '../../services/orders';
 
 const emit = defineEmits(['close']);
 
@@ -14,6 +16,7 @@ const store = useStore();
 const token = store.getters['auth/token'];
 const message = ref<string>('');
 const isLoading = ref<boolean>(false);
+const seccessFetch = ref<boolean>(false);
 
 const dataForm = ref({
   title: '',
@@ -29,14 +32,14 @@ const handleSubmit = async (e: Event) => {
   e.preventDefault();
 
   try {
-    await schema.validate(dataForm.value);
+    await schema.validate(dataForm.value, { abortEarly: true });
 
     isLoading.value = true;
 
     const payload = {
       title: dataForm.value.title,
       description: dataForm.value.description,
-      date: new Date().toISOString(),
+      date: formatDateForDB(new Date()),
     };
 
     const res = await createOrder(token, payload);
@@ -47,14 +50,21 @@ const handleSubmit = async (e: Event) => {
       return;
     }
 
-    closeForm();
+    fetchOrders(true)
+    seccessFetch.value = true
+    message.value = 'Приход успешно создан.'
+
+    setTimeout(() => {
+      seccessFetch.value = false
+      message.value = ''
+      closeForm();
+    }, 3000)
+
   } catch (err) {
     if (err instanceof yup.ValidationError) {
-      message.value = err.message;
-    } else {
-      message.value = 'Unexpected error.';
+      message.value = err.errors[0] || err.message || 'Ошибка при создании заказа.';
+      setTimeout(() => (message.value = ''), 3000);
     }
-    setTimeout(() => (message.value = ''), 2000);
   } finally {
     isLoading.value = false;
   }
@@ -71,10 +81,11 @@ const closeForm = () => {
       <h2 class="form__title text-center py-3">Создать заказ</h2>
       <div class="px-4">
         <BaseInput v-model="dataForm.title" label="Название заказа" placeholder="Введите название" id="form__title" />
-        <BaseTextarea v-model="dataForm.description" label="Описание" id="form__textarea" placeholder="Введите описание" :rows="4" />
+        <BaseTextarea v-model="dataForm.description" label="Описание" id="form__textarea" placeholder="Введите описание"
+          :rows="4" />
       </div>
       <FormButtons :isLoading="isLoading" nameConfirm="Создать" typeBtnConfirm="submit" @cancel="closeForm" />
-      <FetchMessage :message="message" type="error" />
+      <FetchMessage :message="message" :type="seccessFetch ? 'success' : 'error'" />
     </form>
   </div>
 </template>

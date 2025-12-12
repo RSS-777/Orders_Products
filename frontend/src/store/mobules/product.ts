@@ -7,6 +7,7 @@ export interface IProductsState {
   lastFetch: number | null;
   currentProduct: IProduct | null;
   idProduct: number | null;
+  createProductFormOpen: boolean;
 }
 
 const products: Module<IProductsState, IRootState> = {
@@ -16,7 +17,8 @@ const products: Module<IProductsState, IRootState> = {
     count: 0,
     lastFetch: null,
     currentProduct: null,
-    idProduct: null
+    idProduct: null,
+    createProductFormOpen: false
   }),
 
   mutations: {
@@ -31,18 +33,25 @@ const products: Module<IProductsState, IRootState> = {
       state.currentProduct = null;
     },
     setProductId(state, id: number) {
-        state.idProduct = id;
+      state.idProduct = id;
     },
     clearProductId(state) {
-        state.idProduct = null
-    }
+      state.idProduct = null
+    },
+    openCreateProductForm(state) {
+      state.createProductFormOpen = true;
+    },
+    closeCreateProductForm(state) {
+      state.createProductFormOpen = false;
+    },
   },
 
   getters: {
     count: (state) => state.count,
     lastFetch: (state) => state.lastFetch,
     currentProduct: (state) => state.currentProduct,
-    idProduct: (state) => state.idProduct
+    idProduct: (state) => state.idProduct,
+    isCreateProductFormOpen: (state) => state.createProductFormOpen
   },
 };
 

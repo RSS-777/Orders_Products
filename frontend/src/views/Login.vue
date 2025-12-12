@@ -2,7 +2,6 @@
 import { useStore } from 'vuex';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-// import { login } from "../api/data"; // mock
 import { login } from '../api/authApi';
 import * as yup from 'yup';
 import FetchMessage from '../components/СomponentsForm/FetchMessage.vue';
@@ -62,7 +61,7 @@ const onSubmit = async () => {
       <FetchMessage :message="message" type="error" />
       <form @submit.prevent="onSubmit" class="mb-3 mt-2">
         <BaseInput v-model="email" label="Email" type="email" autocomplete="email" id="login-email" />
-        <BaseInput v-model="password" label="Password" type="password" autocomplete="carrent-password"
+        <BaseInput v-model="password" label="Password" type="password" autocomplete="current-password"
           id="login-pass" />
         <ButtonAuth name="Войти" />
       </form>
