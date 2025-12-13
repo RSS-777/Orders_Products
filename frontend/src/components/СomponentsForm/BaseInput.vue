@@ -14,6 +14,7 @@ const emit = defineEmits<{
 }>();
 
 const idGeneration = ref(id || `input-${Math.random().toString(36).slice(2)}-${label.replace(/\s+/g, '-')}`);
+const showPassword = ref(false);
 
 const updateValue = (e: Event) => {
   const target = e.target as HTMLInputElement;
@@ -24,15 +25,14 @@ const updateValue = (e: Event) => {
 <template>
   <div class="form-group mb-3">
     <label :for="idGeneration" class="form-group__label fw-medium">{{ label }}</label>
-    <input
-      :id="idGeneration"
-      :type="type || 'text'"
-      class="form-group__input rounded py-1 px-2 mt-1 w-100"
-      :placeholder="placeholder"
-      :autocomplete="autocomplete"
-      :value="modelValue"
-      @input="updateValue"
-    />
+    <div class="mt-1 w-100 d-flex position-relative">
+      <input :id="idGeneration" :type="type === 'password' && showPassword ? 'text' : type || 'text'"
+        class="form-group__input rounded py-1 px-2 w-100" :placeholder="placeholder" :autocomplete="autocomplete"
+        :value="modelValue" @input="updateValue" />
+      <button v-if="type === 'password'" type="button" class="btn position-absolute top-50 end-0 translate-middle-y border-0" @click="showPassword = !showPassword">
+        {{ showPassword ? '🙈' : '👁' }}
+      </button>
+    </div>
   </div>
 </template>
 

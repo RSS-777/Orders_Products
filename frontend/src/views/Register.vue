@@ -35,6 +35,7 @@ const onSubmit = async () => {
 
       setTimeout(() => {
         message.value = '';
+        successReg.value = false; 
         router.push('/login');
       }, 3000);
       return;
@@ -64,7 +65,7 @@ const onSubmit = async () => {
         <BaseInput v-model="password" label="Password" type="password" autocomplete="new-password" id="registration-pass" />
         <ButtonAuth name="Регистрация" :disabled="successReg" />
       </form>
-      <AuthLink text="Уже есть аккаунт?" link="'/login'" name="Войти" />
+      <AuthLink text="Уже есть аккаунт?" link="/login" name="Войти" />
     </div>
   </div>
 </template>

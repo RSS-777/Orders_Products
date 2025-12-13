@@ -10,10 +10,8 @@ export interface ILoginResponse {
 
 export interface IRegisterResponse {
   success: boolean;
-  token?: string;
-  userId?: number;
-  photoUrl?: string;
   error?: string;
+  message?: string;
 }
 
 export const login = async (email: string, password: string): Promise<ILoginResponse> => {
@@ -66,9 +64,7 @@ export const register = async (name: string, email: string, password: string): P
 
     return {
       success: true,
-      token: data.data.token,
-      userId: data.data.userId,
-      photoUrl: data.data.photoUrl,
+      message: data.message, 
     };
   } catch (err) {
     return {

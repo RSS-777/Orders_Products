@@ -8,7 +8,6 @@ const DEFAULT_PHOTO = '/images/person_default.png';
 const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    const role = 'admin';
 
     if (!name || !email || !password) {
       return res.status(400).json({ success: false, error: 'Missing fields' });
@@ -20,22 +19,13 @@ const register = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await Auth.create({ name, email, password: hashedPassword, role });
-
-    const token = jwt.sign(
-      { id: newUser.insertId, role },
-      process.env.JWT_SECRET || 'secret',
-      { expiresIn: '1h' }
-    );
+    await Auth.create({ name, email, password: hashedPassword });
 
     return res.status(201).json({
       success: true,
-      data: {
-        userId: newUser.insertId,
-        token,
-        photoUrl: ''
-      }
+      message: 'User registered successfully'
     });
+
   } catch (err) {
     logger.error(`Failed to register user: ${err.message}`);
     return res.status(500).json({ success: false, error: 'Server error' });
