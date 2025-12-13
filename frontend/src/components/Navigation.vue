@@ -25,7 +25,7 @@ const changePhoto = async (e: Event) => {
   if (!file) return;
 
   const response = await updateUserPhoto(file, token);
-  console.log('response Navigation', response.data)
+
   if (response.success) {
     await store.commit('auth/setPhotoUrl', response.data?.photoUrl);
   } 
