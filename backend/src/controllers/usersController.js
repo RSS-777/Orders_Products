@@ -10,11 +10,7 @@ const uploadPhoto = async (req, res) => {
       return res.status(400).json({ success: false, error: 'No file uploaded' });
     }
 
-    const userId = parseInt(req.params.id, 10);
-
-    if (req.user.id !== userId) {
-      return res.status(403).json({ success: false, error: 'You can only update your own photo' });
-    }
+     const userId = req.user.id;
 
     const user = await User.getById(userId);
     if (!user) {

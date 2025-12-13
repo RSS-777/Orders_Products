@@ -42,7 +42,7 @@ watch(
       :class="classGrid"
       class="columns"
       :key="'gridKey-' + items.length"
-      :getKey="internalItem => internalItem.index"
+      :getKey="(internalItem) => internalItem.index"
     >
       <template v-slot:default="{ item, index, style }">
         <div :style="style" :class="{ 'active-element': index === activeIndex }">

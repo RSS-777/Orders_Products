@@ -7,6 +7,7 @@ import FetchMessage from '../components/СomponentsForm/FetchMessage.vue';
 import BaseInput from '../components/СomponentsForm/BaseInput.vue';
 import ButtonAuth from '../components/СomponentsForm/ButtonAuth.vue';
 import AuthLink from '../components/СomponentsForm/AuthLink.vue';
+import Spinner from '../components/СomponentsForm/Spinner.vue';
 
 const router = useRouter();
 const name = ref<string>('');
@@ -14,6 +15,8 @@ const email = ref<string>('');
 const password = ref<string>('');
 const message = ref<string>('');
 const successReg = ref<boolean>(false);
+const isSubmitting = ref<boolean>(false);
+
 const schema = yup.object({
   name: yup.string().required('Введите имя'),
   email: yup.string().required('Введите email').email('Некорректный email'),
@@ -21,11 +24,12 @@ const schema = yup.object({
 });
 
 const onSubmit = async () => {
-  message.value = '';
+  if (isSubmitting.value) return;
   successReg.value = false;
 
   try {
     await schema.validate({ name: name.value, email: email.value, password: password.value }, { abortEarly: false });
+    isSubmitting.value = true;
 
     const res = await register(name.value, email.value, password.value);
 
@@ -35,21 +39,25 @@ const onSubmit = async () => {
 
       setTimeout(() => {
         message.value = '';
-        successReg.value = false; 
+        isSubmitting.value = false;
+
         router.push('/login');
       }, 3000);
       return;
     }
 
-    throw new Error(res.error ?? 'Unknown error');
+    throw new Error(res.error ?? 'Неизвестная ошибка');
   } catch (err: any) {
     if (err.name === 'ValidationError') {
       message.value = err.errors[0];
     } else {
-      message.value = err.message || 'Unknown error';
+      message.value = err.message || 'Неизвестная ошибка';
     }
 
-    setTimeout(() => (message.value = ''), 3000);
+    setTimeout(() => {
+      message.value = '';
+      isSubmitting.value = false;
+    }, 3000);
   }
 };
 </script>
@@ -63,9 +71,10 @@ const onSubmit = async () => {
         <BaseInput v-model="name" label="Name" autocomplete="name" id="registration-name" />
         <BaseInput v-model="email" label="Email" type="email" autocomplete="email" id="registration-email" />
         <BaseInput v-model="password" label="Password" type="password" autocomplete="new-password" id="registration-pass" />
-        <ButtonAuth name="Регистрация" :disabled="successReg" />
+        <ButtonAuth name="Регистрация" :disabled="isSubmitting" />
       </form>
-      <AuthLink text="Уже есть аккаунт?" link="/login" name="Войти" />
+      <Spinner :isLoading="isSubmitting" />
+      <AuthLink text="Уже есть аккаунт?" link="/login" name="Войти" :disabled="isSubmitting" />
     </div>
   </div>
 </template>

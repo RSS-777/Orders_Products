@@ -29,11 +29,10 @@ export const getProducts = async (token: string): Promise<IProductsResponse> => 
       },
     });
 
-    if (!response.ok) {
-      if (response.status === 500) {
-        throw new Error('Server error while fetching products.');
-      }
-      throw new Error('Unexpected server response.');
+   if (!response.ok) {
+      if (response.status === 404) throw new Error('Продукты не найдены')
+      if (response.status === 500) throw new Error('Ошибка сервера при получении продуктов')
+      throw new Error('Неожиданный ответ сервера')
     }
 
     const res: IProductsResponse = await response.json();
@@ -50,7 +49,7 @@ export const getProducts = async (token: string): Promise<IProductsResponse> => 
 
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Unknown error occurred.',
+      error: err instanceof Error ? err.message : 'Произошла неизвестная ошибка',
     };
   }
 };
@@ -66,15 +65,15 @@ export const deleteProduct = async (id: number, token: string): Promise<IProduct
 
     if (!response.ok) {
       if (response.status === 401) {
-        throw new Error('Unauthorized. Please log in again.');
+        throw new Error('Не авторизован. Пожалуйста, войдите снова');
       }
       if (response.status === 404) {
-        throw new Error('Product not found.');
+        throw new Error('Продукт не найден');
       }
       if (response.status === 500) {
-        throw new Error('Server error while deleting product.');
+        throw new Error('Ошибка сервера при удалении продукта');
       }
-      throw new Error('Unexpected server response.');
+      throw new Error('Неожиданный ответ сервера');
     }
 
     const data = await response.json();
@@ -87,7 +86,7 @@ export const deleteProduct = async (id: number, token: string): Promise<IProduct
 
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Unknown error occurred.',
+      error: err instanceof Error ? err.message : 'Произошла неизвестная ошибка',
     };
   }
 };
@@ -130,10 +129,10 @@ export const createProduct = async (product: IProductWithFile, token: string): P
     });
 
     if (!response.ok) {
-      if (response.status === 400) throw new Error('Invalid product data.');
-      if (response.status === 401) throw new Error('Unauthorized. Please log in again.');
-      if (response.status === 500) throw new Error('Server error while creating product.');
-      throw new Error('Unexpected server response.');
+      if (response.status === 400) throw new Error('Неверные данные продукта');
+      if (response.status === 401) throw new Error('Не авторизован. Пожалуйста, войдите снова');
+      if (response.status === 500) throw new Error('Ошибка сервера при создании продукта');
+      throw new Error('Неожиданный ответ сервера');
     }
 
     const responseData = await response.json();
@@ -143,6 +142,6 @@ export const createProduct = async (product: IProductWithFile, token: string): P
     if (import.meta.env.VITE_APP_MODE === 'development') {
       console.error('Error creating product:', err);
     }
-    return { success: false, error: err instanceof Error ? err.message : 'Unknown error occurred.' };
+    return { success: false, error: err instanceof Error ? err.message : 'Произошла неизвестная ошибка' };
   }
 };

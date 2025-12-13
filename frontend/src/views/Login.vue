@@ -8,12 +8,15 @@ import FetchMessage from '../components/СomponentsForm/FetchMessage.vue';
 import BaseInput from '../components/СomponentsForm/BaseInput.vue';
 import ButtonAuth from '../components/СomponentsForm/ButtonAuth.vue';
 import AuthLink from '../components/СomponentsForm/AuthLink.vue';
+import Spinner from '../components/СomponentsForm/Spinner.vue';
 
 const store = useStore();
 const router = useRouter();
 const email = ref<string>('admin@example.com');
 const password = ref<string>('admin');
 const message = ref<string>('');
+const isSubmitting = ref<boolean>(false);
+const successReg = ref<boolean>(false);
 
 const schema = yup.object({
   email: yup.string().required('Введите email').email('Некорректный email'),
@@ -22,28 +25,46 @@ const schema = yup.object({
 });
 
 const onSubmit = async () => {
-  message.value = '';
+  if (isSubmitting.value) return;
+  successReg.value = false;
 
   try {
     await schema.validate({ email: email.value, password: password.value }, { abortEarly: false });
+    isSubmitting.value = true;
+
     const res = await login(email.value, password.value);
 
-    if (!res.success) {
-      message.value = 'Неверный логин или пароль';
-      setTimeout(() => (message.value = ''), 3000);
+    if (res.success) {
+      successReg.value = true;
+      message.value = 'Вы успешно вошли!';
+
+      setTimeout(() => {
+        store.commit('auth/setAuth', {
+          token: res.token,
+          userId: res.userId,
+          photoUrl: res.photoUrl,
+        });
+
+        message.value = '';
+        isSubmitting.value = false;
+
+        router.push('/arrival');
+      }, 3000);
       return;
     }
 
-    store.commit('auth/setAuth', {
-      token: res.token,
-      userId: res.userId,
-      photoUrl: res.photoUrl,
-    });
+    throw new Error(res.error ?? 'Неизвестная ошибка');
+  } catch (err: any) {
+    if (err.name === 'ValidationError') {
+      message.value = err.errors[0];
+    } else {
+      message.value = err.message || 'Неизвестная ошибка';
+    }
 
-    router.push('/arrival');
-  } catch {
-    message.value = 'Неверный логин или пароль';
-    setTimeout(() => (message.value = ''), 3000);
+    setTimeout(() => {
+      message.value = '';
+      isSubmitting.value = false;
+    }, 3000);
   }
 };
 </script>
@@ -52,13 +73,14 @@ const onSubmit = async () => {
   <div class="d-flex justify-content-center align-items-center vh-100 w-100 bg-light">
     <div class="card shadow p-4 mx-2" style="width: 380px">
       <h1 class="text-center my-3">Авторизация</h1>
-      <FetchMessage :message="message" type="error" />
+      <FetchMessage :message="message" :type="successReg ? 'success' : 'error'" />
       <form @submit.prevent="onSubmit" class="mb-3 mt-2">
         <BaseInput v-model="email" label="Email" type="email" autocomplete="email" id="login-email" />
         <BaseInput v-model="password" label="Password" type="password" autocomplete="current-password" id="login-pass" />
-        <ButtonAuth name="Войти" />
+        <ButtonAuth name="Войти" :disabled="isSubmitting" />
       </form>
-      <AuthLink text="Нет аккаунта?" link="/register" name="Зарегистрироваться" />
+      <Spinner :isLoading="isSubmitting" />
+      <AuthLink text="Нет аккаунта?" link="/register" name="Зарегистрироваться" :disabled="isSubmitting" />
     </div>
   </div>
 </template>

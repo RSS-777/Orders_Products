@@ -67,7 +67,7 @@ const login = async (req, res) => {
       }
     });
   } catch (err) {
-    logger.error(`Failed to login user ${req.body.email}: ${err.message}`);
+    logger.error(`Failed to login user: ${err.message}`);
     return res.status(500).json({ success: false, error: 'Server error' });
   }
 };

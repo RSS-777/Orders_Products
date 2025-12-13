@@ -26,7 +26,7 @@ const emptyOrder: IOrder = {
 
 const store = useStore();
 const orders = computed<IOrder[]>(() => cachedOrders.value);
-const tempScroll = ref<number | undefined>(undefined);  // Использую undefined вместо null, потому что vue-virtual-scroll-grid !!!
+const tempScroll = ref<number | undefined>(undefined); // Использую undefined вместо null, потому что vue-virtual-scroll-grid !!!
 const searchText = computed(() => store.getters['search/text']);
 const orderChoice = computed(() => store.getters['orders/currentOrder']);
 const openListProducts = ref<boolean>(false);

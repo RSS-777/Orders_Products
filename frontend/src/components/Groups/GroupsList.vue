@@ -9,7 +9,7 @@ import EllipsisText from '../EllipsisText.vue';
 import VirtualGrid from '../VirtualGrid.vue';
 import Date from '../Date.vue';
 import ProductListShortPlus from './ProductListShortPlus.vue';
-import iconArrow from '../../assets/arrow-icon.png'
+import iconArrow from '../../assets/arrow-icon.png';
 
 const orders = computed(() => cachedOrders.value);
 const searchText = computed(() => store.getters['search/text']);
@@ -28,7 +28,8 @@ const findOrder = async () => {
   const id = findIdByDate(orders.value, searchText.value);
   if (!id) return;
 
-  const index = orders.value.findIndex((order) => order.id === id); if (index === -1) return;
+  const index = orders.value.findIndex((order) => order.id === id);
+  if (index === -1) return;
   tempScroll.value = index;
 
   await nextTick();
@@ -39,30 +40,35 @@ const findOrder = async () => {
 
 const handleOpenProductForm = (id: number) => {
   if (!id) return;
-  store.commit('orders/setOrderId', id)
-  store.commit('products/openCreateProductForm')
-}
+  store.commit('orders/setOrderId', id);
+  store.commit('products/openCreateProductForm');
+};
 
 const handleOpenProductList = (id: number) => {
   chooseOrderById(id);
-  nextTick(() => openListProducts.value = true);
+  nextTick(() => (openListProducts.value = true));
 };
 
 const handleCloseProductList = () => {
   openListProducts.value = false;
   store.commit('orders/clearCurrentOrder');
 };
-
 </script>
 <template>
   <div class="wrapper">
-    <div class="group d-grid gap-4  px-4">
-
-      <VirtualGrid :items="orders" :tempScroll="tempScroll ? tempScroll : undefined" classGrid="d-grid gap-2"
-        :maxHeightGrid="650" :heightElement="60">
+    <div class="group d-grid gap-4 px-4">
+      <VirtualGrid
+        :items="orders"
+        :tempScroll="tempScroll ? tempScroll : undefined"
+        classGrid="d-grid gap-2"
+        :maxHeightGrid="650"
+        :heightElement="60"
+      >
         <template #default="{ item: element }">
-          <div class="order relative d-grid align-items-center border rounded-2 gap-3 p-2 px-4 bg-white"
-            :class="{ 'order--active': element.id === orderChoice?.id }">
+          <div
+            class="order relative d-grid align-items-center border rounded-2 gap-3 p-2 px-4 bg-white"
+            :class="{ 'order--active': element.id === orderChoice?.id }"
+          >
             <div class="order__products d-flex align-items-center gap-3 justify-content-start">
               <CustomButton @click="() => handleOpenProductList(element.id)" />
               <div class="d-flex flex-column">
@@ -71,27 +77,24 @@ const handleCloseProductList = () => {
               </div>
             </div>
             <Date :date="element.date" :className="'align-self-start'" />
-            <img v-if="element.id === orderChoice?.id" :src="iconArrow" alt="button" height="100%"
-              class="order__btn position-absolute top-50 ">
+            <img v-if="element.id === orderChoice?.id" :src="iconArrow" alt="button" height="100%" class="order__btn position-absolute top-50" />
           </div>
         </template>
       </VirtualGrid>
 
-      <div class="choice-products bg-white  position-relative" :class="{ 'choice-products--open': openListProducts }">
-        <EllipsisText :title="orderChoice?.title" className="border-0 fs-6 text-dark"
-          classBlock="mt-4 mx-4 choice-products__title" maxWidth="90%" />
+      <div class="choice-products bg-white position-relative" :class="{ 'choice-products--open': openListProducts }">
+        <EllipsisText :title="orderChoice?.title" className="border-0 fs-6 text-dark" classBlock="mt-4 mx-4 choice-products__title" maxWidth="90%" />
 
-        <button type="button"
+        <button
+          type="button"
           class="btn rounded-circle-btn shadow-sm rounded-circle d-flex align-items-center justify-content-center ms-4 mt-3 text-white border-0"
-          @click="handleOpenProductForm(orderChoice?.id)">
+          @click="handleOpenProductForm(orderChoice?.id)"
+        >
           +
         </button>
         <ProductListShortPlus>
           <template #header>
-            <button class="button position-absolute rounded-circle shadow  border-0 fw-semibold bg-white"
-              @click="handleCloseProductList">
-              ✕
-            </button>
+            <button class="button position-absolute rounded-circle shadow border-0 fw-semibold bg-white" @click="handleCloseProductList">✕</button>
           </template>
         </ProductListShortPlus>
       </div>
@@ -124,7 +127,7 @@ const handleCloseProductList = () => {
   width: 40px;
   height: 100%;
   z-index: 2;
-  background-color: #CFD8DC;
+  background-color: #cfd8dc;
 }
 
 .order__btn {
@@ -183,6 +186,6 @@ const handleCloseProductList = () => {
   width: 26px;
   height: 26px;
   font-size: 24px;
-  background-color: #80B548;
+  background-color: #80b548;
 }
 </style>

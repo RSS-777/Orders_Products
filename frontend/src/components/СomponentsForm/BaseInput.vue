@@ -26,10 +26,21 @@ const updateValue = (e: Event) => {
   <div class="form-group mb-3">
     <label :for="idGeneration" class="form-group__label fw-medium">{{ label }}</label>
     <div class="mt-1 w-100 d-flex position-relative">
-      <input :id="idGeneration" :type="type === 'password' && showPassword ? 'text' : type || 'text'"
-        class="form-group__input rounded py-1 px-2 w-100" :placeholder="placeholder" :autocomplete="autocomplete"
-        :value="modelValue" @input="updateValue" />
-      <button v-if="type === 'password'" type="button" class="btn position-absolute top-50 end-0 translate-middle-y border-0" @click="showPassword = !showPassword">
+      <input
+        :id="idGeneration"
+        :type="type === 'password' && showPassword ? 'text' : type || 'text'"
+        class="form-group__input rounded py-1 px-2 w-100"
+        :placeholder="placeholder"
+        :autocomplete="autocomplete"
+        :value="modelValue"
+        @input="updateValue"
+      />
+      <button
+        v-if="type === 'password'"
+        type="button"
+        class="btn position-absolute top-50 end-0 translate-middle-y border-0"
+        @click="showPassword = !showPassword"
+      >
         {{ showPassword ? '🙈' : '👁' }}
       </button>
     </div>

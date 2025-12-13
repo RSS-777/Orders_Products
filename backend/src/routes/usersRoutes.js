@@ -5,6 +5,6 @@ const { uploadUserPhoto } = require('../middlewares/upload');
 
 const { uploadPhoto } = require('../controllers/usersController');
 
-router.patch('/:id/photo', authMiddleware, uploadUserPhoto.single('photo'), uploadPhoto);
+router.patch('/photo', authMiddleware, uploadUserPhoto.single('photo'), uploadPhoto);
 
 module.exports = router;

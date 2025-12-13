@@ -9,10 +9,12 @@ import { updateUserPhoto } from '../api/userApi';
 const route = useRoute();
 const store = useStore();
 const token: string = store.getters['auth/token'];
-const userId: number = store.getters['auth/userId'];
 const isOpen = ref<boolean>(false);
 const BASE_URL = import.meta.env.VITE_API_URL;
-const userImage = computed(() => `${BASE_URL}${store.getters['auth/photoUrl']}` || personDefaultImg);
+const userImage = computed(() => {
+  const photo = store.getters['auth/photoUrl'];
+  return photo ? `${BASE_URL}${photo}?t=${Date.now()}` : personDefaultImg;
+});
 const fileInput = ref<HTMLInputElement | null>(null);
 const openFileDialog = () => {
   fileInput.value?.click();
@@ -22,13 +24,11 @@ const changePhoto = async (e: Event) => {
   const file = (e.target as HTMLInputElement).files?.[0];
   if (!file) return;
 
-  const response = await updateUserPhoto(userId, file, token);
-
+  const response = await updateUserPhoto(file, token);
+  console.log('response Navigation', response.data)
   if (response.success) {
-    await store.commit('auth/setPhotoUrl', response.data);
-  } else {
-    console.error('Error updating photo');
-  }
+    await store.commit('auth/setPhotoUrl', response.data?.photoUrl);
+  } 
 };
 
 const closeMenu = () => {

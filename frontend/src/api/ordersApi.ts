@@ -38,23 +38,24 @@ export const getOrders = async (token: string): Promise<IOrdersResponse> => {
     const data: IOrdersResponse = await response.json();
 
     if (!response.ok) {
-      if (response.status === 500) throw new Error(data.error || 'Server error while fetching orders.');
-      throw new Error(data.error || 'Unexpected server response.');
+      if (response.status === 500) throw new Error(data.error || 'Ошибка сервера при получении заказов');
+      throw new Error(data.error || 'Неожиданный ответ сервера');
+      
     }
 
     if (!data.success) {
-      throw new Error(data.error || 'Failed to fetch orders.');
+      throw new Error(data.error || 'Не удалось получить заказы');
     }
 
     return { success: true, data: data.data };
   } catch (err) {
     if (import.meta.env.VITE_APP_MODE === 'development') {
-      console.error('Error fetching orders:', err);
+      console.error('Ошибка при получении заказов', err);
     }
 
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Unknown error occurred.',
+      error: err instanceof Error ? err.message : 'Произошла неизвестная ошибка',
     };
   }
 };
@@ -71,14 +72,14 @@ export const deleteOrder = async (id: number, token: string): Promise<IDeleteOrd
     const result: IDeleteOrderResponse = await response.json();
 
     if (!response.ok) {
-      if (response.status === 401) throw new Error('Unauthorized. Please log in again.');
-      if (response.status === 404) throw new Error('Order not found.');
-      if (response.status === 500) throw new Error('Server error while deleting order.');
-      throw new Error(result.error || 'Unexpected server response.');
+      if (response.status === 401) throw new Error('Не авторизован. Пожалуйста, войдите снова');
+      if (response.status === 404) throw new Error('Заказ не найден');
+      if (response.status === 500) throw new Error('Ошибка сервера при удалении заказа');
+      throw new Error(result.error || 'Неожиданный ответ сервера');
     }
 
     if (!result.success) {
-      throw new Error(result.error || 'Failed to delete order.');
+      throw new Error(result.error || 'Не удалось удалить заказ');
     }
 
     return { success: true, data: result.data };
@@ -89,7 +90,7 @@ export const deleteOrder = async (id: number, token: string): Promise<IDeleteOrd
 
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Unknown error occurred.',
+      error: err instanceof Error ? err.message : 'Произошла неизвестная ошибка',
     };
   }
 };
@@ -108,17 +109,17 @@ export const createOrder = async (token: string, order: { title: string; descrip
     const result: IOrderResponse = await response.json();
 
     if (!response.ok) {
-      if (response.status === 400) throw new Error(result.error || 'Invalid data for creating order.');
-      if (response.status === 401) throw new Error(result.error || 'Unauthorized.');
-      if (response.status === 500) throw new Error(result.error || 'Server error while creating order.');
-      throw new Error(result.error || 'Unexpected server response.');
+      if (response.status === 400) throw new Error(result.error || 'Неверные данные для создания заказа');
+      if (response.status === 401) throw new Error(result.error || 'Не авторизован');
+      if (response.status === 500) throw new Error(result.error || 'Ошибка сервера при создании заказа');
+      throw new Error(result.error || 'Неожиданный ответ сервера');
     }
 
     if (!result.success) {
-      throw new Error(result.error || 'Failed to create order.');
+      throw new Error(result.error || 'Не удалось создать заказ');
     }
 
-    return { success: true, message: 'Order created successfully' };
+    return { success: true, message: 'Заказ успешно создан' };
   } catch (err) {
     if (import.meta.env.VITE_APP_MODE === 'development') {
       console.error('Error creating order:', err);
@@ -126,7 +127,7 @@ export const createOrder = async (token: string, order: { title: string; descrip
 
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Unknown error occurred.',
+      error: err instanceof Error ? err.message : 'Произошла неизвестная ошибка',
     };
   }
 };

@@ -8,12 +8,12 @@ export interface IUserPhotoUpdateResponse {
   error?: string;
 }
 
-export const updateUserPhoto = async (userId: number, file: File, token: string): Promise<IUserPhotoUpdateResponse> => {
+export const updateUserPhoto = async (file: File, token: string): Promise<IUserPhotoUpdateResponse> => {
   try {
     const formData = new FormData();
     formData.append('photo', file);
 
-    const response = await fetch(`${BASE_URL}/api/users/${userId}/photo`, {
+    const response = await fetch(`${BASE_URL}/api/users/photo`, {
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -24,24 +24,23 @@ export const updateUserPhoto = async (userId: number, file: File, token: string)
     const data = await response.json();
 
     if (!response.ok) {
-      if (response.status === 400) throw new Error('File not uploaded');
-      if (response.status === 403) throw new Error('You can only update your own photo');
-      if (response.status === 500) throw new Error('Internal server error');
-      throw new Error(data.error || 'Unknown error');
+      if (response.status === 400) throw new Error('Файл не загружен');
+      if (response.status === 500) throw new Error('Ошибка сервера');
+      throw new Error(data.error || 'Произошла неизвестная ошибка');
     }
 
     return {
       success: true,
-      data: data.data.photoUrl,
+      data: { photoUrl: data.data.photoUrl },
     };
   } catch (err) {
     if (import.meta.env.VITE_APP_MODE === 'development') {
-      console.error('Error updating user photo:', err);
+      console.error('Ошибка при обновлении фото пользователя:', err)
     }
 
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Unknown error occurred.',
+      error: err instanceof Error ? err.message : 'Произошла неизвестная ошибка',
     };
   }
 };

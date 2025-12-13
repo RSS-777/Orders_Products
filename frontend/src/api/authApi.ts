@@ -25,10 +25,10 @@ export const login = async (email: string, password: string): Promise<ILoginResp
     const data = await response.json();
 
     if (!response.ok) {
-      if (response.status === 400) throw new Error('Email or password is missing');
-      if (response.status === 401) throw new Error('Invalid credentials');
-      if (response.status === 500) throw new Error('Internal server error');
-      throw new Error(data.error || 'Unknown error');
+      if (response.status === 400) throw new Error('Отсутствует email или пароль');
+      if (response.status === 401) throw new Error('Неверный email или пароль');
+      if (response.status === 500) throw new Error('Внутренняя ошибка сервера');
+      throw new Error(data.error || 'Неизвестная ошибка');
     }
 
     return {
@@ -40,7 +40,7 @@ export const login = async (email: string, password: string): Promise<ILoginResp
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Unknown error',
+      error: err instanceof Error ? err.message : 'Неизвестная ошибка',
     };
   }
 };
@@ -56,20 +56,20 @@ export const register = async (name: string, email: string, password: string): P
     const data = await response.json();
 
     if (!response.ok) {
-      if (response.status === 400) throw new Error('Email or password is missing');
-      if (response.status === 401) throw new Error('Invalid credentials');
-      if (response.status === 500) throw new Error('Internal server error');
-      throw new Error(data.error || 'Unknown error');
+      if (response.status === 400) throw new Error('Отсутствуют необходимые поля');
+      if (response.status === 409) throw new Error('Пользователь с таким email уже существует');
+      if (response.status === 500) throw new Error('Внутренняя ошибка сервера');
+      throw new Error(data.error || 'Неизвестная ошибка');
     }
 
     return {
       success: true,
-      message: data.message, 
+      message: data.message,
     };
   } catch (err) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Unknown error',
+      error: err instanceof Error ? err.message : 'Неизвестная ошибка',
     };
   }
 };
