@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useStore } from 'vuex';
 import type { IProduct } from '../../types/product';
 
 const { products: rawProducts } = defineProps<{
   products: IProduct | IProduct[];
 }>();
+
+const store = useStore();
+const defaultCurrencyStore = computed(() =>
+  store.getters['settings/defaultCurrency']
+);
 
 const products = Array.isArray(rawProducts) ? rawProducts : [rawProducts];
 
@@ -13,14 +19,6 @@ const formatNumber = (num: number) => {
   const intWithSpaces = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   return decPart === '00' ? intWithSpaces : `${intWithSpaces}.${decPart}`;
 };
-
-const defaultCurrency = computed(() => {
-  for (const product of products) {
-    const defaultPrice = product.price.find((p) => p.isDefault);
-    if (defaultPrice) return defaultPrice.symbol;
-  }
-  return 'UAH';
-});
 
 const totalUSD = computed(() => {
   const sum = products.reduce((acc, product) => {
@@ -45,16 +43,16 @@ const totalUAH = computed(() => {
   <div class="price d-flex flex-column">
     <span
       class="price__usd text-nowrap"
-      :class="defaultCurrency !== 'USD' ? 'price__first' : 'price__last'"
-      :style="{ order: defaultCurrency === 'USD' ? 2 : 1 }"
+      :class="defaultCurrencyStore !== 'USD' ? 'price__first' : 'price__last'"
+      :style="{ order: defaultCurrencyStore === 'USD' ? 2 : 1 }"
     >
       {{ totalUSD !== null ? totalUSD + ' $' : '—' }}
     </span>
 
     <span
       class="price__uah text-nowrap"
-      :class="defaultCurrency !== 'UAH' ? 'price__first' : 'price__last'"
-      :style="{ order: defaultCurrency === 'UAH' ? 2 : 1 }"
+      :class="defaultCurrencyStore !== 'UAH' ? 'price__first' : 'price__last'"
+      :style="{ order: defaultCurrencyStore === 'UAH' ? 2 : 1 }"
     >
       {{ totalUAH !== null ? totalUAH + ' UAH' : '—' }}
     </span>

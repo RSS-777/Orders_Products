@@ -7,7 +7,7 @@ import EllipsisText from '../EllipsisText.vue';
 import VirtualGrid from '../VirtualGrid.vue';
 import PriceDisplay from './PriceDisplay.vue';
 import BaseButton from '../BaseButton.vue';
-import Date from '../Date.vue';
+import FormattedDate from '../FormattedDate.vue';
 import ProductListShort from './ProductListShort.vue';
 import imageBacket from '../../assets/basket.png';
 import { cachedOrders, chooseOrderById } from '../../services/orders';
@@ -25,11 +25,14 @@ const emptyOrder: IOrder = {
 };
 
 const store = useStore();
-const orders = computed<IOrder[]>(() => cachedOrders.value);
+const openListProducts = ref<boolean>(false);
 const tempScroll = ref<number | undefined>(undefined); // Использую undefined вместо null, потому что vue-virtual-scroll-grid !!!
+const orders = computed<IOrder[]>(() => cachedOrders.value);
 const searchText = computed(() => store.getters['search/text']);
 const orderChoice = computed(() => store.getters['orders/currentOrder']);
-const openListProducts = ref<boolean>(false);
+const sortedOrdersTitle = computed<IOrder[]>(() => {
+  return [...orders.value].sort((a, b) => a.title.localeCompare(b.title));
+});
 
 watch(searchText, async () => {
   await nextTick();
@@ -44,7 +47,7 @@ const findOrder = async () => {
     return;
   }
 
-  const index = orders.value.findIndex((order) => order.title.toLowerCase().includes(q));
+  const index = sortedOrdersTitle.value.findIndex((order) => order.title.toLowerCase().includes(q));
 
   if (index !== -1) {
     tempScroll.value = index;
@@ -61,15 +64,23 @@ const handleOpenProducts = (id: number) => {
   });
 };
 
-const handleCloseProducts = () => {
+const handleCloseProducts = () => { 
   openListProducts.value = false;
   store.commit('orders/clearCurrentOrder');
 };
+
+defineExpose({ handleCloseProducts, openListProducts });
 </script>
+
 <template>
-  <VirtualGrid :items="orders" :tempScroll="tempScroll ? tempScroll : undefined" classGrid="d-grid gap-2" :maxHeightGrid="650" :heightElement="60">
+  <VirtualGrid 
+    :items="sortedOrdersTitle" 
+    :tempScroll="tempScroll" 
+    classGrid="d-grid gap-2"
+    :heightElement="60"
+    >
     <template #default="{ item: element }">
-      <div class="order d-grid align-items-center border rounded-2 gap-3 p-2 px-4 bg-white">
+      <div class="order d-grid align-items-center border rounded-2 gap-3 py-2 px-4 bg-white">
         <EllipsisText :title="element.title" />
         <div class="order__products d-flex align-items-center gap-3 justify-content-start">
           <CustomButton @click="() => handleOpenProducts(element.id)" />
@@ -78,7 +89,7 @@ const handleCloseProducts = () => {
             <span class="order__products-title">Продукта</span>
           </div>
         </div>
-        <Date :date="element.date" />
+        <FormattedDate :date="element.date" />
         <div class="d-flex justify-content-start">
           <PriceDisplay :products="element.products" />
         </div>
@@ -88,27 +99,17 @@ const handleCloseProducts = () => {
       </div>
     </template>
   </VirtualGrid>
-  <div class="choice-product bg-white w-100 h-100 start-0 position-absolute" :class="{ 'choice-product--open': openListProducts }">
-    <ProductListShort :order="orderChoice ?? emptyOrder" :showProducts="true" version="expanded">
-      <template #header>
-        <button
-          class="button position-absolute top-0 end-0 me-2 mt-1 text-danger border-0 bg-transparent fs-5 fw-semibold"
-          @click="handleCloseProducts"
-        >
-          ✕
-        </button>
-      </template>
-    </ProductListShort>
+  <div 
+    class="choice-product bg-white w-100 position-absolute bottom-0 start-0 overflow-y-auto" 
+    :class="{ 'choice-product--open': openListProducts }"
+  >
+    <ProductListShort :order="orderChoice ?? emptyOrder" :showProducts="true" version="expanded" />
   </div>
 </template>
 
 <style scoped>
 .order {
   grid-template-columns: minmax(150px, 3fr) minmax(110px, 1fr) minmax(120px, 1fr) minmax(110px, 1fr) auto;
-}
-
-.order:hover {
-  box-shadow: 1px 1px 8px 0 rgba(100, 100, 100, 0.702);
 }
 
 .order__products-title {
@@ -118,21 +119,20 @@ const handleCloseProducts = () => {
 
 .choice-product {
   top: 126px;
-  transform: translateY(120%);
   opacity: 0;
-  transition:
-    transform 1s ease,
-    opacity 1s ease;
-  pointer-events: none;
+  transform: translateY(120%);
+  transition: transform 1s ease, opacity 1s ease;
 }
 
 .choice-product--open {
   transform: translateY(0);
   opacity: 1;
-  pointer-events: auto;
 }
 
-.button:active {
-  transform: scale(0.95);
+@media (hover: hover) and (pointer: fine) {
+  .order:hover {
+    box-shadow: 1px 1px 5px 0 #80B548;
+    outline: 1px solid #80B548;
+  }
 }
 </style>

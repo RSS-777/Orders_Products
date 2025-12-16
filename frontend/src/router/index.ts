@@ -55,13 +55,18 @@ const router = createRouter({
 
 router.beforeEach((to, _from, next) => {
   const isAuth = store.getters['auth/isAuth'];
+  const role = store.getters['auth/role'];
   const publicPages = ['/login', '/register'];
 
   if (!isAuth && !publicPages.includes(to.path)) {
-    next('/login');
-  } else {
-    next();
+    return next('/login');
+  } 
+
+  if (to.path === '/settings' && role !== 'admin') {
+    return next('/');
   }
+
+  next();
 });
 
 export default router;

@@ -7,6 +7,7 @@ body {
   padding: 0;
   color: #6c757d;
   font-size: 16px;
+  overflow: hidden;
 }
 
 a {
@@ -34,6 +35,8 @@ p {
 }
 
 .active-element {
-  box-shadow: 1px 1px 3px 0 #a4ff49;
-  border-radius: 5px;
+  outline: 1px solid #80B548;
+  background-color: #80B548;
+  border-radius: 10px;
+  margin: 0 10px;
 }

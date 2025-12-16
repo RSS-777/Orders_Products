@@ -47,7 +47,6 @@ const onSubmit = async () => {
 
         message.value = '';
         isSubmitting.value = false;
-
         router.push('/arrival');
       }, 3000);
       return;

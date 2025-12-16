@@ -2,6 +2,7 @@
 import { onMounted, onBeforeUnmount, computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import { fetchProducts, chooseProductById } from '../services/product';
+import { fetchOrders } from '../services/orders';
 import { deleteProduct } from '../api/productsApi';
 import ProductsList from '../components/Products/ProductsList.vue';
 import ProductNewIndicator from '../components/Products/ProductNewIndicator.vue';
@@ -33,28 +34,36 @@ const openDeleteModal = () => {
 };
 
 const handleConfirmDelete = async () => {
-  if (productId.value === null) return;
+  if (productId.value === null || isLoading.value) return;
 
-  const res = await deleteProduct(productId.value, token.value);
+  try {
+    isLoading.value = true
+    const res = await deleteProduct(productId.value, token.value);
 
-  if (res.success) {
-    fetchMessage.value = 'Продукт успешно удалён!';
-    successDelete.value = true;
-    await fetchProducts(true);
+    if (res.success) {
+      successDelete.value = true;
+      fetchMessage.value = 'Продукт успешно удалён!';
+
+      setTimeout(() => {
+        showModal.value = false;
+        fetchOrders(true);
+        fetchProducts(true);
+        store.commit('products/clearCurrentProduct');
+        store.commit('products/clearProductId');
+        fetchMessage.value = '';
+        successDelete.value = false;
+        isLoading.value = false;
+      }, 3000);
+      return
+    }
+    throw new Error(res.error ?? 'Неизвестная ошибка');
+  } catch (err: any) {
+    fetchMessage.value = err.error || 'Произошла ошибка';
 
     setTimeout(() => {
-      showModal.value = false;
-      store.commit('products/clearCurrentProduct');
-      store.commit('products/clearProductId');
       fetchMessage.value = '';
-      successDelete.value = false;
-    }, 2000);
-  } else {
-    fetchMessage.value = res.error || 'Произошла ошибка';
-
-    setTimeout(() => {
-      fetchMessage.value = '';
-    }, 2000);
+      isLoading.value = false;
+    }, 3000);
   }
 };
 
@@ -65,6 +74,7 @@ const handleCancelDelete = () => {
 };
 
 onMounted(async () => {
+  await fetchOrders();
   await fetchProducts();
 });
 
@@ -76,23 +86,16 @@ onBeforeUnmount(() => {
 
 <template>
   <WrapperMain>
-    <main class="main pb-2 mx-auto">
-      <div class="main__inner mx-3">
-        <div class="pt-5">
+    <main class="main pb-2 mx-auto overflow-hidden d-flex flex-column">
+      <div class="main__inner mx-3 d-flex flex-column overflow-x-auto overflow-y-hidden">
+        <div class="pt-5 mb-5">
           <h1>Продукты / {{ countProducts }}</h1>
         </div>
         <ProductsList />
       </div>
     </main>
-    <ConfirmModal
-      v-if="showModal"
-      :message="fetchMessage"
-      :isLoading="isLoading"
-      :success="successDelete"
-      name="продукт"
-      @confirm="handleConfirmDelete"
-      @cancel="handleCancelDelete"
-    >
+    <ConfirmModal v-if="showModal" :message="fetchMessage" :isLoading="isLoading" :success="successDelete"
+      name="продукт" @confirm="handleConfirmDelete" @cancel="handleCancelDelete">
       <div class="modal-element d-grid align-items-center gap-2 py-2">
         <ProductNewIndicator v-if="currentProduct" :status="currentProduct.status" />
         <ProductImage :src="currentProduct?.photo" />
@@ -106,12 +109,14 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+
 .main {
+  flex: 1;              
   max-width: 1540px;
 }
 
 .main__inner {
-  overflow-x: auto;
+  flex: 1;                  
 }
 
 .modal-element {

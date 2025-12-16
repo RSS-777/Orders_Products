@@ -5,9 +5,17 @@ import { useStore } from 'vuex';
 import personDefaultImg from '../assets/default.png';
 import settingsImage from '../assets/settings.png';
 import { updateUserPhoto } from '../api/userApi';
+import padlockImage from '../assets/padlock.png';
+import padlockImageOpen from '../assets/padlock-open.png';
 
 const route = useRoute();
 const store = useStore();
+
+const isAdmin = computed(() => {
+  const role = store.getters['auth/role'];
+  return role === 'admin';
+});
+
 const token: string = store.getters['auth/token'];
 const isOpen = ref<boolean>(false);
 const BASE_URL = import.meta.env.VITE_API_URL;
@@ -16,6 +24,7 @@ const userImage = computed(() => {
   return photo ? `${BASE_URL}${photo}?t=${Date.now()}` : personDefaultImg;
 });
 const fileInput = ref<HTMLInputElement | null>(null);
+
 const openFileDialog = () => {
   fileInput.value?.click();
 };
@@ -28,7 +37,7 @@ const changePhoto = async (e: Event) => {
 
   if (response.success) {
     await store.commit('auth/setPhotoUrl', response.data?.photoUrl);
-  } 
+  }
 };
 
 const closeMenu = () => {
@@ -60,33 +69,38 @@ const toggleMenu = () => {
 <template>
   <form>
     <label for="user-photo" class="visually-hidden">Upload user photo</label>
-    <input ref="fileInput" id="user-photo" name="userPhoto" type="file" class="d-none" accept="image/*" @change="changePhoto" />
+    <input ref="fileInput" id="user-photo" name="userPhoto" type="file" class="d-none" accept="image/*"
+      @change="changePhoto" />
   </form>
-
-  <button class="btn-navbar position-absolute z-5 pt-1 ps-2 fs-3 top-3 start-3 focus-none border-0 bg-transparent" @click="toggleMenu">☰</button>
-
-  <div class="navigation z-1 p-2 w-100 bg-white border" :class="{ open: isOpen }" @click.stop>
+  <button class="btn-navbar position-fixed z-2 pt-1 ps-2 fs-3 top-3 start-3 focus-none border-0 bg-transparent"
+    @click="toggleMenu">☰</button>
+  <div class="navigation z-1 p-2  h-100 bg-white border" :class="{ open: isOpen }" @click.stop>
     <div class="navigation__image position-relative rounded-circle border mx-auto my-4">
       <div class="overflow-hidden rounded-circle w-100 h-100 d-flex align-items-center justify-content-center">
         <img :src="userImage" alt="Image person" class="img-fluid" />
       </div>
-      <button
-        @click="openFileDialog"
-        class="navigation__settings position-absolute rounded-circle bg-white d-flex align-items-center justify-content-center border-0 focus-none"
-      >
+      <button @click="openFileDialog"
+        class="navigation__settings position-absolute rounded-circle bg-white d-flex align-items-center justify-content-center border-0 focus-none">
         <img :src="settingsImage || personDefaultImg" alt="Icon settings" width="18" height="18" class="img-fluid" />
       </button>
     </div>
     <nav>
-      <RouterLink to="/arrival" class="nav-link mx-auto" :class="{ 'active-link': route.path === '/arrival' }" @click="closeMenu">приход </RouterLink>
-      <RouterLink to="/groups" class="nav-link mx-auto" :class="{ 'active-link': route.path === '/groups' }" @click="closeMenu">группы </RouterLink>
-      <RouterLink to="/products" class="nav-link mx-auto" :class="{ 'active-link': route.path === '/products' }" @click="closeMenu">
+      <RouterLink to="/arrival" class="nav-link mx-auto mb-1 fw-medium"
+        :class="{ 'active-link': route.path === '/arrival' }" @click="closeMenu">приход </RouterLink>
+      <RouterLink to="/groups" class="nav-link mx-auto  mb-1 fw-medium"
+        :class="{ 'active-link': route.path === '/groups' }" @click="closeMenu">группы </RouterLink>
+      <RouterLink to="/products" class="nav-link mx-auto  mb-1 fw-medium"
+        :class="{ 'active-link': route.path === '/products' }" @click="closeMenu">
         продукты
       </RouterLink>
-      <RouterLink to="/users" class="nav-link mx-auto" :class="{ 'active-link': route.path === '/users' }" @click="closeMenu"
-        >пользователи
+      <RouterLink to="/users" class="nav-link mx-auto  mb-1 fw-medium"
+        :class="{ 'active-link': route.path === '/users' }" @click="closeMenu">пользователи
       </RouterLink>
-      <RouterLink to="/settings" class="nav-link mx-auto" :class="{ 'active-link': route.path === '/settings' }" @click="closeMenu">
+      <RouterLink :to="isAdmin ? '/settings' : '#'" class="nav-link mx-auto mb-1 fw-medium"
+        :class="{ 'active-link': route.path === '/settings', 'active-link--disabled': !isAdmin }"
+        @click.prevent="!isAdmin && closeMenu()">
+        <img :src="isAdmin ? padlockImageOpen : padlockImage" alt="Icon settings" width="18" height="18"
+          class="img-fluid me-1" />
         настройки
       </RouterLink>
     </nav>
@@ -96,16 +110,13 @@ const toggleMenu = () => {
 <style scoped>
 .btn-navbar {
   color: #80b548;
-  z-index: 1000;
 }
 
 .navigation {
-  box-shadow: 4px 0 8px -4px rgba(85, 85, 85, 0.549);
-  min-width: 180px;
-  max-width: 250px;
-  height: 100%;
-  transition: transform 1.5s ease;
   position: fixed;
+  box-shadow: 4px 0 8px -4px rgba(85, 85, 85, 0.55);
+  width: clamp(180px, 20vw, 250px);
+  transition: transform 0.6s ease;
   transform: translateX(-120%);
 }
 
@@ -133,15 +144,19 @@ const toggleMenu = () => {
 }
 
 a {
-  margin-bottom: 10px;
   color: #1e2f38;
-  font-weight: 500;
   width: fit-content;
 }
 
 .active-link {
   border-bottom: 2px solid #80b548;
   color: #1e2f38;
+}
+
+.active-link--disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
 }
 
 @keyframes rotate360 {
@@ -158,7 +173,6 @@ a {
   .navigation {
     position: static;
     transform: translateX(0);
-    height: auto;
   }
 
   .btn-navbar {

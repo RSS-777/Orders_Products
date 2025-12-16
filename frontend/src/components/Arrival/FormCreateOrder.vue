@@ -9,6 +9,7 @@ import BaseTextarea from '../СomponentsForm/BaseTextarea.vue';
 import FetchMessage from '../СomponentsForm/FetchMessage.vue';
 import { formatDateForDB } from '../../utils/dateFormateForDB';
 import { fetchOrders } from '../../services/orders';
+import Spinner from '../СomponentsForm/Spinner.vue';
 
 const emit = defineEmits(['close']);
 
@@ -17,7 +18,6 @@ const token = store.getters['auth/token'];
 const message = ref<string>('');
 const isLoading = ref<boolean>(false);
 const seccessFetch = ref<boolean>(false);
-let isSubmitting = false;
 
 const dataForm = ref({
   title: '',
@@ -32,12 +32,11 @@ const schema = yup.object({
 const handleSubmit = async (e: Event) => {
   e.preventDefault();
 
-  if (isSubmitting) return;
-  isSubmitting = true;
-  isLoading.value = true;
+  if (isLoading.value) return;
 
   try {
-    await schema.validate(dataForm.value, { abortEarly: true });
+    isLoading.value = true;
+    await schema.validate(dataForm.value, { abortEarly: false });
 
     const payload = {
       title: dataForm.value.title,
@@ -47,30 +46,32 @@ const handleSubmit = async (e: Event) => {
 
     const res = await createOrder(token, payload);
 
-    if (!res.success) {
-      message.value = res.error ?? 'Ошибка при создании заказа.';
-      setTimeout(() => (message.value = ''), 2000);
-      return;
+    if (res.success) {
+      seccessFetch.value = true;
+      message.value = 'Приход успешно создан.';
+      fetchOrders(true);
+
+      setTimeout(() => {
+        seccessFetch.value = false;
+        message.value = '';
+        isLoading.value = false;
+        closeForm();
+      }, 3000);
+      return
     }
 
-    fetchOrders(true);
-    seccessFetch.value = true;
-    message.value = 'Приход успешно создан.';
+    throw new Error(res.error ?? 'Неизвестная ошибка');
+  } catch (err: any) {
+    if (err.name === 'ValidationError') {
+      message.value = err.errors[0];
+    } else {
+      message.value = err.message || 'Неизвестная ошибка';
+    }
 
     setTimeout(() => {
-      seccessFetch.value = false;
-      message.value = '';
-      closeForm();
-      console.log('Form closed after success');
+      message.value = ''
+      isLoading.value = false;
     }, 3000);
-  } catch (err) {
-    if (err instanceof yup.ValidationError) {
-      message.value = err.errors[0] || err.message || 'Ошибка при создании заказа.';
-      setTimeout(() => (message.value = ''), 3000);
-    }
-  } finally {
-    isLoading.value = false;
-    console;
   }
 };
 
@@ -85,8 +86,10 @@ const closeForm = () => {
       <h2 class="form__title text-center py-3">Создать заказ</h2>
       <div class="px-4">
         <BaseInput v-model="dataForm.title" label="Название заказа" placeholder="Введите название" id="form__title" />
-        <BaseTextarea v-model="dataForm.description" label="Описание" id="form__textarea" placeholder="Введите описание" :rows="4" />
+        <BaseTextarea v-model="dataForm.description" label="Описание" id="form__textarea" placeholder="Введите описание"
+          :rows="4" />
       </div>
+      <Spinner :isLoading="isLoading"/>
       <FormButtons :isLoading="isLoading" nameConfirm="Создать" typeBtnConfirm="submit" @cancel="closeForm" />
       <FetchMessage :message="message" :type="seccessFetch ? 'success' : 'error'" />
     </form>

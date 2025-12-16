@@ -11,7 +11,7 @@ export interface IGuarantee {
 
 export interface IProduct {
   id: number;
-  serialNumber: number;
+  serialNumber: string;
   isNew: 0 | 1;
   photo: string;
   title: string;

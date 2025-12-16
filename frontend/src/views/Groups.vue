@@ -53,38 +53,41 @@ const handleCenselDeleteProduct = () => {
 };
 
 const handleSubmitDeleteProduct = async () => {
+  if (isLoading.value) return;
   const token = store.getters['auth/token'];
   const productId = idProduct.value;
 
-  if (!token || !productId) {
-    return console.error('There is no token or product ID for deletion.');
-  }
+  try {
+    isLoading.value = true;
+    const res = await deleteProduct(productId, token);
 
-  isLoading.value = true;
-  const res = await deleteProduct(productId, token);
+    if (res.success) {
+      massage.value = 'Продукт успешно удалён!';
+      isDeleteProduct.value = true;
 
-  if (res.success) {
-    massage.value = 'Продукт успешно удалён!';
-    isDeleteProduct.value = true;
+      setTimeout(() => {
+        showDeleteModal.value = false;
+        fetchOrders(true);
+        fetchProducts(true);
+        store.commit('products/clearCurrentProduct');
+        store.commit('products/clearProductId');
+        massage.value = null;
+        isDeleteProduct.value = false;
+        isLoading.value = false;
+      }, 3000);
+      return
+    }
+
+    throw new Error(res.error ?? 'Неизвестная ошибка');
+  } catch (err: any) {
+    massage.value = err.error || 'Произошла ошибка';
 
     setTimeout(() => {
-      showDeleteModal.value = false;
-      fetchOrders(true);
-      store.commit('products/clearCurrentProduct');
-      store.commit('products/clearProductId');
-      massage.value = null;
-      isDeleteProduct.value = false;
-    }, 3000);
-  } else {
-    massage.value = 'Ошибка при удалении продукта.';
-
-    setTimeout(() => {
+      isLoading.value = false;
       massage.value = null;
     }, 2000);
   }
-
-  isLoading.value = false;
-};
+}
 
 onMounted(async () => {
   await fetchOrders();
@@ -95,31 +98,26 @@ onBeforeUnmount(() => {
   store.commit('products/clearProductId');
   store.commit('products/clearCurrentProduct');
   store.commit('products/closeCreateProductForm');
+  store.commit('orders/clearCurrentOrder');
+  store.commit('orders/clearOrderId');
 });
 </script>
 
 <template>
   <WrapperMain>
-    <main class="main pb-2 mx-auto position-relative">
-      <div class="main__inner mx-3">
-        <div class="d-flex gap-3 align-items-center justify-content-start pt-5">
+    <main class="main d-flex flex-column pb-2 mx-auto position-relative over overflow-hidden">
+      <div class="main__inner d-flex flex-column mx-3 overflow-hidden">
+        <div class="d-flex gap-3 align-items-center justify-content-start mb-4 pt-5 ps-4">
           <ButtonOpenForm :onclick="handleToggleOrderForm" />
           <h1>Приходы / {{ countOrders }}</h1>
         </div>
-        <GroupsList :orders="orders" />
+        <GroupsList :orders="orders"/>
       </div>
     </main>
     <FormCreateOrder v-if="createOrder" @close="handleToggleOrderForm" />
     <FormCreateProduct v-if="createProduct && idOrder" :idOrder="idOrder" @close="handleCloseProductForm" />
-    <ConfirmModal
-      v-if="showDeleteModal"
-      :message="massage"
-      :success="isDeleteProduct"
-      name="продукт"
-      :isLoading="isLoading"
-      @confirm="handleSubmitDeleteProduct"
-      @cancel="handleCenselDeleteProduct"
-    >
+    <ConfirmModal v-if="showDeleteModal" :message="massage" :success="isDeleteProduct" name="продукт"
+      :isLoading="isLoading" @confirm="handleSubmitDeleteProduct" @cancel="handleCenselDeleteProduct">
       <div class="modal-element d-grid align-items-center gap-4 py-2">
         <ProductNewIndicator v-if="currentProduct" :status="currentProduct.status" />
         <ProductImage :src="currentProduct?.photo" />
@@ -134,23 +132,12 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .main {
-  max-width: 1540px;
-  overflow-y: hidden;
+  flex: 1;  
+  max-width: 1540px; 
 }
 
 .main__inner {
-  overflow-x: auto;
-}
-
-.main__btn {
-  background-color: #80b548;
-  border: 5px solid #7bab4b;
-  width: 30px;
-  height: 30px;
-}
-
-.main__btn:active {
-  transform: scale(0.9);
+  flex: 1;             
 }
 
 .modal-element {

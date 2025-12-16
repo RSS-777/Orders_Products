@@ -1,10 +1,16 @@
 import type { Module } from 'vuex';
 import type { IRootState } from '..';
+import { jwtDecode } from 'jwt-decode';
 
 export interface IAuthState {
   token: string | null;
   userId: number | null;
   photoUrl: string | null;
+}
+
+interface ITokenPayload {
+  id: number;
+  role: 'admin' | 'manager' | 'viewer';
 }
 
 const auth: Module<IAuthState, IRootState> = {
@@ -34,7 +40,13 @@ const auth: Module<IAuthState, IRootState> = {
     token: (state) => state.token,
     userId: (state) => state.userId,
     photoUrl: (state) => state.photoUrl,
+    role: (state) => {
+      if (!state.token) return null;
+      const decoded = jwtDecode(state.token) as ITokenPayload;
+      return decoded?.role || null;
+    }
   },
 };
 
 export default auth;
+

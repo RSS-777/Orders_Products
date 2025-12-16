@@ -27,6 +27,7 @@ export const login = async (email: string, password: string): Promise<ILoginResp
     if (!response.ok) {
       if (response.status === 400) throw new Error('Отсутствует email или пароль');
       if (response.status === 401) throw new Error('Неверный email или пароль');
+      if (response.status === 403) throw new Error('У вас нет прав доступа');
       if (response.status === 500) throw new Error('Внутренняя ошибка сервера');
       throw new Error(data.error || 'Неизвестная ошибка');
     }

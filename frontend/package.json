@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
+    "jwt-decode": "^4.0.0",
     "socket.io-client": "^4.8.1",
     "vue": "^3.5.25",
     "vue-router": "^4.6.3",
@@ -22,6 +23,7 @@
     "yup": "^1.7.1"
   },
   "devDependencies": {
+    "@types/jwt-decode": "^2.2.1",
     "@typescript-eslint/eslint-plugin": "^8.49.0",
     "@typescript-eslint/parser": "^8.49.0",
     "@vitejs/plugin-vue": "^5.2.4",

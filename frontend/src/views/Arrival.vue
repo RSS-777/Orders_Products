@@ -2,7 +2,9 @@
 import { onMounted, computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import { fetchOrders, chooseOrderById } from '../services/orders';
+import { fetchProducts } from '../services/product';
 import { deleteOrder } from '../api/ordersApi';
+import { fetchCurrency } from '../services/settings';
 import OrdersList from '../components/Arrival/OrdersList.vue';
 import ConfirmModal from '../components/ConfirmModal.vue';
 import WrapperMain from '../components/WrapperMain.vue';
@@ -22,15 +24,39 @@ const showModal = ref<boolean>(false);
 const fetchMessage = ref<string>('');
 const showProducts = ref<boolean>(false);
 const openForm = ref<boolean>(false);
+const ordersListRef = ref<InstanceType<typeof OrdersList>>();
+const isProductsOpen = computed(() => ordersListRef.value?.openListProducts ?? false);
+const showCloseProductsButton = ref<boolean>(false)
+let openListTimer: number | null = null;
+
+const callChildClose = () => {
+  ordersListRef.value?.handleCloseProducts();
+};
+
 const toggleProducts = () => {
   showProducts.value = !showProducts.value;
 };
 
+watch(isProductsOpen, (isOpen) => {
+  if (openListTimer) {
+    clearTimeout(openListTimer);
+    openListTimer = null;
+  }
+
+  if (isOpen) {
+    openListTimer = window.setTimeout(() => {
+      showCloseProductsButton.value = true;
+    }, 1000);
+  } else {
+    showCloseProductsButton.value = false;
+  }
+});
+
 watch(
   () => orderId.value,
-  (id: number) => {
+  async (id: number) => {
     if (id !== null) {
-      chooseOrderById(id);
+      await chooseOrderById(id);
       handleDelete();
     }
   },
@@ -41,33 +67,37 @@ const handleDelete = () => {
 };
 
 const handleConfirmDelete = async () => {
-  if (orderId.value === null) return;
-  isLoading.value = true;
+  if (orderId.value === null || isLoading.value) return;
 
   try {
+    isLoading.value = true;
     const res = await deleteOrder(orderId.value, token.value);
 
     if (res.success) {
-      fetchMessage.value = 'Удаление прихода прошло успешно!';
       isSuccessDelete.value = true;
+      fetchMessage.value = 'Удаление прихода прошло успешно!';
 
       setTimeout(() => {
         showModal.value = false;
         store.commit('orders/clearOrderId');
         store.commit('orders/clearCurrentOrder');
         fetchOrders(true);
+        fetchProducts(true);
         fetchMessage.value = '';
         isSuccessDelete.value = false;
+        isLoading.value = false;
       }, 3000);
+      return
     }
+
+    throw new Error(res.error ?? 'Неизвестная ошибка');
   } catch (err: any) {
     fetchMessage.value = err.error || 'Произошла ошибка';
 
     setTimeout(() => {
       fetchMessage.value = '';
-    }, 2000);
-  } finally {
-    isLoading.value = false;
+      isLoading.value = false;
+    }, 3000);
   }
 };
 
@@ -84,34 +114,36 @@ const handleOpenForm = () => {
 
 onMounted(async () => {
   await fetchOrders();
+  await fetchProducts();
+  await fetchCurrency();
 });
 </script>
 
 <template>
   <WrapperMain>
-    <main class="main pb-2 mx-auto position-relative">
-      <div class="main__inner mx-3">
-        <div class="d-flex gap-3 align-items-center justify-content-start pt-5">
+    <main class="main pb-2 mx-auto position-relative d-flex flex-column overflow-hidden">
+      <button v-if="showCloseProductsButton"
+        class="button position-absolute z-2 rounded-circle shadow border-0 fw-semibold bg-white"
+        @click="callChildClose">
+        ✕
+      </button>
+
+      <div class="main__inner d-flex flex-column overflow-x-auto overflow-y-hidden mx-3 position-relative">
+        <div class="d-flex gap-3 align-items-center justify-content-start pt-5 mb-5">
           <ButtonOpenForm :onclick="handleOpenForm" />
           <h1>Приходы / {{ countOrders }}</h1>
         </div>
-        <OrdersList />
+        <OrdersList ref="ordersListRef" />
       </div>
     </main>
-    <ConfirmModal
-      v-if="showModal"
-      :message="fetchMessage"
-      :success="isSuccessDelete"
-      name="приход"
-      @confirm="handleConfirmDelete"
-      @cancel="handleCancelDelete"
-      :isLoading="isLoading"
-    >
+    <ConfirmModal v-if="showModal" :message="fetchMessage" :success="isSuccessDelete" :isLoading="isLoading"
+      name="приход" @confirm="handleConfirmDelete" @cancel="handleCancelDelete">
       <div class="modal-element p-4">
         <EllipsisText v-if="currentOrder" :title="currentOrder.title" className="fs-5 border-0 fw-medium" />
         <p class="fd-2 lh-sm my-2">{{ currentOrder?.description }}</p>
         <div v-if="currentOrder?.products.length">
-          <button class="modal-element__btn border-0 bg-transparent p-0 d-flex align-items-center" @click="toggleProducts">
+          <button class="modal-element__btn border-0 bg-transparent p-0 d-flex align-items-center"
+            @click="toggleProducts">
             <span>Продукти</span> <span>{{ showProducts ? '▲' : '▼' }}</span>
           </button>
           <ProductListShort :order="currentOrder" :showProducts="showProducts" />
@@ -124,12 +156,12 @@ onMounted(async () => {
 
 <style scoped>
 .main {
+  flex: 1;
   max-width: 1540px;
-  overflow-y: hidden;
 }
 
 .main__inner {
-  overflow-x: auto;
+  flex: 1;
 }
 
 .main__btn {
@@ -149,5 +181,18 @@ onMounted(async () => {
 
 .modal-element__btn {
   color: #7bab4b;
+}
+
+.button {
+  color: rgb(192, 192, 192);
+  font-size: 12px;
+  width: 32px;
+  height: 32px;
+  top: 110px;
+  right: 5px;
+}
+
+.button:active {
+  transform: scale(0.95);
 }
 </style>

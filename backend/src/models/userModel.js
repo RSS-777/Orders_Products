@@ -5,7 +5,6 @@ const User = {
     const [rows] = await db.query('SELECT * FROM users WHERE id = ?', [id]);
     return rows[0];
   },
-
   updatePhoto: async (id, photoUrl) => {
     const [result] = await db.query(
       'UPDATE users SET photoUrl = ? WHERE id = ?',

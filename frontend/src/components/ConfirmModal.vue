@@ -2,6 +2,7 @@
 import basket from '../assets/basket.png';
 import FormButtons from './СomponentsForm/FormButtons.vue';
 import FetchMessage from './СomponentsForm/FetchMessage.vue';
+import Spinner from './СomponentsForm/Spinner.vue';
 
 const { message, name, isLoading, success } = defineProps<{
   message?: string | null;
@@ -31,8 +32,9 @@ const handleConfirm = () => {
         <strong>Вы уверены, что хотите удалить этот {{ name }}?</strong>
       </p>
       <slot></slot>
+      <Spinner :isLoading="isLoading" />
       <FormButtons
-        :isLoading="isLoading || success"
+        :isLoading="isLoading"
         nameConfirm="Удалить"
         typeBtnConfirm="button"
         @cancel="handleCancel"

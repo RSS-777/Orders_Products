@@ -3,7 +3,7 @@ const { isLoading } = defineProps<{ isLoading: boolean }>();
 </script>
 
 <template>
-  <div v-if="isLoading" class="spinner d-flex justify-content-center gap-2">
+  <div v-if="isLoading" class="spinner d-flex justify-content-center gap-2 p-2">
     <span class="spinner__dot rounded-circle"></span>
     <span class="spinner__dot rounded-circle"></span>
     <span class="spinner__dot rounded-circle"></span>

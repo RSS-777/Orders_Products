@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, nextTick } from 'vue';
 import Grid from 'vue-virtual-scroll-grid';
 
-const { items, tempScroll, classGrid, heightElement, maxHeightGrid } = defineProps<{
+const { items, tempScroll, classGrid, heightElement } = defineProps<{
   items: any[];
-  tempScroll: number | undefined;
+  tempScroll?: number;
   classGrid?: string;
   heightElement: number;
-  maxHeightGrid: number;
 }>();
 
 const activeIndex = ref<number | null>(null);
-const maxHeight = { maxHeight: `${maxHeightGrid}px` };
+const gridKey = ref<number>(0);
 
-const pageProvider = (pageNumber: number, pageSize: number) => {
+const pageProvider = async (pageNumber: number, pageSize: number) => {
   const start = pageNumber * pageSize;
   const end = start + pageSize;
-  return Promise.resolve(items.slice(start, end));
+  return Promise.resolve([...items.slice(start, end)]);
 };
+
 
 watch(
   () => tempScroll,
@@ -31,21 +31,29 @@ watch(
     }
   },
 );
+
+watch(
+  () => items.length,
+  async () => {
+    gridKey.value++;
+    await nextTick();
+  }
+);
 </script>
+
 <template>
-  <div :style="maxHeight" class="mt-5 overflow-y-auto">
-    <Grid
-      :length="items.length"
-      :pageProvider="pageProvider"
-      :pageSize="20"
-      :scrollTo="tempScroll"
+  <div class="virtual-wrapper overflow-y-auto pb-1 pt-1">
+    <Grid 
+      :length="items.length" 
+      :pageProvider="pageProvider" 
+      :pageSize="20" 
+      :scrollTo="tempScroll" 
       :class="classGrid"
-      class="columns"
-      :key="'gridKey-' + items.length"
-      :getKey="(internalItem) => internalItem.index"
+      class="columns" 
+      :key="gridKey"
     >
       <template v-slot:default="{ item, index, style }">
-        <div :style="style" :class="{ 'active-element': index === activeIndex }">
+        <div :style="style" :class="{ 'active-element': index === activeIndex }"  class="px-1">
           <slot :item="item"></slot>
         </div>
       </template>
@@ -55,14 +63,11 @@ watch(
       </template>
 
       <template v-slot:probe>
-        <div
-          class="item"
-          :style="{
-            height: `${heightElement}px`,
-            width: 'auto',
-            visibility: 'hidden',
-          }"
-        >
+        <div class="item" :style="{
+          height: `${heightElement}px`,
+          width: 'auto',
+          visibility: 'hidden',
+        }">
           Probe
         </div>
       </template>
@@ -71,6 +76,11 @@ watch(
 </template>
 
 <style scoped>
+.virtual-wrapper {
+  flex: 1;
+  min-height: 0;
+}
+
 .columns {
   grid-template-columns: 1fr;
 }

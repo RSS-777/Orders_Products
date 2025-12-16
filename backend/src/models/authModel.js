@@ -12,6 +12,10 @@ const Auth = {
     );
     return result;
   },
+  getById: async (id) => {
+    const [rows] = await db.query('SELECT * FROM users WHERE id = ?', [id]);
+    return rows[0];
+  },
   deleteById: async (id) => {
     const [result] = await db.query('DELETE FROM users WHERE id = ?', [id]);
     return result;

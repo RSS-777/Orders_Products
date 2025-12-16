@@ -79,7 +79,6 @@ export const findIdByDate = (items: ProductWithDate[], query: string): number | 
       itemDate.getMonth() === queryDate.getMonth() &&
       itemDate.getDate() === queryDate.getDate()
     ) {
-      console.log('Match found:', item);
       return item.id;
     }
   }

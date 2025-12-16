@@ -1,13 +1,11 @@
 <template>
-  <div class="wrapper-main">
+  <div class="wrapper-main d-flex position-relative h-100 overflow-hidden">
     <slot />
   </div>
 </template>
 
 <style scoped>
 .wrapper-main {
-  position: relative;
-  width: 100%;
-  overflow-x: auto;
+  flex: 1;            
 }
 </style>

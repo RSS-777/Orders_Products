@@ -17,21 +17,12 @@ const {
 </script>
 
 <template>
-  <div class="relative">
-    <div v-if="version === 'expanded'" class="product-header">
-      <slot name="header"></slot>
-    </div>
-    <ul
-      class="product list-unstyled mt-2 overflow-y-auto"
-      :style="{ maxHeight: !showProducts && version === 'modal' ? '5px' : undefined }"
-      :class="version === 'modal' ? 'product--modal' : 'product--expanded'"
-    >
-      <li
-        v-for="product in order?.products"
-        :key="product.id"
-        class="product__list gap-3 py-1"
-        :class="version === 'modal' ? 'product__list--modal' : 'product__list--expanded'"
-      >
+  <div>
+    <ul class="product list-unstyled overflow-y-auto"
+      :style="{ maxHeight: !showProducts && version === 'modal' ? '0' : '' }"
+      :class="{ 'product--modal': version === 'modal' }">
+      <li v-for="product in order?.products" :key="product.id" class="product__list gap-3 py-1"
+        :class="version === 'modal' ? 'product__list--modal' : 'product__list--expanded'">
         <ProductStatus :status="product.status" />
         <ProductImage />
         <div class="product__information overflow-hidden">
@@ -50,11 +41,6 @@ const {
 
 .product--modal {
   max-height: 200px;
-}
-
-.product--expanded {
-  max-height: 500px;
-  padding-top: 30px;
 }
 
 .product__list {
