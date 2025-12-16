@@ -5,6 +5,7 @@ import { useRoute } from 'vue-router';
 import { useDate } from '../composables/useDate';
 import { useTime } from '../composables/useTime';
 import { useActiveSessions } from '../composables/useActiveSessions';
+import {dateFormateNav} from '../utils/dateFormateNav';
 import logo from '../assets/logo.png';
 import clock from '../assets/clock.png';
 import person from '../assets/person.png';
@@ -12,8 +13,9 @@ import person from '../assets/person.png';
 const store = useStore();
 const route = useRoute();
 const searchValue = ref<string>('');
+const today = new Date();
 
-const { formattedDate, formattedDay } = useDate('slash');
+const { formattedDay } = useDate('slash');
 const { formattedTime } = useTime();
 const { activeSessions } = useActiveSessions();
 
@@ -70,7 +72,7 @@ const handleKeyPress = (e: KeyboardEvent) => {
     <div class="header__info d-flex align-items-center flex-column flex-shrink-0 align-self-start">
       <span class="header__info-label align-self-end align-self-sm-start">{{ formattedDay }}</span>
       <div class="d-flex flex-column flex-sm-row align-items-end align-items-sm-center">
-        <span class="me-sm-3">{{ formattedDate }}</span>
+        <span class="me-sm-3">{{ dateFormateNav(today) }}</span>
         <div class="d-flex align-items-center">
           <img :src="clock" alt="Image clock" width="18" class="mx-2" />
           <span>{{ formattedTime }}</span>
