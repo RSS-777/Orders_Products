@@ -3,38 +3,44 @@ import { computed } from 'vue';
 import { useStore } from 'vuex';
 import type { IProduct } from '../../types/product';
 
-const { products: rawProducts } = defineProps<{
-  products: IProduct | IProduct[];
+const { products } = defineProps<{
+  products: IProduct[] | IProduct;
 }>();
 
 const store = useStore();
-const defaultCurrencyStore = computed(() =>
-  store.getters['settings/defaultCurrency']
-);
-
-const products = Array.isArray(rawProducts) ? rawProducts : [rawProducts];
+const defaultCurrencyStore = computed(() => store.getters['settings/defaultCurrency']);
+const productsArray = Array.isArray(products) ? products : [products];
 
 const formatNumber = (num: number) => {
-  const [intPart = '0', decPart = '00'] = num.toFixed(2).split('.');
+  const n = Number(num) || 0;
+  const parts = n.toFixed(2).split('.');
+  const intPart = parts[0] ?? '0';
+  const decPart = parts[1] ?? '00';
   const intWithSpaces = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   return decPart === '00' ? intWithSpaces : `${intWithSpaces}.${decPart}`;
 };
 
 const totalUSD = computed(() => {
-  const sum = products.reduce((acc, product) => {
-    const price = product.price.find((p) => p.symbol === 'USD')?.value || 0;
+  if (!productsArray.length) return null;
+
+  const sum = productsArray.reduce((acc, product) => {
+    if (!product || !Array.isArray(product.price)) return acc;
+    const price = product.price.find((p) => p.symbol === 'USD')?.value ?? 0;
     return acc + price;
   }, 0);
-  if (sum === 0) return null;
+
   return formatNumber(sum);
 });
 
 const totalUAH = computed(() => {
-  const sum = products.reduce((acc, product) => {
-    const price = product.price.find((p) => p.symbol === 'UAH')?.value || 0;
+  if (!productsArray.length) return null;
+
+  const sum = productsArray.reduce((acc, product) => {
+    if (!product || !Array.isArray(product.price)) return acc;
+    const price = product.price.find((p) => p.symbol === 'UAH')?.value ?? 0;
     return acc + price;
   }, 0);
-  if (sum === 0) return null;
+
   return formatNumber(sum);
 });
 </script>
@@ -46,15 +52,14 @@ const totalUAH = computed(() => {
       :class="defaultCurrencyStore !== 'USD' ? 'price__first' : 'price__last'"
       :style="{ order: defaultCurrencyStore === 'USD' ? 2 : 1 }"
     >
-      {{ totalUSD !== null ? totalUSD + ' $' : '—' }}
+      {{ totalUSD && Number(totalUSD) > 0 ? totalUSD + ' $' : '—' }}
     </span>
-
     <span
       class="price__uah text-nowrap"
       :class="defaultCurrencyStore !== 'UAH' ? 'price__first' : 'price__last'"
       :style="{ order: defaultCurrencyStore === 'UAH' ? 2 : 1 }"
     >
-      {{ totalUAH !== null ? totalUAH + ' UAH' : '—' }}
+      {{ totalUAH && Number(totalUAH) > 0 ? totalUAH + ' UAH' : '—' }}
     </span>
   </div>
 </template>

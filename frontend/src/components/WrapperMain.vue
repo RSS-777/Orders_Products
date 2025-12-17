@@ -6,6 +6,6 @@
 
 <style scoped>
 .wrapper-main {
-  flex: 1;            
+  flex: 1;
 }
 </style>

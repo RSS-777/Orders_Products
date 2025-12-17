@@ -37,7 +37,7 @@ const handleConfirmDelete = async () => {
   if (productId.value === null || isLoading.value) return;
 
   try {
-    isLoading.value = true
+    isLoading.value = true;
     const res = await deleteProduct(productId.value, token.value);
 
     if (res.success) {
@@ -54,7 +54,7 @@ const handleConfirmDelete = async () => {
         successDelete.value = false;
         isLoading.value = false;
       }, 3000);
-      return
+      return;
     }
     throw new Error(res.error ?? 'Неизвестная ошибка');
   } catch (err: any) {
@@ -94,8 +94,15 @@ onBeforeUnmount(() => {
         <ProductsList />
       </div>
     </main>
-    <ConfirmModal v-if="showModal" :message="fetchMessage" :isLoading="isLoading" :success="successDelete"
-      name="продукт" @confirm="handleConfirmDelete" @cancel="handleCancelDelete">
+    <ConfirmModal
+      v-if="showModal"
+      :message="fetchMessage"
+      :isLoading="isLoading"
+      :success="successDelete"
+      name="продукт"
+      @confirm="handleConfirmDelete"
+      @cancel="handleCancelDelete"
+    >
       <div class="modal-element d-grid align-items-center gap-2 py-2">
         <ProductNewIndicator v-if="currentProduct" :status="currentProduct.status" />
         <ProductImage :src="currentProduct?.photo" />
@@ -109,14 +116,13 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-
 .main {
-  flex: 1;              
+  flex: 1;
   max-width: 1540px;
 }
 
 .main__inner {
-  flex: 1;                  
+  flex: 1;
 }
 
 .modal-element {

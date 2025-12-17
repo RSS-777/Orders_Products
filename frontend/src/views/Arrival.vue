@@ -26,7 +26,7 @@ const showProducts = ref<boolean>(false);
 const openForm = ref<boolean>(false);
 const ordersListRef = ref<InstanceType<typeof OrdersList>>();
 const isProductsOpen = computed(() => ordersListRef.value?.openListProducts ?? false);
-const showCloseProductsButton = ref<boolean>(false)
+const showCloseProductsButton = ref<boolean>(false);
 let openListTimer: number | null = null;
 
 const callChildClose = () => {
@@ -87,7 +87,7 @@ const handleConfirmDelete = async () => {
         isSuccessDelete.value = false;
         isLoading.value = false;
       }, 3000);
-      return
+      return;
     }
 
     throw new Error(res.error ?? 'Неизвестная ошибка');
@@ -122,9 +122,11 @@ onMounted(async () => {
 <template>
   <WrapperMain>
     <main class="main pb-2 mx-auto position-relative d-flex flex-column overflow-hidden">
-      <button v-if="showCloseProductsButton"
+      <button
+        v-if="showCloseProductsButton"
         class="button position-absolute z-2 rounded-circle shadow border-0 fw-semibold bg-white"
-        @click="callChildClose">
+        @click="callChildClose"
+      >
         ✕
       </button>
 
@@ -136,14 +138,20 @@ onMounted(async () => {
         <OrdersList ref="ordersListRef" />
       </div>
     </main>
-    <ConfirmModal v-if="showModal" :message="fetchMessage" :success="isSuccessDelete" :isLoading="isLoading"
-      name="приход" @confirm="handleConfirmDelete" @cancel="handleCancelDelete">
+    <ConfirmModal
+      v-if="showModal"
+      :message="fetchMessage"
+      :success="isSuccessDelete"
+      :isLoading="isLoading"
+      name="приход"
+      @confirm="handleConfirmDelete"
+      @cancel="handleCancelDelete"
+    >
       <div class="modal-element p-4">
         <EllipsisText v-if="currentOrder" :title="currentOrder.title" className="fs-5 border-0 fw-medium" />
         <p class="fd-2 lh-sm my-2">{{ currentOrder?.description }}</p>
         <div v-if="currentOrder?.products.length">
-          <button class="modal-element__btn border-0 bg-transparent p-0 d-flex align-items-center"
-            @click="toggleProducts">
+          <button class="modal-element__btn border-0 bg-transparent p-0 d-flex align-items-center" @click="toggleProducts">
             <span>Продукти</span> <span>{{ showProducts ? '▲' : '▼' }}</span>
           </button>
           <ProductListShort :order="currentOrder" :showProducts="showProducts" />

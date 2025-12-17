@@ -35,8 +35,8 @@ p {
 }
 
 .active-element {
-  outline: 1px solid #80B548;
-  background-color: #80B548;
+  outline: 1px solid #80b548;
+  background-color: #80b548;
   border-radius: 10px;
   margin: 0 10px;
 }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { IOrder } from '../../types/order';
+import type { IOrder } from '../../types/order';
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import EllipsisText from '../EllipsisText.vue';
@@ -21,7 +21,7 @@ const onDelete = (id: number) => {
 <template>
   <div class="wrapper relative d-flex flex-column">
     <ul class="product list-unstyled mt-2 overflow-y-auto overflow-x-hidden" v-if="order">
-      <li class="product__list d-grid align-items-center gap-4 py-1" v-for="product in order?.products" :key="product.id" >
+      <li class="product__list d-grid align-items-center gap-4 py-1" v-for="product in order?.products" :key="product.id">
         <ProductStatus :status="product.status" />
         <ProductImage />
         <div class="product__information overflow-hidden">
@@ -38,13 +38,13 @@ const onDelete = (id: number) => {
 </template>
 
 <style scoped>
-.wrapper {  
-  flex: 1; 
-  min-height: 0; 
+.wrapper {
+  flex: 1;
+  min-height: 0;
 }
 
 .product {
-  flex: 1; 
+  flex: 1;
 }
 
 .product__list {

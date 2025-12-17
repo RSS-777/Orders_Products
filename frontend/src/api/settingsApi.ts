@@ -45,10 +45,7 @@ export const getDefaultCurrency = async (token: string): Promise<ICurrencyRespon
   }
 };
 
-export const updateDefaultCurrency = async (
-  currency: string,
-  token: string
-): Promise<ICurrencyResponse> => {
+export const updateDefaultCurrency = async (currency: string, token: string): Promise<ICurrencyResponse> => {
   try {
     const response = await fetch(`${BASE_URL}/api/settings/currency`, {
       method: 'PUT',

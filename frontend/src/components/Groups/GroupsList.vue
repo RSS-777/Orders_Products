@@ -19,9 +19,7 @@ const orders = computed<IOrder[]>(() => cachedOrders.value);
 const searchText = computed(() => store.getters['search/text']);
 const orderChoice = computed(() => store.getters['orders/currentOrder']);
 const sortedOrders = computed<IOrder[]>(() => {
-  return [...orders.value].sort(
-    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-  );
+  return [...orders.value].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 });
 
 watch(searchText, (newValue) => {
@@ -65,16 +63,12 @@ const handleCloseProductList = () => {
 <template>
   <div class="wrapper d-flex overflow-x-visible h-100">
     <div class="group d-grid overflow-y-hidden pt-3 px-4 h-100" :class="{ 'gap-4': openListProducts }">
-      <VirtualGrid 
-        :items="sortedOrders" 
-        :tempScroll="tempScroll" 
-        classGrid="d-grid gap-2" 
-        :heightElement="60"
-      >
+      <VirtualGrid :items="sortedOrders" :tempScroll="tempScroll" classGrid="d-grid gap-2" :heightElement="60">
         <template #default="{ item: element }">
-          <div class="order position-relative d-grid align-items-center rounded-2 gap-3 py-2 px-4 mx-1 bg-white"
+          <div
+            class="order position-relative d-grid align-items-center rounded-2 gap-3 py-2 px-4 mx-1 bg-white"
             :class="{ 'order--active': element.id === orderChoice?.id }"
-            >
+          >
             <div class="order__products d-flex align-items-center gap-3 justify-content-start">
               <CustomButton @click="() => handleOpenProductList(element.id)" />
               <div class="d-flex flex-column">
@@ -83,26 +77,41 @@ const handleCloseProductList = () => {
               </div>
             </div>
             <FormattedDate :date="element.date" :className="'align-self-start'" />
-            <img v-if="element.id === orderChoice?.id" :src="iconArrow" alt="button" height="100%"
-              class="order__arrow-icon position-absolute z-2 top-50" />
+            <img
+              v-if="element.id === orderChoice?.id"
+              :src="iconArrow"
+              alt="button"
+              height="100%"
+              class="order__arrow-icon position-absolute z-2 top-50"
+            />
           </div>
         </template>
       </VirtualGrid>
-      <div class="choice-products d-flex flex-column bg-white position-relative rounded-1 h-100"
-        :class="{ 'choice-products--open': openListProducts }">
-        <button v-if="openListProducts"
+      <div
+        class="choice-products d-flex flex-column bg-white position-relative rounded-1 h-100"
+        :class="{ 'choice-products--open': openListProducts }"
+      >
+        <button
+          v-if="openListProducts"
           class="choice-products__btn-close position-absolute rounded-circle shadow border-0 fw-semibold bg-white"
-          @click="handleCloseProductList">
+          @click="handleCloseProductList"
+        >
           ✕
         </button>
         <div class="choice-products__inner d-flex flex-column overflow-y-auto overflow-x-hidden">
           <div class="choice-products__header">
-            <EllipsisText :title="orderChoice?.title" className="border-0 fs-6 text-dark"
-              classBlock="mt-4 mx-4 choice-products__title fw-medium" maxWidth="90%" />
+            <EllipsisText
+              :title="orderChoice?.title"
+              className="border-0 fs-6 text-dark"
+              classBlock="mt-4 mx-4 choice-products__title fw-medium"
+              maxWidth="90%"
+            />
             <div class="d-flex gap-3 align-items-center ms-4 mt-3">
-              <button type="button"
+              <button
+                type="button"
                 class="choice-products__btn btn shadow-sm rounded-circle d-flex align-items-center justify-content-center text-white border-0"
-                @click="handleOpenProductForm(orderChoice?.id)">
+                @click="handleOpenProductForm(orderChoice?.id)"
+              >
                 +
               </button>
               <span>Добавить продукт</span>
@@ -129,7 +138,7 @@ const handleCloseProductList = () => {
 
 .order {
   grid-template-columns: minmax(110px, 1fr) 2fr;
-  border: 1px solid #D1DADE;
+  border: 1px solid #d1dade;
 }
 
 .order--active::before {
@@ -160,13 +169,15 @@ const handleCloseProductList = () => {
   opacity: 0;
   border: 0;
   min-height: 0;
-  transition: width 0.4s ease-in-out, opacity 0.4s ease-in-out;
+  transition:
+    width 0.4s ease-in-out,
+    opacity 0.4s ease-in-out;
 }
 
 .choice-products--open {
   width: 100%;
   opacity: 1;
-  border: 1px solid #D1DADE;
+  border: 1px solid #d1dade;
 }
 
 .choice-products__btn-close {
@@ -205,8 +216,8 @@ const handleCloseProductList = () => {
 
 @media (hover: hover) and (pointer: fine) {
   .order:hover {
-    box-shadow: 1px 1px 5px 0 #80B548;
-    outline: 1px solid #80B548;
+    box-shadow: 1px 1px 5px 0 #80b548;
+    outline: 1px solid #80b548;
   }
 }
 </style>

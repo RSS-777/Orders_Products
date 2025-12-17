@@ -5,7 +5,7 @@ import { useRoute } from 'vue-router';
 import { useDate } from '../composables/useDate';
 import { useTime } from '../composables/useTime';
 import { useActiveSessions } from '../composables/useActiveSessions';
-import {dateFormateNav} from '../utils/dateFormateNav';
+import { dateFormateNav } from '../utils/dateFormateNav';
 import logo from '../assets/logo.png';
 import clock from '../assets/clock.png';
 import person from '../assets/person.png';

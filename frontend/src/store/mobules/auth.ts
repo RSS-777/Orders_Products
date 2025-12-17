@@ -44,9 +44,8 @@ const auth: Module<IAuthState, IRootState> = {
       if (!state.token) return null;
       const decoded = jwtDecode(state.token) as ITokenPayload;
       return decoded?.role || null;
-    }
+    },
   },
 };
 
 export default auth;
-

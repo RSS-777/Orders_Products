@@ -4,7 +4,7 @@ import { getDefaultCurrency } from '../api/settingsApi';
 
 export const cachedCurrency = ref<string | null>(null);
 
-const CACHE_LIFETIME = 60 * 60 * 1000; 
+const CACHE_LIFETIME = 60 * 60 * 1000;
 
 export const fetchCurrency = async (forceReload = false) => {
   const token = store.getters['auth/token'];

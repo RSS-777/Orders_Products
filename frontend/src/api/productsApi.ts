@@ -29,10 +29,10 @@ export const getProducts = async (token: string): Promise<IProductsResponse> => 
       },
     });
 
-   if (!response.ok) {
-      if (response.status === 404) throw new Error('Продукты не найдены')
-      if (response.status === 500) throw new Error('Ошибка сервера при получении продуктов')
-      throw new Error('Неожиданный ответ сервера')
+    if (!response.ok) {
+      if (response.status === 404) throw new Error('Продукты не найдены');
+      if (response.status === 500) throw new Error('Ошибка сервера при получении продуктов');
+      throw new Error('Неожиданный ответ сервера');
     }
 
     const res: IProductsResponse = await response.json();

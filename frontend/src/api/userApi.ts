@@ -35,7 +35,7 @@ export const updateUserPhoto = async (file: File, token: string): Promise<IUserP
     };
   } catch (err) {
     if (import.meta.env.VITE_APP_MODE === 'development') {
-      console.error('Ошибка при обновлении фото пользователя:', err)
+      console.error('Ошибка при обновлении фото пользователя:', err);
     }
 
     return {

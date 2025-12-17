@@ -4,6 +4,7 @@ import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin';
 import typescriptParser from '@typescript-eslint/parser';
 import browserGlobals from 'globals';
 import vueParser from 'vue-eslint-parser';
+import pluginPrettier from 'eslint-plugin-prettier';
 
 export default [
   {
@@ -13,13 +14,10 @@ export default [
     files: ['**/*.ts', '**/*.tsx'],
     languageOptions: {
       parser: typescriptParser,
-      ecmaVersion: 2021,
-      sourceType: 'module',
+      parserOptions: { ecmaVersion: 2021, sourceType: 'module' },
       globals: browserGlobals.browser,
     },
-    plugins: {
-      '@typescript-eslint': typescriptEslintPlugin,
-    },
+    plugins: { '@typescript-eslint': typescriptEslintPlugin },
     rules: {
       ...js.configs.recommended.rules,
       ...(typescriptEslintPlugin.configs.recommended?.rules || {}),
@@ -32,22 +30,15 @@ export default [
     files: ['**/*.vue'],
     languageOptions: {
       parser: vueParser,
-      parserOptions: {
-        parser: typescriptParser,
-        ecmaVersion: 2021,
-        sourceType: 'module',
-      },
+      parserOptions: { parser: typescriptParser, ecmaVersion: 2021, sourceType: 'module' },
       globals: browserGlobals.browser,
     },
-    plugins: {
-      vue: pluginVue,
-    },
+    plugins: { vue: pluginVue, prettier: pluginPrettier },
     rules: {
       'vue/multi-word-component-names': 'off',
       'vue/max-attributes-per-line': 'off',
       'vue/html-self-closing': 'off',
       'prettier/prettier': 'error',
     },
-    extends: ['plugin:prettier/recommended'],
   },
 ];

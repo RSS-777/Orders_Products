@@ -9,6 +9,10 @@ module.exports = function (io) {
         activeSessions++;
         io.emit('updateSessions', activeSessions);
 
+        socket.on('requestSessions', () => {
+            socket.emit('updateSessions', activeSessions);
+        });
+        
         socket.on('disconnect', () => {
             activeSessions--;
             io.emit('updateSessions', activeSessions);

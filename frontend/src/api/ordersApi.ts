@@ -40,7 +40,6 @@ export const getOrders = async (token: string): Promise<IOrdersResponse> => {
     if (!response.ok) {
       if (response.status === 500) throw new Error(data.error || 'Ошибка сервера при получении заказов');
       throw new Error(data.error || 'Неожиданный ответ сервера');
-      
     }
 
     if (!data.success) {

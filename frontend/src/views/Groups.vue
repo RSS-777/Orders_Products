@@ -75,7 +75,7 @@ const handleSubmitDeleteProduct = async () => {
         isDeleteProduct.value = false;
         isLoading.value = false;
       }, 3000);
-      return
+      return;
     }
 
     throw new Error(res.error ?? 'Неизвестная ошибка');
@@ -87,7 +87,7 @@ const handleSubmitDeleteProduct = async () => {
       massage.value = null;
     }, 2000);
   }
-}
+};
 
 onMounted(async () => {
   await fetchOrders();
@@ -111,13 +111,20 @@ onBeforeUnmount(() => {
           <ButtonOpenForm :onclick="handleToggleOrderForm" />
           <h1>Приходы / {{ countOrders }}</h1>
         </div>
-        <GroupsList :orders="orders"/>
+        <GroupsList :orders="orders" />
       </div>
     </main>
     <FormCreateOrder v-if="createOrder" @close="handleToggleOrderForm" />
     <FormCreateProduct v-if="createProduct && idOrder" :idOrder="idOrder" @close="handleCloseProductForm" />
-    <ConfirmModal v-if="showDeleteModal" :message="massage" :success="isDeleteProduct" name="продукт"
-      :isLoading="isLoading" @confirm="handleSubmitDeleteProduct" @cancel="handleCenselDeleteProduct">
+    <ConfirmModal
+      v-if="showDeleteModal"
+      :message="massage"
+      :success="isDeleteProduct"
+      name="продукт"
+      :isLoading="isLoading"
+      @confirm="handleSubmitDeleteProduct"
+      @cancel="handleCenselDeleteProduct"
+    >
       <div class="modal-element d-grid align-items-center gap-4 py-2">
         <ProductNewIndicator v-if="currentProduct" :status="currentProduct.status" />
         <ProductImage :src="currentProduct?.photo" />
@@ -132,12 +139,12 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .main {
-  flex: 1;  
-  max-width: 1540px; 
+  flex: 1;
+  max-width: 1540px;
 }
 
 .main__inner {
-  flex: 1;             
+  flex: 1;
 }
 
 .modal-element {

@@ -18,7 +18,6 @@ const pageProvider = async (pageNumber: number, pageSize: number) => {
   return Promise.resolve([...items.slice(start, end)]);
 };
 
-
 watch(
   () => tempScroll,
   (newIndex) => {
@@ -37,23 +36,15 @@ watch(
   async () => {
     gridKey.value++;
     await nextTick();
-  }
+  },
 );
 </script>
 
 <template>
   <div class="virtual-wrapper overflow-y-auto pb-1 pt-1">
-    <Grid 
-      :length="items.length" 
-      :pageProvider="pageProvider" 
-      :pageSize="20" 
-      :scrollTo="tempScroll" 
-      :class="classGrid"
-      class="columns" 
-      :key="gridKey"
-    >
+    <Grid :length="items.length" :pageProvider="pageProvider" :pageSize="20" :scrollTo="tempScroll" :class="classGrid" class="columns" :key="gridKey">
       <template v-slot:default="{ item, index, style }">
-        <div :style="style" :class="{ 'active-element': index === activeIndex }"  class="px-1">
+        <div :style="style" :class="{ 'active-element': index === activeIndex }" class="px-1">
           <slot :item="item"></slot>
         </div>
       </template>
@@ -63,11 +54,14 @@ watch(
       </template>
 
       <template v-slot:probe>
-        <div class="item" :style="{
-          height: `${heightElement}px`,
-          width: 'auto',
-          visibility: 'hidden',
-        }">
+        <div
+          class="item"
+          :style="{
+            height: `${heightElement}px`,
+            width: 'auto',
+            visibility: 'hidden',
+          }"
+        >
           Probe
         </div>
       </template>

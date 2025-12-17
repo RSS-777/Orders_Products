@@ -5,13 +5,20 @@ export function useActiveSessions() {
   const activeSessions = ref<number>(0);
 
   const updateSessions = (count: number) => {
-    console.log('updateSessions received from server:', count);
     activeSessions.value = count;
   };
 
-  onMounted(() => {
-    console.log('Socket connected?', socket.connected);
+  const setupSocket = () => {
     socket.on('updateSessions', updateSessions);
+    socket.emit('requestSessions');
+  };
+
+  onMounted(() => {
+    if (socket.connected) {
+      setupSocket();
+    } else {
+      socket.once('connect', setupSocket);
+    }
   });
 
   onBeforeUnmount(() => {

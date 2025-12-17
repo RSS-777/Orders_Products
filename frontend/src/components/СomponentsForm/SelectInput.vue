@@ -22,13 +22,7 @@ function onChange(event: Event) {
 <template>
   <div class="mb-3">
     <label :for="idSpecifier" class="form-label">{{ props.label }}</label>
-    <select
-      :name="props.name"
-      :id="idSpecifier"
-      :value="props.modelValue"
-      @change="onChange"
-      class="form-select"
-    >
+    <select :name="props.name" :id="idSpecifier" :value="props.modelValue" @change="onChange" class="form-select">
       <option v-for="option in props.options" :key="option" :value="option">
         {{ option }}
       </option>

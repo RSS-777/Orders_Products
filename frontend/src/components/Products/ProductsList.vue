@@ -22,9 +22,7 @@ const filteredProducts = ref<IProduct[]>([]);
 const products = computed<IProduct[]>(() => cachedProducts.value);
 const dataOrders = computed<IOrder[]>(() => cachedOrders.value);
 const searchText = computed(() => store.getters['search/text']);
-const sortedProductsByType = computed<IProduct[]>(() =>
-  [...products.value].sort((a, b) => (a.type ?? '').localeCompare(b.type ?? ''))
-);
+const sortedProductsByType = computed<IProduct[]>(() => [...products.value].sort((a, b) => (a.type ?? '').localeCompare(b.type ?? '')));
 
 watchEffect(() => {
   const q = searchText.value?.trim().toLowerCase() || '';
@@ -32,9 +30,7 @@ watchEffect(() => {
   if (!q) {
     filteredProducts.value = sortedProductsByType.value;
   } else {
-    filteredProducts.value = sortedProductsByType.value.filter(
-      (product) => product.type?.trim().toLowerCase().includes(q)
-    );
+    filteredProducts.value = sortedProductsByType.value.filter((product) => product.type?.trim().toLowerCase().includes(q));
   }
 });
 
@@ -86,8 +82,8 @@ onMounted(async () => {
 
 @media (hover: hover) and (pointer: fine) {
   .product:hover {
-    box-shadow: 1px 1px 5px 0 #80B548;
-    outline: 1px solid #80B548;
+    box-shadow: 1px 1px 5px 0 #80b548;
+    outline: 1px solid #80b548;
   }
 }
 </style>

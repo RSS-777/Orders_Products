@@ -60,7 +60,7 @@ router.beforeEach((to, _from, next) => {
 
   if (!isAuth && !publicPages.includes(to.path)) {
     return next('/login');
-  } 
+  }
 
   if (to.path === '/settings' && role !== 'admin') {
     return next('/');

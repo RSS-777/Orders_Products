@@ -143,7 +143,7 @@ const handleSubmit = async (e: Event) => {
         successFetch.value = false;
         closeForm();
       }, 3000);
-      return
+      return;
     }
 
     throw new Error(result.error ?? 'Неизвестная ошибка');
@@ -155,11 +155,11 @@ const handleSubmit = async (e: Event) => {
     }
 
     setTimeout(() => {
-      message.value = ''
+      message.value = '';
       isLoading.value = false;
     }, 3000);
-  };
-}
+  }
+};
 
 const resetForm = () => {
   dataForm.value = {
@@ -186,8 +186,7 @@ const closeForm = () => {
 </script>
 
 <template>
-  <div
-    class="modal position-absolute d-flex justify-content-center align-items-center bg-dark bg-opacity-50 border py-4">
+  <div class="modal position-absolute d-flex justify-content-center align-items-center bg-dark bg-opacity-50 border py-4">
     <form class="form w-100 overflow-y-auto rounded shadow bg-white mx-3" @submit="handleSubmit">
       <div>
         <h2 class="form__title text-center py-3">Создать продукт</h2>
@@ -196,16 +195,18 @@ const closeForm = () => {
           <BaseInput v-model="dataForm.serialNumber" label="Серийный номер" />
           <BaseInput v-model="dataForm.owner" label="Владелец" />
           <div class="d-flex justify-content-between">
-            <RadioGroup label="Состояние" :options="[
-              { label: 'Новый', value: 1 },
-              { label: 'Б/У', value: 0 },
-            ]" v-model="dataForm.isNew" />
+            <RadioGroup
+              label="Состояние"
+              :options="[
+                { label: 'Новый', value: 1 },
+                { label: 'Б/У', value: 0 },
+              ]"
+              v-model="dataForm.isNew"
+            />
           </div>
-          <BaseInput v-model="dataForm.title" label="Название продукта" placeholder="Введите название"
-            id="form__title" />
+          <BaseInput v-model="dataForm.title" label="Название продукта" placeholder="Введите название" id="form__title" />
           <BaseInput v-model="dataForm.type" label="Тип продукта" placeholder="Введите тип" id="form__type" />
-          <BaseInput v-model="dataForm.specification" label="Спецификация" placeholder="Введите спецификацию"
-            id="form__spec" />
+          <BaseInput v-model="dataForm.specification" label="Спецификация" placeholder="Введите спецификацию" id="form__spec" />
           <BaseInput v-model="dataForm.guarantee.start" label="Гарантия с" type="date" />
           <BaseInput v-model="dataForm.guarantee.end" label="Гарантия до" type="date" />
           <BaseInput v-model="dataForm.price[0].value" label="Цена USD" type="number" />

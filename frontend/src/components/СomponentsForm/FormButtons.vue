@@ -21,11 +21,7 @@ const handleCancel = () => {
 
 <template>
   <div class="form__buttons d-flex justify-content-end align-items-center gap-2 p-4">
-    <button 
-      type="button" 
-      class="btn form__btn form__btn--cancel text-white rounded-5 px-4"
-     @click="handleCancel" :disabled="isLoading"
-    >
+    <button type="button" class="btn form__btn form__btn--cancel text-white rounded-5 px-4" @click="handleCancel" :disabled="isLoading">
       отменить
     </button>
 

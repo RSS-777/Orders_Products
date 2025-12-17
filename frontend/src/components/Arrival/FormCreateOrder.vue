@@ -57,7 +57,7 @@ const handleSubmit = async (e: Event) => {
         isLoading.value = false;
         closeForm();
       }, 3000);
-      return
+      return;
     }
 
     throw new Error(res.error ?? 'Неизвестная ошибка');
@@ -69,7 +69,7 @@ const handleSubmit = async (e: Event) => {
     }
 
     setTimeout(() => {
-      message.value = ''
+      message.value = '';
       isLoading.value = false;
     }, 3000);
   }
@@ -86,10 +86,9 @@ const closeForm = () => {
       <h2 class="form__title text-center py-3">Создать заказ</h2>
       <div class="px-4">
         <BaseInput v-model="dataForm.title" label="Название заказа" placeholder="Введите название" id="form__title" />
-        <BaseTextarea v-model="dataForm.description" label="Описание" id="form__textarea" placeholder="Введите описание"
-          :rows="4" />
+        <BaseTextarea v-model="dataForm.description" label="Описание" id="form__textarea" placeholder="Введите описание" :rows="4" />
       </div>
-      <Spinner :isLoading="isLoading"/>
+      <Spinner :isLoading="isLoading" />
       <FormButtons :isLoading="isLoading" nameConfirm="Создать" typeBtnConfirm="submit" @cancel="closeForm" />
       <FetchMessage :message="message" :type="seccessFetch ? 'success' : 'error'" />
     </form>

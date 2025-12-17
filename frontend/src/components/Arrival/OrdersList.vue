@@ -64,7 +64,7 @@ const handleOpenProducts = (id: number) => {
   });
 };
 
-const handleCloseProducts = () => { 
+const handleCloseProducts = () => {
   openListProducts.value = false;
   store.commit('orders/clearCurrentOrder');
 };
@@ -73,12 +73,7 @@ defineExpose({ handleCloseProducts, openListProducts });
 </script>
 
 <template>
-  <VirtualGrid 
-    :items="sortedOrdersTitle" 
-    :tempScroll="tempScroll" 
-    classGrid="d-grid gap-2"
-    :heightElement="60"
-    >
+  <VirtualGrid :items="sortedOrdersTitle" :tempScroll="tempScroll" classGrid="d-grid gap-2" :heightElement="60">
     <template #default="{ item: element }">
       <div class="order d-grid align-items-center border rounded-2 gap-3 py-2 px-4 bg-white">
         <EllipsisText :title="element.title" />
@@ -99,10 +94,7 @@ defineExpose({ handleCloseProducts, openListProducts });
       </div>
     </template>
   </VirtualGrid>
-  <div 
-    class="choice-product bg-white w-100 position-absolute bottom-0 start-0 overflow-y-auto" 
-    :class="{ 'choice-product--open': openListProducts }"
-  >
+  <div class="choice-product bg-white w-100 position-absolute bottom-0 start-0 overflow-y-auto" :class="{ 'choice-product--open': openListProducts }">
     <ProductListShort :order="orderChoice ?? emptyOrder" :showProducts="true" version="expanded" />
   </div>
 </template>
@@ -121,7 +113,9 @@ defineExpose({ handleCloseProducts, openListProducts });
   top: 126px;
   opacity: 0;
   transform: translateY(120%);
-  transition: transform 1s ease, opacity 1s ease;
+  transition:
+    transform 1s ease,
+    opacity 1s ease;
 }
 
 .choice-product--open {
@@ -131,8 +125,8 @@ defineExpose({ handleCloseProducts, openListProducts });
 
 @media (hover: hover) and (pointer: fine) {
   .order:hover {
-    box-shadow: 1px 1px 5px 0 #80B548;
-    outline: 1px solid #80B548;
+    box-shadow: 1px 1px 5px 0 #80b548;
+    outline: 1px solid #80b548;
   }
 }
 </style>

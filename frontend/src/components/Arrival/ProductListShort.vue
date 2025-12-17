@@ -18,11 +18,17 @@ const {
 
 <template>
   <div>
-    <ul class="product list-unstyled overflow-y-auto"
+    <ul
+      class="product list-unstyled overflow-y-auto"
       :style="{ maxHeight: !showProducts && version === 'modal' ? '0' : '' }"
-      :class="{ 'product--modal': version === 'modal' }">
-      <li v-for="product in order?.products" :key="product.id" class="product__list gap-3 py-1"
-        :class="version === 'modal' ? 'product__list--modal' : 'product__list--expanded'">
+      :class="{ 'product--modal': version === 'modal' }"
+    >
+      <li
+        v-for="product in order?.products"
+        :key="product.id"
+        class="product__list gap-3 py-1"
+        :class="version === 'modal' ? 'product__list--modal' : 'product__list--expanded'"
+      >
         <ProductStatus :status="product.status" />
         <ProductImage />
         <div class="product__information overflow-hidden">

@@ -3,7 +3,7 @@ import type { IAuthState } from './mobules/auth';
 import type { ISearchState } from './mobules/search';
 import type { IProductsState } from './mobules/product';
 import type { IOrdersState } from './mobules/orders';
-import type {ISettingsState} from './mobules/settings';
+import type { ISettingsState } from './mobules/settings';
 
 import auth from './mobules/auth';
 import search from './mobules/search';
