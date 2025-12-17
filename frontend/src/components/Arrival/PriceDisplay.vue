@@ -29,7 +29,7 @@ const totalUSD = computed(() => {
     return acc + price;
   }, 0);
 
-  return formatNumber(sum);
+  return sum;
 });
 
 const totalUAH = computed(() => {
@@ -41,7 +41,7 @@ const totalUAH = computed(() => {
     return acc + price;
   }, 0);
 
-  return formatNumber(sum);
+  return sum;
 });
 </script>
 
@@ -52,14 +52,14 @@ const totalUAH = computed(() => {
       :class="defaultCurrencyStore !== 'USD' ? 'price__first' : 'price__last'"
       :style="{ order: defaultCurrencyStore === 'USD' ? 2 : 1 }"
     >
-      {{ totalUSD && Number(totalUSD) > 0 ? totalUSD + ' $' : '—' }}
+      {{ totalUSD && Number(totalUSD) > 0 ? formatNumber(totalUSD) + ' $' : '—' }}
     </span>
     <span
       class="price__uah text-nowrap"
       :class="defaultCurrencyStore !== 'UAH' ? 'price__first' : 'price__last'"
       :style="{ order: defaultCurrencyStore === 'UAH' ? 2 : 1 }"
     >
-      {{ totalUAH && Number(totalUAH) > 0 ? totalUAH + ' UAH' : '—' }}
+      {{ totalUAH && Number(totalUAH) > 0 ? formatNumber(totalUAH) + ' UAH' : '—' }}
     </span>
   </div>
 </template>

@@ -4,6 +4,7 @@ import EllipsisText from '../EllipsisText.vue';
 import ProductImage from '../Products/ProductImage.vue';
 import ProductStatus from '../Products/ProductNewIndicator.vue';
 import SecondaryText from '../SecondaryText.vue';
+import { getProductsForOrder } from '../../services/product';
 
 const {
   showProducts,
@@ -24,7 +25,7 @@ const {
       :class="{ 'product--modal': version === 'modal' }"
     >
       <li
-        v-for="product in order?.products"
+        v-for="product in getProductsForOrder(order?.id) || []"
         :key="product.id"
         class="product__list gap-3 py-1"
         :class="version === 'modal' ? 'product__list--modal' : 'product__list--expanded'"

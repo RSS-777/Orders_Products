@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { onMounted, computed, ref, watch } from 'vue';
+import { onBeforeMount, computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import { fetchOrders, chooseOrderById } from '../services/orders';
+import { getProductsForOrder } from '../services/product';
 import { fetchProducts } from '../services/product';
 import { deleteOrder } from '../api/ordersApi';
 import { fetchCurrency } from '../services/settings';
@@ -112,10 +113,10 @@ const handleOpenForm = () => {
   openForm.value = !openForm.value;
 };
 
-onMounted(async () => {
+onBeforeMount(async () => {
+  await fetchCurrency();
   await fetchOrders();
   await fetchProducts();
-  await fetchCurrency();
 });
 </script>
 
@@ -150,7 +151,7 @@ onMounted(async () => {
       <div class="modal-element p-4">
         <EllipsisText v-if="currentOrder" :title="currentOrder.title" className="fs-5 border-0 fw-medium" />
         <p class="fd-2 lh-sm my-2">{{ currentOrder?.description }}</p>
-        <div v-if="currentOrder?.products.length">
+        <div v-if="getProductsForOrder(currentOrder?.id).length">
           <button class="modal-element__btn border-0 bg-transparent p-0 d-flex align-items-center" @click="toggleProducts">
             <span>Продукти</span> <span>{{ showProducts ? '▲' : '▼' }}</span>
           </button>

@@ -12,9 +12,11 @@ const getProducts = async (req, res) => {
       return res.status(404).json({ success: false, error: 'No products found' });
     }
 
-    const formattedProducts = products.map(p => ({
-      ...p,
-      photo: p.photo || DEFAULT_PHOTO
+    const formattedProducts = products.map(({ price_json, guarantee_json, ...rest }) => ({
+      ...rest,
+      photo: rest.photo || DEFAULT_PHOTO,
+      price: price_json,
+      guarantee: guarantee_json
     }));
 
     return res.status(200).json({ success: true, data: formattedProducts });

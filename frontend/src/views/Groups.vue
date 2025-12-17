@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import type { IProduct } from '../types/product';
-import GroupsList from '../components/Groups/GroupsList.vue';
+import { onBeforeMount, onBeforeUnmount, computed, ref, watch } from 'vue';
 import { deleteProduct } from '../api/productsApi';
+import { fetchOrders, cachedOrders } from '../services/orders';
+import { fetchProducts, chooseProductById } from '../services/product';
+import GroupsList from '../components/Groups/GroupsList.vue';
 import ConfirmModal from '../components/ConfirmModal.vue';
 import WrapperMain from '../components/WrapperMain.vue';
 import EllipsisText from '../components/EllipsisText.vue';
@@ -13,8 +15,6 @@ import ButtonOpenForm from '../components/СomponentsForm/ButtonOpenForm.vue';
 import ProductNewIndicator from '../components/Products/ProductNewIndicator.vue';
 import ProductImage from '../components/Products/ProductImage.vue';
 import SecondaryText from '../components/SecondaryText.vue';
-import { fetchOrders, cachedOrders } from '../services/orders';
-import { fetchProducts, chooseProductById } from '../services/product';
 
 const store = useStore();
 const isLoading = ref<boolean>(false);
@@ -89,7 +89,7 @@ const handleSubmitDeleteProduct = async () => {
   }
 };
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await fetchOrders();
   await fetchProducts();
 });

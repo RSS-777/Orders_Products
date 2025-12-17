@@ -142,6 +142,7 @@ export const createProduct = async (product: IProductWithFile, token: string): P
     if (import.meta.env.VITE_APP_MODE === 'development') {
       console.error('Error creating product:', err);
     }
+
     return { success: false, error: err instanceof Error ? err.message : 'Произошла неизвестная ошибка' };
   }
 };

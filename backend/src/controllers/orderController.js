@@ -3,7 +3,6 @@ const Product = require('../models/productModel');
 const path = require('path');
 const fs = require('fs');
 const logger = require('../logger');
-
 const DEFAULT_PHOTO = '/images/default.png';
 const UPLOAD_DIR = path.join(__dirname, '../uploads/products');
 
@@ -11,14 +10,7 @@ const getOrders = async (req, res) => {
   try {
     const orders = await Order.getAllOrders();
 
-    const ordersWithProducts = await Promise.all(
-      orders.map(async o => ({
-        ...o,
-        products: await Product.getProductsByOrderId(o.id)
-      }))
-    );
-
-    res.status(200).json({ success: true, data: ordersWithProducts });
+    res.status(200).json({ success: true, data: orders });
   } catch (err) {
     logger.error(`Failed to get orders: ${err.message}`);
     res.status(500).json({ success: false, error: 'Server error' });

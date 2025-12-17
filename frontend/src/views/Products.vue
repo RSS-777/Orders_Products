@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount, computed, ref, watch } from 'vue';
+import { onBeforeMount, onBeforeUnmount, computed, ref, watch } from 'vue';
 import { useStore } from 'vuex';
 import { fetchProducts, chooseProductById } from '../services/product';
 import { fetchOrders } from '../services/orders';
@@ -73,7 +73,7 @@ const handleCancelDelete = () => {
   store.commit('products/clearCurrentProduct');
 };
 
-onMounted(async () => {
+onBeforeMount(async () => {
   await fetchOrders();
   await fetchProducts();
 });

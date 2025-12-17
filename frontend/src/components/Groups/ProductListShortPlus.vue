@@ -2,6 +2,7 @@
 import type { IOrder } from '../../types/order';
 import { computed } from 'vue';
 import { useStore } from 'vuex';
+import { getProductsForOrder } from '../../services/product';
 import EllipsisText from '../EllipsisText.vue';
 import ProductImage from '../Products/ProductImage.vue';
 import ProductStatus from '../Products/ProductNewIndicator.vue';
@@ -21,7 +22,7 @@ const onDelete = (id: number) => {
 <template>
   <div class="wrapper relative d-flex flex-column">
     <ul class="product list-unstyled mt-2 overflow-y-auto overflow-x-hidden" v-if="order">
-      <li class="product__list d-grid align-items-center gap-4 py-1" v-for="product in order?.products" :key="product.id">
+      <li class="product__list d-grid align-items-center gap-4 py-1" v-for="product in getProductsForOrder(order.id)" :key="product.id">
         <ProductStatus :status="product.status" />
         <ProductImage />
         <div class="product__information overflow-hidden">

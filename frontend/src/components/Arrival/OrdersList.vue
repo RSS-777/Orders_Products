@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { IOrder } from '../../types/order';
 import { useStore } from 'vuex';
 import { ref, computed, watch, nextTick } from 'vue';
-import type { IOrder } from '../../types/order';
+import { cachedOrders, chooseOrderById } from '../../services/orders';
+import { getProductsForOrder } from '../../services/product';
 import CustomButton from '../CustomButton.vue';
 import EllipsisText from '../EllipsisText.vue';
 import VirtualGrid from '../VirtualGrid.vue';
@@ -10,7 +12,6 @@ import BaseButton from '../BaseButton.vue';
 import FormattedDate from '../FormattedDate.vue';
 import ProductListShort from './ProductListShort.vue';
 import imageBacket from '../../assets/basket.png';
-import { cachedOrders, chooseOrderById } from '../../services/orders';
 
 const handleDelete = (id: number) => {
   store.commit('orders/setOrderId', id);
@@ -21,7 +22,6 @@ const emptyOrder: IOrder = {
   title: '',
   date: '',
   description: '',
-  products: [],
 };
 
 const store = useStore();
@@ -80,13 +80,13 @@ defineExpose({ handleCloseProducts, openListProducts });
         <div class="order__products d-flex align-items-center gap-3 justify-content-start">
           <CustomButton @click="() => handleOpenProducts(element.id)" />
           <div class="d-flex flex-column">
-            <span class="fs-5 lh-1">{{ element.products.length }}</span>
+            <span class="fs-5 lh-1">{{ getProductsForOrder(element.id).length }}</span>
             <span class="order__products-title">Продукта</span>
           </div>
         </div>
         <FormattedDate :date="element.date" />
         <div class="d-flex justify-content-start">
-          <PriceDisplay :products="element.products" />
+          <PriceDisplay :products="getProductsForOrder(element.id)" />
         </div>
         <BaseButton @click="() => handleDelete(element.id)">
           <img :src="imageBacket" alt="Delete icon" width="16" height="16" />

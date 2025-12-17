@@ -43,3 +43,7 @@ export const chooseProductById = (id: number) => {
     store.commit('products/setCurrentProduct', product);
   }
 };
+
+export const getProductsForOrder = (orderId: number): IProduct[] => {
+  return cachedProducts.value.filter((product) => product.order_id === orderId);
+};

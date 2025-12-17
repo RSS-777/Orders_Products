@@ -8,10 +8,10 @@ import BaseInput from '../СomponentsForm/BaseInput.vue';
 import FetchMessage from '../СomponentsForm/FetchMessage.vue';
 import ButtonFile from '../СomponentsForm/ButtonFile.vue';
 import RadioGroup from '../СomponentsForm/RadioGroup.vue';
+import Spinner from '../СomponentsForm/Spinner.vue';
 import { createProduct } from '../../api/productsApi';
 import { fetchProducts } from '../../services/product';
 import { fetchOrders } from '../../services/orders';
-import Spinner from '../СomponentsForm/Spinner.vue';
 import { formatDateForDB } from '../../utils/dateFormateForDB';
 import { dataCompare } from '../../utils/dataCompare';
 
