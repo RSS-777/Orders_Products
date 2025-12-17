@@ -12,7 +12,7 @@ This project is a **test assignment** designed to demonstrate skills in both fro
 ## Technologies
 
 ### Backend:
-**Node.js** – JavaScript runtime environment for building server-side applications.  
+- **Node.js** – JavaScript runtime environment for building server-side applications.  
 - **Express** – Web framework for Node.js, used to handle routing, middleware, and server logic.  
 - **MySQL2** – MySQL client for Node.js, used to interact with the database.  
 - **Socket.io** – Library for real-time communication between server and clients, used here to display active user sessions.  
@@ -53,7 +53,7 @@ This project is a **test assignment** designed to demonstrate skills in both fro
 ### Frontend:
 
 #### Sidebar Navigation:
-- Navigate between **Orders** and **Products** pages  
+- Navigate between **Orders**, **Products**, **Groups**, and others 
 - Display user profile photo  
 
 #### Top Bar:
@@ -71,26 +71,35 @@ This project is a **test assignment** designed to demonstrate skills in both fro
 - Show the number of orders  
 
 #### Products Page:
-- **CRUD** for products, including images  
 - Display all required product fields (name, type, warranty, price, etc.)  
 - Filter by type and search by partial words  
 - Delete individual products  
 - Show the number of products  
 
+#### **Settings Page / Access Control:**
+- Accessible **only to users with the admin role**  
+- **Managers or other roles** cannot access the Settings page  
+- Role-based route guards in the frontend prevent unauthorized access  
+- Backend also verifies roles when accessing sensitive endpoints
+- **Admin can select the default currency** for display across the application  
+
 #### Group Page:
 - Sidebar list of orders with buttons to expand products in each order  
 - Create products directly within an order  
 - Create new orders  
-- Product creation form allows setting all fields, including default currency  
+- Product creation form allows setting all fields  
+
 
 ### Other Frontend Features:
 - Forms with **validation**  
 - **Responsive design**  
 - **BEM-like styling**  
 - **Animations and modal windows**  
-- Efficient rendering of large lists using `vue-virtual-scroll-grid` (dynamic loading of 20–30 items at a time to avoid DOM overload)  
+- Efficient rendering of large lists using `vue-virtual-scroll-grid` (dynamic loading of 20–30 items)  
 
-    > **Note:** Data on the frontend is **cached using Vuex**, so repeated requests for the same data do not hit the server unnecessarily. This improves performance and reduces server load.
+> **Note:** Data on the frontend is **cached using Vuex**, so repeated requests for the same data do not hit the server unnecessarily. This improves performance and reduces server load.  
+> ⚠️ I am aware that this approach is not ideal for this project. While the implementation with CRUD and cache that updates periodically works fine, it is not suitable here. For **real-time updates** of products and orders, a Socket.io-based solution would be the correct approach. However, for demonstration purposes, this solution is sufficient.
+
 ---
 
 ## Future Improvements
@@ -104,12 +113,12 @@ This project is a **test assignment** designed to demonstrate skills in both fro
 ### Screenshots
 <div style="display: flex; flex-direction: column; gap: 10px">
     <div style="display: flex; gap: 5px">
-        <img src="./screenshots/filters.png" width="45%">
         <img src="./screenshots/order.png" width="45%" >
+        <img src="./screenshots/settings.png" width="45%">
     </div>
     <div style="display: flex; gap: 5px">
-        <img src="./screenshots/form.png" width="45%" >
-        <img src="./screenshots/mobile.png" width="35%" >
+        <img src="./screenshots/form.png" width="25%" height="100%">
+        <img src="./screenshots/product_form.png" width="25%"height="100%">
     </div>
 </div>
 
