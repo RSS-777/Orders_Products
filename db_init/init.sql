@@ -16,7 +16,7 @@ CREATE TABLE orders (
 
 CREATE TABLE products (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    serialNumber INT NOT NULL,
+    serialNumber VARCHAR(50) NOT NULL,
     isNew TINYINT(1) DEFAULT 1,
     photo VARCHAR(255) NULL,
     title VARCHAR(255) NOT NULL,
@@ -31,56 +31,65 @@ CREATE TABLE products (
     FOREIGN KEY (order_id) REFERENCES orders(id)
 );
 
-INSERT INTO orders (title, description, date)
-VALUES
-('Замовлення офісного обладнання для нового відділу', 'Замовлення містить 10 продуктів: монітори, клавіатури, миші.', '2017-07-01 09:00:00'),
-('Заказ канцелярських товарів для нового отдела', 'Заказ содержит 10 продуктов: коробки, книги, канцтовары.', '2017-07-02 09:15:12'),
-('Закупівля комп’ютерної техніки для IT-відділу', 'Включає 5 ноутбуків, 5 моніторів та аксесуари.', '2017-07-03 10:30:00'),
-('Замовлення периферії для нових робочих місць', 'Клавіатури, миші, принтери.', '2017-07-04 11:45:00'),
-('Закупівля серверного обладнання', 'Сервери, накопичувачі, мережеве обладнання.', '2017-07-05 09:20:00'),
-('Замовлення для бухгалтерії', 'Принтери, сканери, канцелярія.', '2017-07-06 10:10:00'),
-('Закупівля матеріалів для презентацій', 'Проектори, екрани, кабелі.', '2017-07-07 14:05:00'),
-('Замовлення для нового складу', 'Раковини, полиці, органайзери.', '2017-07-08 08:50:00'),
-('Закупівля обладнання для конференц-зали', 'Монітори, мікрофони, колонки.', '2017-07-09 12:30:00'),
-('Замовлення для відділу продажів', 'Ноутбуки, телефони, гарнітури.', '2017-07-10 11:15:00'),
-('Закупівля для відділу маркетингу', 'Принтери, планшети, фототехніка.', '2017-07-11 10:05:00'),
-('Замовлення для нового проекту', 'Комп’ютери, клавіатури, миші, монітори.', '2017-07-12 09:45:00'),
-('Закупівля для складу запасних частин', 'Жорсткі диски, SSD, кабелі, адаптери.', '2017-07-13 14:20:00'),
-('Замовлення для відділу підтримки', 'Монітори, гарнітури, клавіатури.', '2017-07-14 08:40:00'),
-('Закупівля для адміністративного відділу', 'Принтери, сканери, меблі.', '2017-07-15 11:30:00');
+CREATE TABLE settings (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    `key` VARCHAR(100) NOT NULL UNIQUE,
+    `value` VARCHAR(255) NOT NULL,
+    description VARCHAR(255) NULL
+);
 
-INSERT INTO products (serialNumber, isNew, photo, title, type, specification, price_json, order_id, date, owner, status, guarantee_json)
-VALUES
-(1236, 1, NULL, 'Материнська плата Gigabyte X870 AORUS ELITE WIFI7 ICE', 'Motherboards', 'Specification 3', '[{"value":0,"symbol":"USD","isDefault":0},{"value":5200,"symbol":"UAH","isDefault":1}]', 2, '2017-07-01 14:03:55', 'Сидоров Сергей', 'ready', '{"start":"2017-07-01 14:03:55","end":"2018-07-01 14:03:55"}'),
-(1237, 0, NULL, 'Принтер HP LaserJet Pro M404dn', 'Printers', '4800 dpi, U', '[{"value":100,"symbol":"USD","isDefault":0},{"value":2700,"symbol":"UAH","isDefault":1}]', 4, '2017-07-02 08:44:12', NULL, 'in_repair', '{"start":"2017-07-02 08:44:12","end":"2018-07-02 08:44:12"}'),
-(1238, 1, NULL, 'Монітор Dell UltraSharp U2723QE', 'Monitors', '27" IPS, 4K', '[{"value":400,"symbol":"USD","isDefault":0},{"value":10800,"symbol":"UAH","isDefault":1}]', 1, '2017-07-03 10:12:00', 'Іваненко Ігор', 'ready', '{"start":"2017-07-03 10:12:00","end":"2018-07-03 10:12:00"}'),
-(1239, 0, NULL, 'Клавіатура Logitech MX Keys', 'Keyboards', 'Wireless, Bluetooth', '[{"value":100,"symbol":"USD","isDefault":0},{"value":2700,"symbol":"UAH","isDefault":1}]', 5, '2017-07-04 12:00:00', 'Петренко Олег', 'in_repair', '{"start":"2017-07-04 12:00:00","end":"2018-07-04 12:00:00"}'),
-(1240, 1, NULL, 'Миша Logitech MX Master 3', 'Mice', 'Wireless, Bluetooth', '[{"value":80,"symbol":"USD","isDefault":0},{"value":2160,"symbol":"UAH","isDefault":1}]', 3, '2017-07-05 09:30:00', 'Коваль Андрій', 'ready', '{"start":"2017-07-05 09:30:00","end":"2018-07-05 09:30:00"}'),
-(1241, 0, NULL, 'Ноутбук ASUS ROG Zephyrus G15', 'Laptops', 'Ryzen 9, RTX 3080', '[{"value":1500,"symbol":"USD","isDefault":0},{"value":40500,"symbol":"UAH","isDefault":1}]', 6, '2017-07-06 14:15:00', 'Сидоренко Олексій', 'in_repair', '{"start":"2017-07-06 14:15:00","end":"2018-07-06 14:15:00"}'),
-(1242, 1, NULL, 'Жорсткий диск Seagate 2TB', 'Storage', 'SATA III', '[{"value":90,"symbol":"USD","isDefault":0},{"value":2430,"symbol":"UAH","isDefault":1}]', 7, '2017-07-07 11:20:00', 'Іваненко Ігор', 'ready', '{"start":"2017-07-07 11:20:00","end":"2018-07-07 11:20:00"}'),
-(1243, 0, NULL, 'SSD Samsung 1TB', 'Storage', 'NVMe PCIe 3.0', '[{"value":120,"symbol":"USD","isDefault":0},{"value":3240,"symbol":"UAH","isDefault":1}]', 8, '2017-07-08 15:10:00', 'Петренко Олег', 'in_repair', '{"start":"2017-07-08 15:10:00","end":"2018-07-08 15:10:00"}'),
-(1244, 1, NULL, 'Материнська плата MSI MPG X670', 'Motherboards', 'Specification 5', '[{"value":0,"symbol":"USD","isDefault":0},{"value":7000,"symbol":"UAH","isDefault":1}]', 9, '2017-07-09 10:45:00', 'Сидоров Сергей', 'ready', '{"start":"2017-07-09 10:45:00","end":"2018-07-09 10:45:00"}'),
-(1245, 0, NULL, 'Принтер Canon PIXMA G7020', 'Printers', 'All-in-One', '[{"value":120,"symbol":"USD","isDefault":0},{"value":3240,"symbol":"UAH","isDefault":1}]', 10, '2017-07-10 08:50:00', NULL, 'in_repair', '{"start":"2017-07-10 08:50:00","end":"2018-07-10 08:50:00"}'),
-(1246, 1, NULL, 'Монітор LG 27UL850', 'Monitors', '27" 4K IPS', '[{"value":0,"symbol":"USD","isDefault":0},{"value":7500,"symbol":"UAH","isDefault":1}]', 1, '2017-07-11 09:00:00', 'Іваненко Ігор', 'ready', '{"start":"2017-07-11 09:00:00","end":"2018-07-11 09:00:00"}'),
-(1247, 0, NULL, 'Ноутбук Lenovo ThinkPad X1 Carbon', 'Laptops', 'i7, 16GB RAM', '[{"value":1200,"symbol":"USD","isDefault":0},{"value":32400,"symbol":"UAH","isDefault":1}]', 2, '2017-07-11 10:30:00', 'Петренко Олег', 'in_repair', '{"start":"2017-07-11 10:30:00","end":"2018-07-11 10:30:00"}'),
-(1248, 1, NULL, 'Клавіатура Razer BlackWidow', 'Keyboards', 'Mechanical, RGB', '[{"value":150,"symbol":"USD","isDefault":0},{"value":4050,"symbol":"UAH","isDefault":1}]', 3, '2017-07-12 11:00:00', 'Сидоров Сергей', 'ready', '{"start":"2017-07-12 11:00:00","end":"2018-07-12 11:00:00"}'),
-(1249, 0, NULL, 'Миша Logitech G502', 'Mice', 'Wired Gaming', '[{"value":70,"symbol":"USD","isDefault":0},{"value":1890,"symbol":"UAH","isDefault":1}]', 4, '2017-07-12 12:15:00', 'Коваль Андрій', 'in_repair', '{"start":"2017-07-12 12:15:00","end":"2018-07-12 12:15:00"}'),
-(1250, 1, NULL, 'Принтер Epson EcoTank L3150', 'Printers', 'All-in-One', '[{"value":110,"symbol":"USD","isDefault":0},{"value":2970,"symbol":"UAH","isDefault":1}]', 5, '2017-07-13 09:30:00', 'Іваненко Ігор', 'ready', '{"start":"2017-07-13 09:30:00","end":"2018-07-13 09:30:00"}'),
-(1251, 0, NULL, 'SSD Crucial P5 500GB', 'Storage', 'NVMe PCIe 3.0', '[{"value":80,"symbol":"USD","isDefault":0},{"value":2160,"symbol":"UAH","isDefault":1}]', 6, '2017-07-13 11:45:00', 'Петренко Олег', 'in_repair', '{"start":"2017-07-13 11:45:00","end":"2018-07-13 11:45:00"}'),
-(1252, 1, NULL, 'Жорсткий диск WD Blue 1TB', 'Storage', 'SATA III', '[{"value":50,"symbol":"USD","isDefault":0},{"value":1350,"symbol":"UAH","isDefault":1}]', 7, '2017-07-14 10:00:00', 'Сидоров Сергей', 'ready', '{"start":"2017-07-14 10:00:00","end":"2018-07-14 10:00:00"}'),
-(1253, 0, NULL, 'Монітор Samsung Odyssey G7', 'Monitors', '27" QHD 240Hz', '[{"value":600,"symbol":"USD","isDefault":0},{"value":16200,"symbol":"UAH","isDefault":1}]', 8, '2017-07-14 12:30:00', 'Коваль Андрій', 'in_repair', '{"start":"2017-07-14 12:30:00","end":"2018-07-14 12:30:00"}'),
-(1254, 1, NULL, 'Ноутбук HP Spectre x360', 'Laptops', 'i5, 16GB RAM', '[{"value":1000,"symbol":"USD","isDefault":0},{"value":27000,"symbol":"UAH","isDefault":1}]', 9, '2017-07-15 09:15:00', 'Іваненко Ігор', 'ready', '{"start":"2017-07-15 09:15:00","end":"2018-07-15 09:15:00"}'),
-(1255, 0, NULL, 'Клавіатура SteelSeries Apex 7', 'Keyboards', 'Mechanical, RGB', '[{"value":140,"symbol":"USD","isDefault":0},{"value":3780,"symbol":"UAH","isDefault":1}]', 10, '2017-07-15 10:45:00', 'Петренко Олег', 'in_repair', '{"start":"2017-07-15 10:45:00","end":"2018-07-15 10:45:00"}'),
-(1256, 1, NULL, 'Миша Razer DeathAdder V2', 'Mice', 'Wired Gaming', '[{"value":65,"symbol":"USD","isDefault":0},{"value":1755,"symbol":"UAH","isDefault":1}]', 1, '2017-07-16 11:00:00', 'Сидоров Сергей', 'ready', '{"start":"2017-07-16 11:00:00","end":"2018-07-16 11:00:00"}'),
-(1257, 0, NULL, 'Принтер Brother HL-L2350DW', 'Printers', 'Monochrome', '[{"value":90,"symbol":"USD","isDefault":0},{"value":2430,"symbol":"UAH","isDefault":1}]', 2, '2017-07-16 13:20:00', 'Коваль Андрій', 'in_repair', '{"start":"2017-07-16 13:20:00","end":"2018-07-16 13:20:00"}'),
-(1258, 1, NULL, 'SSD Samsung 970 EVO Plus 1TB', 'Storage', 'NVMe PCIe 3.0', '[{"value":130,"symbol":"USD","isDefault":0},{"value":3510,"symbol":"UAH","isDefault":1}]', 3, '2017-07-17 09:00:00', 'Іваненко Ігор', 'ready', '{"start":"2017-07-17 09:00:00","end":"2018-07-17 09:00:00"}'),
-(1259, 0, NULL, 'Жорсткий диск Seagate 4TB', 'Storage', 'SATA III', '[{"value":120,"symbol":"USD","isDefault":0},{"value":3240,"symbol":"UAH","isDefault":1}]', 4, '2017-07-17 11:30:00', 'Петренко Олег', 'in_repair', '{"start":"2017-07-17 11:30:00","end":"2018-07-17 11:30:00"}'),
-(1260, 1, NULL, 'Монітор Acer Predator XB273K', 'Monitors', '27" 4K 144Hz', '[{"value":550,"symbol":"USD","isDefault":0},{"value":14850,"symbol":"UAH","isDefault":1}]', 5, '2017-07-18 10:15:00', 'Сидоров Сергей', 'ready', '{"start":"2017-07-18 10:15:00","end":"2018-07-18 10:15:00"}'),
-(1261, 0, NULL, 'Ноутбук Dell XPS 15', 'Laptops', 'i7, 16GB RAM', '[{"value":1400,"symbol":"USD","isDefault":0},{"value":37800,"symbol":"UAH","isDefault":1}]', 6, '2017-07-18 12:45:00', 'Коваль Андрій', 'in_repair', '{"start":"2017-07-18 12:45:00","end":"2018-07-18 12:45:00"}'),
-(1262, 1, NULL, 'Клавіатура Corsair K70 RGB', 'Keyboards', 'Mechanical, RGB', '[{"value":130,"symbol":"USD","isDefault":0},{"value":3510,"symbol":"UAH","isDefault":1}]', 7, '2017-07-19 09:20:00', 'Іваненко Ігор', 'ready', '{"start":"2017-07-19 09:20:00","end":"2018-07-19 09:20:00"}'),
-(1263, 0, NULL, 'Миша Logitech G Pro X', 'Mice', 'Wireless Gaming', '[{"value":90,"symbol":"USD","isDefault":0},{"value":2430,"symbol":"UAH","isDefault":1}]', 8, '2017-07-19 11:50:00', 'Петренко Олег', 'in_repair', '{"start":"2017-07-19 11:50:00","end":"2018-07-19 11:50:00"}'),
-(1264, 1, NULL, 'Принтер Canon LBP6230dw', 'Printers', 'Monochrome', '[{"value":100,"symbol":"USD","isDefault":0},{"value":2700,"symbol":"UAH","isDefault":1}]', 9, '2017-07-20 10:05:00', 'Сидоров Сергей', 'ready', '{"start":"2017-07-20 10:05:00","end":"2018-07-20 10:05:00"}'),
-(1265, 0, NULL, 'SSD WD Black SN750 1TB', 'Storage', 'NVMe PCIe 3.0', '[{"value":140,"symbol":"USD","isDefault":0},{"value":3780,"symbol":"UAH","isDefault":1}]', 10, '2017-07-20 12:35:00', 'Коваль Андрій', 'in_repair', '{"start":"2017-07-20 12:35:00","end":"2018-07-20 12:35:00"}');
+INSERT INTO orders (title, description, date) VALUES
+('Ремонт ноутбуків для офісу', 'Включає 3 пристрої: 2 ноутбуки та 1 принтер', '2025-12-01 09:00:00'),
+('Обслуговування мережевого обладнання', 'Перевірка та заміна кабелів, комутаторів', '2025-12-02 10:30:00'),
+('Ремонт мобільних пристроїв', '5 телефонів для співробітників', '2025-12-03 11:00:00'),
+('Технічне обслуговування серверів', 'Сервера потребують чистки та апгрейду', '2025-12-04 09:15:00'),
+('Заміна моніторів', '3 монітори з поламаними матрицями', '2025-12-05 14:00:00'),
+('Ремонт принтерів', '2 лазерні принтери та 1 струменевий', '2025-12-06 13:30:00'),
+('Обслуговування ПК', '4 стаціонарні комп’ютери для нового відділу', '2025-12-07 10:45:00'),
+('Ремонт ноутбуків', '2 ноутбуки HP', '2025-12-08 09:20:00'),
+('Заміна батарей мобільних', '3 батареї для телефонів', '2025-12-09 15:00:00'),
+('Перевірка мережі', 'Тестування маршрутизаторів та комутаторів', '2025-12-10 11:15:00'),
+('Обслуговування проекторів', '2 проектори для конференц-залів', '2025-12-11 14:30:00'),
+('Ремонт планшетів', '3 планшети Apple та Samsung', '2025-12-12 09:45:00'),
+('Перевірка серверного обладнання', 'Сервера та комутатори', '2025-12-13 10:00:00'),
+('Обслуговування офісних пристроїв', 'Принтери та сканери', '2025-12-14 13:00:00'),
+('Ремонт ноутбуків Lenovo', '2 ноутбуки Lenovo ThinkPad', '2025-12-15 09:30:00');
 
+INSERT INTO products (serialNumber, isNew, photo, title, type, specification, price_json, order_id, date, owner, status, guarantee_json) VALUES
+('SN-20001', 1, '', 'Ноутбук Lenovo ThinkPad T14', 'Laptop', 'Intel i5, 16GB RAM, 512GB SSD', '[{"value":1200,"symbol":"USD","isDefault":0},{"value":45000,"symbol":"UAH","isDefault":1}]', 1, '2025-12-01 09:30:00', 'Іванов І.', 'in_repair', '{"start":"2025-12-01","end":"2026-12-01"}'),
+('SN-20002', 0, '', 'Принтер HP LaserJet', 'Printer', 'Laser, 20ppm', '[{"value":200,"symbol":"USD","isDefault":0},{"value":7500,"symbol":"UAH","isDefault":1}]', 1, '2025-12-01 09:40:00', 'Петренко П.', 'ready', '{"start":"2025-12-01","end":"2026-12-01"}'),
+('SN-20003', 1, '', 'Ноутбук Dell XPS 13', 'Laptop', 'Intel i7, 16GB RAM, 1TB SSD', '[{"value":1500,"symbol":"USD","isDefault":0},{"value":56000,"symbol":"UAH","isDefault":1}]', 1, '2025-12-01 09:50:00', 'Сидоренко С.', 'ready', '{"start":"2025-12-01","end":"2026-12-01"}'),
+('SN-21001', 1, '', 'Комутатор Netgear GS108', 'Networking', '8 портів, Gigabit', '[{"value":60,"symbol":"USD","isDefault":0},{"value":2250,"symbol":"UAH","isDefault":1}]', 2, '2025-12-02 10:40:00', 'Іванов І.', 'in_repair', '{"start":"2025-12-02","end":"2026-12-02"}'),
+('SN-21002', 1, '', 'Маршрутизатор TP-Link TL-WR841N', 'Networking', '300Mbps, 4 порти', '[{"value":25,"symbol":"USD","isDefault":0},{"value":950,"symbol":"UAH","isDefault":1}]', 2, '2025-12-02 10:50:00', 'Петренко П.', 'ready', '{"start":"2025-12-02","end":"2026-12-02"}'),
+('SN-22001', 1, '', 'Смартфон Samsung Galaxy S21', 'Mobile', '128GB, Black', '[{"value":800,"symbol":"USD","isDefault":0},{"value":30000,"symbol":"UAH","isDefault":1}]', 3, '2025-12-03 11:10:00', 'Сидоренко С.', 'in_repair', '{"start":"2025-12-03","end":"2026-12-03"}'),
+('SN-22002', 1, '', 'Смартфон iPhone 12', 'Mobile', '64GB, White', '[{"value":900,"symbol":"USD","isDefault":0},{"value":34000,"symbol":"UAH","isDefault":1}]', 3, '2025-12-03 11:20:00', 'Іванов І.', 'ready', '{"start":"2025-12-03","end":"2026-12-03"}'),
+('SN-22003', 0, '', 'Смартфон Xiaomi Mi 11', 'Mobile', '128GB, Blue', '[{"value":700,"symbol":"USD","isDefault":0},{"value":26000,"symbol":"UAH","isDefault":1}]', 3, '2025-12-03 11:30:00', 'Петренко П.', 'ready', '{"start":"2025-12-03","end":"2026-12-03"}'),
+('SN-23001', 0, '', 'Сервер Dell PowerEdge R740', 'Server', '2x Intel Xeon, 64GB RAM, 2TB SSD', '[{"value":5000,"symbol":"USD","isDefault":0},{"value":185000,"symbol":"UAH","isDefault":1}]', 4, '2025-12-04 09:20:00', 'Іванов І.', 'in_repair', '{"start":"2025-12-04","end":"2026-12-04"}'),
+('SN-23002', 0, '', 'Сервер HP ProLiant DL380', 'Server', '2x Intel Xeon, 128GB RAM, 4TB SSD', '[{"value":7000,"symbol":"USD","isDefault":0},{"value":260000,"symbol":"UAH","isDefault":1}]', 4, '2025-12-04 09:40:00', 'Сидоренко С.', 'ready', '{"start":"2025-12-04","end":"2026-12-04"}'),
+('SN-24001', 0, '', 'Монітор Dell UltraSharp 27"', 'Monitor', '2560x1440, IPS', '[{"value":400,"symbol":"USD","isDefault":0},{"value":14800,"symbol":"UAH","isDefault":1}]', 5, '2025-12-05 14:10:00', 'Петренко П.', 'in_repair', '{"start":"2025-12-05","end":"2026-12-05"}'),
+('SN-24002', 0, '', 'Монітор LG 24"', 'Monitor', '1920x1080, IPS', '[{"value":200,"symbol":"USD","isDefault":0},{"value":7400,"symbol":"UAH","isDefault":1}]', 5, '2025-12-05 14:20:00', 'Іванов І.', 'ready', '{"start":"2025-12-05","end":"2026-12-05"}'),
+('SN-25001', 0, '', 'Принтер Canon i-Sensys', 'Printer', 'Laser, 18ppm', '[{"value":180,"symbol":"USD","isDefault":0},{"value":6700,"symbol":"UAH","isDefault":1}]', 6, '2025-12-06 13:40:00', 'Сидоренко С.', 'in_repair', '{"start":"2025-12-06","end":"2026-12-06"}'),
+('SN-25002', 1, '', 'Принтер HP DeskJet', 'Printer', 'Inkjet, 10ppm', '[{"value":120,"symbol":"USD","isDefault":0},{"value":4500,"symbol":"UAH","isDefault":1}]', 6, '2025-12-06 13:50:00', 'Іванов І.', 'ready', '{"start":"2025-12-06","end":"2026-12-06"}'),
+('SN-25003', 0, '', 'Принтер Epson L3150', 'Printer', 'Inkjet, 15ppm', '[{"value":150,"symbol":"USD","isDefault":0},{"value":5600,"symbol":"UAH","isDefault":1}]', 6, '2025-12-06 14:00:00', 'Петренко П.', 'ready', '{"start":"2025-12-06","end":"2026-12-06"}'),
+('SN-26001', 1, '', 'ПК Dell OptiPlex 7080', 'PC', 'Intel i5, 16GB RAM, 512GB SSD', '[{"value":1000,"symbol":"USD","isDefault":0},{"value":37000,"symbol":"UAH","isDefault":1}]', 7, '2025-12-07 11:00:00', 'Іванов І.', 'in_repair', '{"start":"2025-12-07","end":"2026-12-07"}'),
+('SN-26002', 1, '', 'ПК HP EliteDesk 800', 'PC', 'Intel i7, 32GB RAM, 1TB SSD', '[{"value":1500,"symbol":"USD","isDefault":0},{"value":55500,"symbol":"UAH","isDefault":1}]', 7, '2025-12-07 11:15:00', 'Сидоренко С.', 'ready', '{"start":"2025-12-07","end":"2026-12-07"}'),
+('SN-26003', 0, '', 'ПК Lenovo ThinkCentre M720', 'PC', 'Intel i5, 16GB RAM, 256GB SSD', '[{"value":900,"symbol":"USD","isDefault":0},{"value":33300,"symbol":"UAH","isDefault":1}]', 7, '2025-12-07 11:30:00', 'Петренко П.', 'ready', '{"start":"2025-12-07","end":"2026-12-07"}'),
+('SN-27001', 1, '', 'Ноутбук HP EliteBook 840', 'Laptop', 'Intel i5, 8GB RAM, 256GB SSD', '[{"value":1200,"symbol":"USD","isDefault":0},{"value":45000,"symbol":"UAH","isDefault":1}]', 8, '2025-12-08 09:40:00', 'Іванов І.', 'in_repair', '{"start":"2025-12-08","end":"2026-12-08"}'),
+('SN-27002', 1, '', 'Ноутбук HP ProBook 450', 'Laptop', 'Intel i7, 16GB RAM, 512GB SSD', '[{"value":1400,"symbol":"USD","isDefault":0},{"value":52000,"symbol":"UAH","isDefault":1}]', 8, '2025-12-08 09:50:00', 'Сидоренко С.', 'ready', '{"start":"2025-12-08","end":"2026-12-08"}'),
+('SN-28001', 1, '', 'Батарея для iPhone 12', 'Accessory', 'Lithium-ion, 2815mAh', '[{"value":50,"symbol":"USD","isDefault":0},{"value":1850,"symbol":"UAH","isDefault":1}]', 9, '2025-12-09 15:10:00', 'Петренко П.', 'in_repair', '{"start":"2025-12-09","end":"2026-12-09"}'),
+('SN-28002', 1, '', 'Батарея для Samsung Galaxy S21', 'Accessory', 'Lithium-ion, 4000mAh', '[{"value":60,"symbol":"USD","isDefault":0},{"value":2250,"symbol":"UAH","isDefault":1}]', 9, '2025-12-09 15:20:00', 'Іванов І.', 'ready', '{"start":"2025-12-09","end":"2026-12-09"}'),
+('SN-29001', 1, '', 'Маршрутизатор Cisco RV340', 'Networking', 'Dual WAN, 4 порти', '[{"value":150,"symbol":"USD","isDefault":0},{"value":5550,"symbol":"UAH","isDefault":1}]', 10, '2025-12-10 11:30:00', 'Сидоренко С.', 'in_repair', '{"start":"2025-12-10","end":"2026-12-10"}'),
+('SN-29002', 1, '', 'Комутатор Cisco SG250', 'Networking', '24 порти, Gigabit', '[{"value":200,"symbol":"USD","isDefault":0},{"value":7400,"symbol":"UAH","isDefault":1}]', 10, '2025-12-10 11:40:00', 'Петренко П.', 'ready', '{"start":"2025-12-10","end":"2026-12-10"}'),
+('SN-30001', 0, '', 'Проектор Epson EB-X41', 'Projector', '3600 люмен, XGA', '[{"value":400,"symbol":"USD","isDefault":0},{"value":14800,"symbol":"UAH","isDefault":1}]', 11, '2025-12-11 14:40:00', 'Іванов І.', 'in_repair', '{"start":"2025-12-11","end":"2026-12-11"}'),
+('SN-30002', 0, '', 'Проектор BenQ MW535', 'Projector', '3600 люмен, WXGA', '[{"value":350,"symbol":"USD","isDefault":0},{"value":12950,"symbol":"UAH","isDefault":1}]', 11, '2025-12-11 14:50:00', 'Сидоренко С.', 'ready', '{"start":"2025-12-11","end":"2026-12-11"}'),
+('SN-31001', 1, '', 'Планшет Apple iPad 9', 'Tablet', '64GB, Silver', '[{"value":400,"symbol":"USD","isDefault":0},{"value":14800,"symbol":"UAH","isDefault":1}]', 12, '2025-12-12 09:50:00', 'Петренко П.', 'in_repair', '{"start":"2025-12-12","end":"2026-12-12"}'),
+('SN-31002', 1, '', 'Планшет Samsung Galaxy Tab S7', 'Tablet', '128GB, Black', '[{"value":600,"symbol":"USD","isDefault":0},{"value":22200,"symbol":"UAH","isDefault":1}]', 12, '2025-12-12 10:00:00', 'Іванов І.', 'ready', '{"start":"2025-12-12","end":"2026-12-12"}'),
+('SN-31003', 1, '', 'Планшет Huawei MatePad 11', 'Tablet', '128GB, Gray', '[{"value":500,"symbol":"USD","isDefault":0},{"value":18500,"symbol":"UAH","isDefault":1}]', 12, '2025-12-12 10:10:00', 'Сидоренко С.', 'ready', '{"start":"2025-12-12","end":"2026-12-12"}'),
+('SN-32001', 0, '', 'Сервер Dell PowerEdge T40', 'Server', 'Intel Xeon E-2224G, 16GB RAM, 1TB HDD', '[{"value":1000,"symbol":"USD","isDefault":0},{"value":37000,"symbol":"UAH","isDefault":1}]', 13, '2025-12-13 10:10:00', 'Іванов І.', 'in_repair', '{"start":"2025-12-13","end":"2026-12-13"}'),
+('SN-32002', 0, '', 'Комутатор Netgear GS716T', 'Networking', '16 портів, Gigabit', '[{"value":120,"symbol":"USD","isDefault":0},{"value":4440,"symbol":"UAH","isDefault":1}]', 13, '2025-12-13 10:20:00', 'Сидоренко С.', 'ready', '{"start":"2025-12-13","end":"2026-12-13"}'),
+('SN-33001', 1, '', 'Принтер Canon PIXMA TS5340', 'Printer', 'Inkjet, 10ppm', '[{"value":100,"symbol":"USD","isDefault":0},{"value":3700,"symbol":"UAH","isDefault":1}]', 14, '2025-12-14 13:10:00', 'Петренко П.', 'in_repair', '{"start":"2025-12-14","end":"2026-12-14"}'),
+('SN-33002', 1, '', 'Сканер Epson Perfection V39', 'Scanner', 'Flatbed, 4800dpi', '[{"value":80,"symbol":"USD","isDefault":0},{"value":2960,"symbol":"UAH","isDefault":1}]', 14, '2025-12-14 13:20:00', 'Іванов І.', 'ready', '{"start":"2025-12-14","end":"2026-12-14"}'),
+('SN-34001', 1, '', 'Ноутбук Lenovo ThinkPad X1 Carbon', 'Laptop', 'Intel i7, 16GB RAM, 512GB SSD', '[{"value":1500,"symbol":"USD","isDefault":0},{"value":55500,"symbol":"UAH","isDefault":1}]', 15, '2025-12-15 09:40:00', 'Сидоренко С.', 'in_repair', '{"start":"2025-12-15","end":"2026-12-15"}');
 
-
+INSERT INTO settings (`key`, `value`, description) VALUES
+('default_currency', 'UAH', 'Валюта за замовчуванням');
