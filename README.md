@@ -8,6 +8,8 @@ This project is a **test assignment** designed to demonstrate skills in both fro
 > 🔹 **Note:** I went beyond just the frontend and implemented the backend as well, because I enjoy having control over both sides and seeing the full process of the application.
 
 ---
+[Try it now](https://test-project.if.ua/)
+---
 
 ## Technologies
 
