@@ -22,9 +22,9 @@ const handleChange = (e: Event) => {
   const target = e.target as HTMLInputElement;
   const file = target.files?.[0] ?? null;
   if (file) {
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp',];
     if (!allowedTypes.includes(file.type)) {
-      emit('update:message', 'Допустимые форматы: jpg, jpeg, png');
+      emit('update:message', 'Допустимые форматы: jpg, jpeg, png, webp');
       setTimeout(() => emit('update:message', ''), 3000);
       return;
     }
@@ -37,7 +37,7 @@ const handleChange = (e: Event) => {
   <div class="mb-3">
     <label class="form-label fw-medium" :for="idGeneration">Фото продукта</label>
     <div class="d-flex align-items-center overflow-hidden">
-      <input ref="fileInput" type="file" :id="idGeneration" class="d-none" accept=".jpg,.jpeg,.png" @change="handleChange" />
+      <input ref="fileInput" type="file" :id="idGeneration" class="d-none" accept=".jpg,.jpeg,.png,.webp" @change="handleChange" />
       <button type="button" class="btn--style bg-transparent rounded-4 p-1 px-3 shadow-sm" @click="openDialog">Выбрать файл</button>
       <span v-if="modelValue" class="ms-2">{{ modelValue.name }}</span>
     </div>

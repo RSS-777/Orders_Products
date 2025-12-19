@@ -30,9 +30,21 @@ const openFileDialog = () => {
 };
 
 const changePhoto = async (e: Event) => {
+  const input = e.target as HTMLInputElement;
   const file = (e.target as HTMLInputElement).files?.[0];
   if (!file) return;
 
+    const allowedTypes = [
+    'image/jpeg',
+    'image/png',
+    'image/webp',
+  ];
+
+   if (!allowedTypes.includes(file.type)) {
+    input.value = '';
+    return;
+  }
+  
   const response = await updateUserPhoto(file, token);
 
   if (response.success) {
@@ -67,10 +79,10 @@ const toggleMenu = () => {
 </script>
 
 <template>
-  <div class="overflow-hidden">
+  <div class="min-h-100 position-relative">
     <form>
       <label for="user-photo" class="visually-hidden">Upload user photo</label>
-      <input ref="fileInput" id="user-photo" name="userPhoto" type="file" class="d-none" accept="image/*" @change="changePhoto" />
+      <input ref="fileInput" id="user-photo" name="userPhoto" type="file" class="d-none" accept="image/jpeg,image/png,image/webp" @change="changePhoto" />
     </form>
     <button class="btn-navbar position-absolute z-2 pt-1 ps-2 fs-3 top-3 start-3 focus-none border-0 bg-transparent" @click="toggleMenu">☰</button>
     <div class="navigation z-1 p-2  bg-white border" :class="{ open: isOpen }" @click.stop>
@@ -123,7 +135,7 @@ const toggleMenu = () => {
   width: clamp(180px, 20vw, 250px);
   transition: transform 0.6s ease;
   transform: translateX(-120%);
-  height: 100%;
+  height: 10000px;
   display: flex;
   flex-direction: column;
   overflow-y: auto;

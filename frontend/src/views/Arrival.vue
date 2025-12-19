@@ -122,14 +122,11 @@ onBeforeMount(async () => {
 <template>
   <WrapperMain>
     <main class="main full-page pb-2 mx-auto position-relative d-flex flex-column overflow-hidden">
-      <button
-        v-if="showCloseProductsButton"
+      <button v-if="showCloseProductsButton"
         class="button position-absolute z-2 rounded-circle shadow border-0 fw-semibold bg-white"
-        @click="callChildClose"
-      >
+        @click="callChildClose">
         ✕
       </button>
-
       <div class="main__inner d-flex flex-column overflow-x-auto overflow-y-hidden mx-3 position-relative">
         <div class="d-flex gap-3 align-items-center justify-content-start pt-5 mb-5">
           <ButtonOpenForm :onclick="handleOpenForm" />
@@ -138,12 +135,12 @@ onBeforeMount(async () => {
         <OrdersList ref="ordersListRef" />
       </div>
     </main>
-    <ConfirmModal
-      v-if="showModal"
-      :message="fetchMessage"
-      :success="isSuccessDelete"
+    <ConfirmModal 
+      v-if="showModal" 
+      :message="fetchMessage" 
+      :success="isSuccessDelete" 
       :isLoading="isLoading"
-      name="приход"
+      name="приход" 
       @confirm="handleConfirmDelete"
       @cancel="handleCancelDelete"
     >
@@ -151,7 +148,8 @@ onBeforeMount(async () => {
         <EllipsisText v-if="currentOrder" :title="currentOrder.title" className="fs-5 border-0 fw-medium" />
         <p class="fd-2 lh-sm my-2">{{ currentOrder?.description }}</p>
         <div v-if="getProductsForOrder(currentOrder?.id).length">
-          <button class="modal-element__btn border-0 bg-transparent p-0 d-flex align-items-center" @click="toggleProducts">
+          <button class="modal-element__btn border-0 bg-transparent p-0 d-flex align-items-center"
+            @click="toggleProducts">
             <span>Продукти</span> <span>{{ showProducts ? '▲' : '▼' }}</span>
           </button>
           <ProductListShort :order="currentOrder" :showProducts="showProducts" />
@@ -202,5 +200,12 @@ onBeforeMount(async () => {
 
 .button:active {
   transform: scale(0.95);
+}
+
+@media (hover: none),
+(pointer: coarse) {
+  .button {
+    top: 150px;
+  }
 }
 </style>
