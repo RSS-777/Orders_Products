@@ -121,7 +121,7 @@ onBeforeMount(async () => {
 
 <template>
   <WrapperMain>
-    <main class="main pb-2 mx-auto position-relative d-flex flex-column overflow-hidden">
+    <main class="main full-page pb-2 mx-auto position-relative d-flex flex-column overflow-hidden">
       <button
         v-if="showCloseProductsButton"
         class="button position-absolute z-2 rounded-circle shadow border-0 fw-semibold bg-white"

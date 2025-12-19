@@ -85,7 +85,7 @@ onBeforeUnmount(() => {
 
 <template>
   <WrapperMain>
-    <main class="main pb-2 mx-auto overflow-hidden d-flex flex-column">
+    <main class="main full-page pb-2 mx-auto overflow-hidden d-flex flex-column">
       <div class="main__inner mx-3 d-flex flex-column overflow-x-auto overflow-y-hidden">
         <div class="pt-5 mb-5">
           <h1>Продукты / {{ countProducts }}</h1>

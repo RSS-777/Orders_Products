@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper-main d-flex position-relative h-100 overflow-hidden">
+  <div class="wrapper-main d-flex position-relative  overflow-x-hidden">
     <slot />
   </div>
 </template>
