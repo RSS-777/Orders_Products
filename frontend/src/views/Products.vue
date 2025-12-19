@@ -74,8 +74,7 @@ const handleCancelDelete = () => {
 };
 
 onBeforeMount(async () => {
-  await fetchOrders();
-  await fetchProducts();
+  await Promise.all([fetchOrders(), fetchProducts()]);
 });
 
 onBeforeUnmount(() => {

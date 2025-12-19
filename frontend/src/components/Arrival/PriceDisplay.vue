@@ -23,25 +23,21 @@ const formatNumber = (num: number) => {
 const totalUSD = computed(() => {
   if (!productsArray.length) return null;
 
-  const sum = productsArray.reduce((acc, product) => {
-    if (!product || !Array.isArray(product.price)) return acc;
-    const price = product.price.find((p) => p.symbol === 'USD')?.value ?? 0;
+  return productsArray.reduce((acc, product) => {
+    const prices = Array.isArray(product.price) ? product.price : [];
+    const price = prices.find((p) => p.symbol === 'USD')?.value ?? 0;
     return acc + price;
   }, 0);
-
-  return sum;
 });
 
 const totalUAH = computed(() => {
   if (!productsArray.length) return null;
 
-  const sum = productsArray.reduce((acc, product) => {
-    if (!product || !Array.isArray(product.price)) return acc;
-    const price = product.price.find((p) => p.symbol === 'UAH')?.value ?? 0;
+  return productsArray.reduce((acc, product) => {
+    const prices = Array.isArray(product.price) ? product.price : [];
+    const price = prices.find((p) => p.symbol === 'UAH')?.value ?? 0;
     return acc + price;
   }, 0);
-
-  return sum;
 });
 </script>
 

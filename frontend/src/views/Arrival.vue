@@ -115,8 +115,7 @@ const handleOpenForm = () => {
 
 onBeforeMount(async () => {
   await fetchCurrency();
-  await fetchOrders();
-  await fetchProducts();
+  await Promise.all([fetchOrders(), fetchProducts()]);
 });
 </script>
 

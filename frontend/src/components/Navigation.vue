@@ -101,7 +101,7 @@ const toggleMenu = () => {
         :to="isAdmin ? '/settings' : '#'"
         class="nav-link mx-auto mb-1 fw-medium"
         :class="{ 'active-link': route.path === '/settings', 'active-link--disabled': !isAdmin }"
-        @click.prevent="!isAdmin && closeMenu()"
+        @click="closeMenu()"
       >
         <img :src="isAdmin ? padlockImageOpen : padlockImage" alt="Icon settings" width="18" height="18" class="img-fluid me-1" />
         настройки

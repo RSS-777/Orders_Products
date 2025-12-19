@@ -90,8 +90,7 @@ const handleSubmitDeleteProduct = async () => {
 };
 
 onBeforeMount(async () => {
-  await fetchOrders();
-  await fetchProducts();
+  await Promise.all([fetchOrders(), fetchProducts()]);
 });
 
 onBeforeUnmount(() => {
