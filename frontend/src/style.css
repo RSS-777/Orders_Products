@@ -7,7 +7,9 @@ body {
   padding: 0;
   color: #6c757d;
   font-size: 16px;
-  overflow: hidden;
+  min-height: 100dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 a {
@@ -39,4 +41,19 @@ p {
   background-color: #80b548;
   border-radius: 10px;
   margin: 0 10px;
+}
+
+.full-page {
+  min-height: 100vh;
+  max-height: 100vh;
+}
+
+@media (hover: none),
+(pointer: coarse) {
+  .full-page {
+    min-height: 100dvh;
+    max-height: 500px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
 }

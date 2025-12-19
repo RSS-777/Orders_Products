@@ -69,7 +69,7 @@ const onSubmit = async () => {
 </script>
 
 <template>
-  <div class="d-flex justify-content-center align-items-center vh-100 w-100 bg-light">
+  <div class=" full-page d-flex justify-content-center align-items-center w-100 bg-light ">
     <div class="card shadow p-4 mx-2" style="width: 380px">
       <h1 class="text-center my-3">Авторизация</h1>
       <FetchMessage :message="message" :type="successReg ? 'success' : 'error'" />

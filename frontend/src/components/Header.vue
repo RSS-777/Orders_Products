@@ -55,7 +55,7 @@ const handleKeyPress = (e: KeyboardEvent) => {
         <span class="header__brand-title">inventory</span>
       </div>
 
-      <div class="header__search flex-grow-1 my-2 my-sm-0 mx-sm-3">
+      <div class="header__search flex-grow-1 my-2 my-sm-0 mx-sm-3" v-if="route.path !== '/settings' && route.path !== '/users'">
         <input
           class="header__search-input px-2 w-100"
           type="search"

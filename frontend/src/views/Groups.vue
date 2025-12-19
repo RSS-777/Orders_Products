@@ -90,8 +90,7 @@ const handleSubmitDeleteProduct = async () => {
 };
 
 onBeforeMount(async () => {
-  await fetchOrders();
-  await fetchProducts();
+  await Promise.all([fetchOrders(), fetchProducts()]);
 });
 
 onBeforeUnmount(() => {
@@ -105,7 +104,7 @@ onBeforeUnmount(() => {
 
 <template>
   <WrapperMain>
-    <main class="main d-flex flex-column pb-2 mx-auto position-relative over overflow-hidden">
+    <main class="main full-page d-flex flex-column pb-2 mx-auto position-relative over overflow-hidden">
       <div class="main__inner d-flex flex-column mx-3 overflow-hidden">
         <div class="d-flex gap-3 align-items-center justify-content-start mb-4 pt-5 ps-4">
           <ButtonOpenForm :onclick="handleToggleOrderForm" />

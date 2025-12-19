@@ -7,7 +7,7 @@ const store = useStore();
 </script>
 
 <template>
-  <div class="wrapper vh-100 p-0 d-flex flex-column mx-auto overflow-hidden">
+  <div class="wrapper min-vh-100 p-0 d-flex flex-column mx-auto">
     <Header v-if="store.getters['auth/isAuth']" />
     <div class="wrapper__pages d-flex flex-grow-1 overflow-hidden">
       <Navigation v-if="store.getters['auth/isAuth']" />
@@ -23,5 +23,8 @@ const store = useStore();
 
 .wrapper__pages {
   background-color: #f0f3f5;
+  min-height: 0; 
+  overflow-y: auto; 
+  -webkit-overflow-scrolling: touch;
 }
 </style>
