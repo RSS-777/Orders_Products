@@ -1,12 +1,11 @@
 // import { io } from 'socket.io-client';
 
 // const socket = io("https://www.test-project.if.ua", {
-//     withCredentials: true, 
-//     transports: ["websocket", "polling"] 
+//     withCredentials: true,
+//     transports: ["websocket", "polling"]
 // });
 
 // export default socket;
-
 
 import { io } from 'socket.io-client';
 

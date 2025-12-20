@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import store from '../store/index';
 import { getProducts } from '../api/productsApi';
 import type { IProduct } from '../types/product';
@@ -44,9 +44,6 @@ export const chooseProductById = (id: number) => {
   }
 };
 
-export const getProductsForOrder = computed(() => {
-  return (orderId: number): IProduct[] =>
-    cachedProducts.value.filter(
-      product => product.order_id === orderId
-    );
-});
+export const getProductsForOrder = (orderId: number): IProduct[] => {
+  return cachedProducts.value.filter((product) => product.order_id === orderId);
+};

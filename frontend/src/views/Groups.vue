@@ -15,6 +15,8 @@ import ButtonOpenForm from '../components/СomponentsForm/ButtonOpenForm.vue';
 import ProductNewIndicator from '../components/Products/ProductNewIndicator.vue';
 import ProductImage from '../components/Products/ProductImage.vue';
 import SecondaryText from '../components/SecondaryText.vue';
+import Tooltip from '../components/Tooltip.vue';
+import { useTooltip } from '../composables/useTooltip';
 
 const store = useStore();
 const isLoading = ref<boolean>(false);
@@ -28,6 +30,7 @@ const idProduct = computed(() => store.getters['products/idProduct']);
 const idOrder = computed(() => store.getters['orders/orderId']);
 const countOrders = computed(() => store.getters['orders/count']);
 const currentProduct = computed<IProduct | null>(() => store.getters['products/currentProduct'] as IProduct | null);
+const { activeTooltipId, tooltipX, toggleTooltip } = useTooltip();
 
 watch(idProduct, (id) => {
   if (!id) return;
@@ -124,13 +127,24 @@ onBeforeUnmount(() => {
       @confirm="handleSubmitDeleteProduct"
       @cancel="handleCenselDeleteProduct"
     >
-      <div class="modal-element d-grid align-items-center gap-4 py-2">
+      <div class="modal-element d-grid align-items-center gap-4 py-2 position-relative">
         <ProductNewIndicator v-if="currentProduct" :status="currentProduct.status" />
         <ProductImage :src="currentProduct?.photo" />
         <div class="d-flex flex-column w-100 overflow-hidden">
-          <EllipsisText v-if="currentProduct" :title="currentProduct.title" className="border-0 fw-medium" />
+          <EllipsisText
+            v-if="currentProduct"
+            :title="currentProduct.title"
+            className="border-0 fw-medium"
+            @click="
+              (e: MouseEvent) => {
+                if (!currentProduct) return;
+                toggleTooltip(currentProduct.id, currentProduct.title, e);
+              }
+            "
+          />
           <SecondaryText v-if="currentProduct" :text="currentProduct?.serialNumber" />
         </div>
+        <Tooltip :title="currentProduct?.title" v-if="activeTooltipId === currentProduct?.id" :x="tooltipX ?? undefined" />
       </div>
     </ConfirmModal>
   </WrapperMain>

@@ -23,8 +23,8 @@ const store = useStore();
 
 .wrapper__pages {
   background-color: #f0f3f5;
-  min-height: 0; 
-  overflow-y: auto; 
+  min-height: 0;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 </style>

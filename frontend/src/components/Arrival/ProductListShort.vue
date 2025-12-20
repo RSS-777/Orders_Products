@@ -5,6 +5,8 @@ import ProductImage from '../Products/ProductImage.vue';
 import ProductStatus from '../Products/ProductNewIndicator.vue';
 import SecondaryText from '../SecondaryText.vue';
 import { getProductsForOrder } from '../../services/product';
+import { useTooltip } from '../../composables/useTooltip';
+import Tooltip from '../Tooltip.vue';
 
 const {
   showProducts,
@@ -15,6 +17,8 @@ const {
   order: IOrder;
   version?: 'modal' | 'expanded';
 }>();
+
+const { activeTooltipId, tooltipX, toggleTooltip } = useTooltip();
 </script>
 
 <template>
@@ -27,15 +31,20 @@ const {
       <li
         v-for="product in getProductsForOrder(order?.id) || []"
         :key="product.id"
-        class="product__list gap-3 py-1"
+        class="product__list gap-3 py-1 position-relative"
         :class="version === 'modal' ? 'product__list--modal' : 'product__list--expanded'"
       >
         <ProductStatus :status="product.status" />
         <ProductImage />
         <div class="product__information overflow-hidden">
-          <EllipsisText :title="product.title" :maxWidth="version === 'expanded' ? '100%' : ''" />
+          <EllipsisText
+            :title="product.title"
+            :maxWidth="version === 'expanded' ? '100%' : ''"
+            @click="(e: MouseEvent) => toggleTooltip(product.id, product.title, e)"
+          />
           <SecondaryText :text="product.serialNumber" />
         </div>
+        <Tooltip :title="product.title" v-if="activeTooltipId === product.id" :x="tooltipX ?? undefined" />
       </li>
     </ul>
   </div>

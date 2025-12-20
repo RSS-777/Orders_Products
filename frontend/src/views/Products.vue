@@ -11,6 +11,8 @@ import EllipsisText from '../components/EllipsisText.vue';
 import SecondaryText from '../components/SecondaryText.vue';
 import ConfirmModal from '../components/ConfirmModal.vue';
 import WrapperMain from '../components/WrapperMain.vue';
+import Tooltip from '../components/Tooltip.vue';
+import { useTooltip } from '../composables/useTooltip';
 
 const store = useStore();
 const token = computed(() => store.getters['auth/token']);
@@ -21,6 +23,7 @@ const productId = computed(() => store.getters['products/idProduct']);
 const currentProduct = computed(() => store.getters['products/currentProduct']);
 const isLoading = ref<boolean>(false);
 const successDelete = ref<boolean>(false);
+const { activeTooltipId, tooltipX, toggleTooltip } = useTooltip();
 
 watch(productId, (newId) => {
   if (newId !== null) {
@@ -102,13 +105,19 @@ onBeforeUnmount(() => {
       @confirm="handleConfirmDelete"
       @cancel="handleCancelDelete"
     >
-      <div class="modal-element d-grid align-items-center gap-2 py-2">
+      <div class="modal-element d-grid align-items-center gap-2 py-2 position-relative">
         <ProductNewIndicator v-if="currentProduct" :status="currentProduct.status" />
         <ProductImage :src="currentProduct?.photo" />
         <div class="d-flex flex-column w-100 overflow-hidden">
-          <EllipsisText v-if="currentProduct" :title="currentProduct.title" className=" border-0 fw-medium" />
+          <EllipsisText
+            v-if="currentProduct"
+            :title="currentProduct.title"
+            className=" border-0 fw-medium"
+            @click="(e: MouseEvent) => toggleTooltip(currentProduct.id, currentProduct.title, e)"
+          />
           <SecondaryText v-if="currentProduct" :text="currentProduct?.serialNumber" />
         </div>
+        <Tooltip v-if="activeTooltipId === currentProduct?.id" :title="currentProduct?.title" :x="tooltipX ?? undefined" />
       </div>
     </ConfirmModal>
   </WrapperMain>

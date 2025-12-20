@@ -13,8 +13,11 @@ import EllipsisText from '../components/EllipsisText.vue';
 import ProductListShort from '../components/Arrival/ProductListShort.vue';
 import FormCreateOrder from '../components/Arrival/FormCreateOrder.vue';
 import ButtonOpenForm from '../components/СomponentsForm/ButtonOpenForm.vue';
+import Tooltip from '../components/Tooltip.vue';
+import { useTooltip } from '../composables/useTooltip';
 
 const store = useStore();
+const isReady = ref<boolean>(false);
 const token = computed(() => store.getters['auth/token']);
 const orderId = computed(() => store.getters['orders/orderId']);
 const countOrders = computed(() => store.getters['orders/count']);
@@ -28,6 +31,7 @@ const openForm = ref<boolean>(false);
 const ordersListRef = ref<InstanceType<typeof OrdersList>>();
 const isProductsOpen = computed(() => ordersListRef.value?.openListProducts ?? false);
 const showCloseProductsButton = ref<boolean>(false);
+const { activeTooltipId, tooltipX, toggleTooltip } = useTooltip();
 let openListTimer: number | null = null;
 
 const callChildClose = () => {
@@ -116,15 +120,18 @@ const handleOpenForm = () => {
 onBeforeMount(async () => {
   await fetchCurrency();
   await Promise.all([fetchOrders(), fetchProducts()]);
+  isReady.value = true;
 });
 </script>
 
 <template>
   <WrapperMain>
     <main class="main full-page pb-2 mx-auto position-relative d-flex flex-column overflow-hidden">
-      <button v-if="showCloseProductsButton"
+      <button
+        v-if="showCloseProductsButton"
         class="button position-absolute z-2 rounded-circle shadow border-0 fw-semibold bg-white"
-        @click="callChildClose">
+        @click="callChildClose"
+      >
         ✕
       </button>
       <div class="main__inner d-flex flex-column overflow-x-auto overflow-y-hidden mx-3 position-relative">
@@ -132,28 +139,33 @@ onBeforeMount(async () => {
           <ButtonOpenForm :onclick="handleOpenForm" />
           <h1>Приходы / {{ countOrders }}</h1>
         </div>
-        <OrdersList ref="ordersListRef" />
+        <OrdersList v-if="isReady" ref="ordersListRef" />
       </div>
     </main>
-    <ConfirmModal 
-      v-if="showModal" 
-      :message="fetchMessage" 
-      :success="isSuccessDelete" 
+    <ConfirmModal
+      v-if="showModal"
+      :message="fetchMessage"
+      :success="isSuccessDelete"
       :isLoading="isLoading"
-      name="приход" 
+      name="приход"
       @confirm="handleConfirmDelete"
       @cancel="handleCancelDelete"
     >
-      <div class="modal-element p-4">
-        <EllipsisText v-if="currentOrder" :title="currentOrder.title" className="fs-5 border-0 fw-medium" />
+      <div class="modal-element p-4 position-relative">
+        <EllipsisText
+          v-if="currentOrder"
+          :title="currentOrder.title"
+          className="fs-5 border-0 fw-medium"
+          @click="(e: MouseEvent) => toggleTooltip(currentOrder.id, currentOrder.title, e)"
+        />
         <p class="fd-2 lh-sm my-2">{{ currentOrder?.description }}</p>
         <div v-if="getProductsForOrder(currentOrder?.id).length">
-          <button class="modal-element__btn border-0 bg-transparent p-0 d-flex align-items-center"
-            @click="toggleProducts">
+          <button class="modal-element__btn border-0 bg-transparent p-0 d-flex align-items-center" @click="toggleProducts">
             <span>Продукти</span> <span>{{ showProducts ? '▲' : '▼' }}</span>
           </button>
           <ProductListShort :order="currentOrder" :showProducts="showProducts" />
         </div>
+        <Tooltip v-if="activeTooltipId === currentOrder?.id" :title="currentOrder?.title" :x="tooltipX ?? undefined" />
       </div>
     </ConfirmModal>
     <FormCreateOrder v-if="openForm" @close="handleOpenForm" />
@@ -202,8 +214,7 @@ onBeforeMount(async () => {
   transform: scale(0.95);
 }
 
-@media (hover: none),
-(pointer: coarse) {
+@media (hover: none), (pointer: coarse) {
   .button {
     top: 150px;
   }

@@ -48,8 +48,7 @@ p {
   max-height: 100vh;
 }
 
-@media (hover: none),
-(pointer: coarse) {
+@media (hover: none), (pointer: coarse) {
   .full-page {
     min-height: 100dvh;
     max-height: 500px;

@@ -4,6 +4,7 @@ import { useStore } from 'vuex';
 import { ref, computed, watch, nextTick } from 'vue';
 import { cachedOrders, chooseOrderById } from '../../services/orders';
 import { getProductsForOrder } from '../../services/product';
+import { useTooltip } from '../../composables/useTooltip';
 import CustomButton from '../CustomButton.vue';
 import EllipsisText from '../EllipsisText.vue';
 import VirtualGrid from '../VirtualGrid.vue';
@@ -11,6 +12,7 @@ import PriceDisplay from './PriceDisplay.vue';
 import BaseButton from '../BaseButton.vue';
 import FormattedDate from '../FormattedDate.vue';
 import ProductListShort from './ProductListShort.vue';
+import Tooltip from '../Tooltip.vue';
 import imageBacket from '../../assets/basket.png';
 
 const handleDelete = (id: number) => {
@@ -33,6 +35,7 @@ const orderChoice = computed(() => store.getters['orders/currentOrder']);
 const sortedOrdersTitle = computed<IOrder[]>(() => {
   return [...orders.value].sort((a, b) => a.title.localeCompare(b.title));
 });
+const { activeTooltipId, tooltipX, toggleTooltip } = useTooltip();
 
 watch(searchText, async () => {
   await nextTick();
@@ -75,8 +78,8 @@ defineExpose({ handleCloseProducts, openListProducts });
 <template>
   <VirtualGrid :items="sortedOrdersTitle" :tempScroll="tempScroll" classGrid="d-grid gap-2" :heightElement="60">
     <template #default="{ item: element }">
-      <div class="order d-grid align-items-center border rounded-2 gap-3 py-2 px-4 bg-white">
-        <EllipsisText :title="element.title" />
+      <div class="order d-grid align-items-center border rounded-2 gap-3 py-2 px-4 bg-white position-relative">
+        <EllipsisText :title="element.title" @click="(e: MouseEvent) => toggleTooltip(element.id, element.title, e)" />
         <div class="order__products d-flex align-items-center gap-3 justify-content-start">
           <CustomButton @click="() => handleOpenProducts(element.id)" />
           <div class="d-flex flex-column">
@@ -91,6 +94,7 @@ defineExpose({ handleCloseProducts, openListProducts });
         <BaseButton @click="() => handleDelete(element.id)">
           <img :src="imageBacket" alt="Delete icon" width="16" height="16" />
         </BaseButton>
+        <Tooltip :title="element.title" v-if="activeTooltipId === element.id" :x="tooltipX ?? undefined" />
       </div>
     </template>
   </VirtualGrid>

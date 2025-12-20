@@ -22,7 +22,7 @@ const handleChange = (e: Event) => {
   const target = e.target as HTMLInputElement;
   const file = target.files?.[0] ?? null;
   if (file) {
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp',];
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     if (!allowedTypes.includes(file.type)) {
       emit('update:message', 'Допустимые форматы: jpg, jpeg, png, webp');
       setTimeout(() => emit('update:message', ''), 3000);

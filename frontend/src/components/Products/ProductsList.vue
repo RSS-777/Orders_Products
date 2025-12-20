@@ -5,6 +5,7 @@ import { fetchOrders, cachedOrders } from '../../services/orders';
 import { cachedProducts } from '../../services/product';
 import type { IProduct } from '../../types/product';
 import type { IOrder } from '../../types/order';
+import { useTooltip } from '../../composables/useTooltip';
 import ProductNewIndicator from './ProductNewIndicator.vue';
 import ProductImage from './ProductImage.vue';
 import ProductStatusWork from './ProductStatusWork.vue';
@@ -15,6 +16,7 @@ import BaseButton from '../BaseButton.vue';
 import FormattedDate from '../FormattedDate.vue';
 import VirtualGrid from '../VirtualGrid.vue';
 import PriceDisplay from '../Arrival/PriceDisplay.vue';
+import Tooltip from '../Tooltip.vue';
 import imageBacket from '../../assets/basket.png';
 
 const store = useStore();
@@ -23,6 +25,7 @@ const products = computed<IProduct[]>(() => cachedProducts.value);
 const dataOrders = computed<IOrder[]>(() => cachedOrders.value);
 const searchText = computed(() => store.getters['search/text']);
 const sortedProductsByType = computed<IProduct[]>(() => [...products.value].sort((a, b) => (a.type ?? '').localeCompare(b.type ?? '')));
+const { activeTooltipId, activeTooltipText, tooltipX, toggleTooltip } = useTooltip();
 
 watchEffect(() => {
   const q = searchText.value?.trim().toLowerCase() || '';
@@ -53,20 +56,24 @@ onMounted(async () => {
       <div class="product d-grid border rounded-2 gap-4 p-2 px-3 bg-white">
         <ProductNewIndicator :status="element.status" />
         <ProductImage :src="element.photo" />
-        <EllipsisText :title="element.title" />
+        <EllipsisText :title="element.title" @click="(e: MouseEvent) => toggleTooltip(element.id, element.title, e)" />
         <ProductStatusWork :status="element.status" />
         <DateStartEnd :start="element.guarantee.start" :end="element.guarantee.end" />
         <ProductNewStatus :isNew="!!element.isNew" />
         <div class="d-flex justify-content-start">
           <PriceDisplay :products="element" />
         </div>
-        <EllipsisText :title="element.type" />
-        <EllipsisText :title="element.owner" />
-        <EllipsisText :title="getCarrentOrder(element)?.title" />
+        <EllipsisText :title="element.type" @click="(e: MouseEvent) => toggleTooltip(element.id, element.type, e)" />
+        <EllipsisText :title="element.owner" @click="(e: MouseEvent) => toggleTooltip(element.id, element.owner, e)" />
+        <EllipsisText
+          :title="getCarrentOrder(element)?.title"
+          @click="(e: MouseEvent) => toggleTooltip(element.id, getCarrentOrder(element)?.title ?? '', e)"
+        />
         <FormattedDate :date="element.date" />
         <BaseButton @click="() => handleDelete?.(element.id)">
           <img :src="imageBacket" alt="Delete" width="16" height="16" />
         </BaseButton>
+        <Tooltip v-if="activeTooltipId === element.id" :title="activeTooltipText" :x="tooltipX ?? undefined" />
       </div>
     </template>
   </VirtualGrid>

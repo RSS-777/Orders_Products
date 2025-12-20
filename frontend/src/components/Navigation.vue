@@ -34,17 +34,13 @@ const changePhoto = async (e: Event) => {
   const file = (e.target as HTMLInputElement).files?.[0];
   if (!file) return;
 
-    const allowedTypes = [
-    'image/jpeg',
-    'image/png',
-    'image/webp',
-  ];
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
-   if (!allowedTypes.includes(file.type)) {
+  if (!allowedTypes.includes(file.type)) {
     input.value = '';
     return;
   }
-  
+
   const response = await updateUserPhoto(file, token);
 
   if (response.success) {
@@ -82,10 +78,18 @@ const toggleMenu = () => {
   <div class="min-h-100 position-relative">
     <form>
       <label for="user-photo" class="visually-hidden">Upload user photo</label>
-      <input ref="fileInput" id="user-photo" name="userPhoto" type="file" class="d-none" accept="image/jpeg,image/png,image/webp" @change="changePhoto" />
+      <input
+        ref="fileInput"
+        id="user-photo"
+        name="userPhoto"
+        type="file"
+        class="d-none"
+        accept="image/jpeg,image/png,image/webp"
+        @change="changePhoto"
+      />
     </form>
     <button class="btn-navbar position-absolute z-2 pt-1 ps-2 fs-3 top-3 start-3 focus-none border-0 bg-transparent" @click="toggleMenu">☰</button>
-    <div class="navigation z-1 p-2  bg-white border" :class="{ open: isOpen }" @click.stop>
+    <div class="navigation z-1 p-2 bg-white border" :class="{ open: isOpen }" @click.stop>
       <div class="navigation__image position-relative rounded-circle border mx-auto my-4">
         <div class="overflow-hidden rounded-circle w-100 h-100 d-flex align-items-center justify-content-center">
           <img :src="userImage" alt="Image person" class="img-fluid" />

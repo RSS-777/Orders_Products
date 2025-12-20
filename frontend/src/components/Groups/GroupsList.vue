@@ -11,6 +11,8 @@ import CustomButton from '../CustomButton.vue';
 import EllipsisText from '../EllipsisText.vue';
 import VirtualGrid from '../VirtualGrid.vue';
 import ProductListShortPlus from './ProductListShortPlus.vue';
+import Tooltip from '../Tooltip.vue';
+import { useTooltip } from '../../composables/useTooltip';
 import iconArrow from '../../assets/arrow-icon.png';
 
 const store = useStore();
@@ -22,6 +24,7 @@ const orderChoice = computed(() => store.getters['orders/currentOrder']);
 const sortedOrders = computed<IOrder[]>(() => {
   return [...orders.value].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 });
+const { activeTooltipId, tooltipX, toggleTooltip } = useTooltip();
 
 watch(searchText, (newValue) => {
   if (newValue) findOrder();
@@ -100,12 +103,12 @@ const handleCloseProductList = () => {
           ✕
         </button>
         <div class="choice-products__inner d-flex flex-column overflow-y-auto overflow-x-hidden">
-          <div class="choice-products__header">
+          <div class="choice-products__header position-relative">
             <EllipsisText
               :title="orderChoice?.title"
               className="border-0 fs-6 text-dark"
               classBlock="mt-4 mx-4 choice-products__title fw-medium"
-              maxWidth="90%"
+              @click="(e: MouseEvent) => toggleTooltip(orderChoice.id, orderChoice.title, e)"
             />
             <div class="d-flex gap-3 align-items-center ms-4 mt-3">
               <button
@@ -117,6 +120,7 @@ const handleCloseProductList = () => {
               </button>
               <span>Добавить продукт</span>
             </div>
+            <Tooltip v-if="activeTooltipId === orderChoice?.id" :title="orderChoice?.title" :x="tooltipX ?? undefined" />
           </div>
           <ProductListShortPlus />
         </div>

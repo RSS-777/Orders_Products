@@ -9,10 +9,13 @@ import ProductStatus from '../Products/ProductNewIndicator.vue';
 import SecondaryText from '../SecondaryText.vue';
 import ProductStatusWork from '../Products/ProductStatusWork.vue';
 import BaseButton from '../BaseButton.vue';
+import Tooltip from '../Tooltip.vue';
+import { useTooltip } from '../../composables/useTooltip';
 import imageBacket from '../../assets/basket.png';
 
 const store = useStore();
 const order = computed<IOrder>(() => store.getters['orders/currentOrder']);
+const { activeTooltipId, tooltipX, toggleTooltip } = useTooltip();
 
 const onDelete = (id: number) => {
   store.commit('products/setProductId', id);
@@ -22,17 +25,22 @@ const onDelete = (id: number) => {
 <template>
   <div class="wrapper relative d-flex flex-column">
     <ul class="product list-unstyled mt-2 overflow-y-auto overflow-x-hidden" v-if="order">
-      <li class="product__list d-grid align-items-center gap-4 py-1" v-for="product in getProductsForOrder(order.id)" :key="product.id">
+      <li
+        class="product__list d-grid align-items-center gap-4 py-1 position-relative"
+        v-for="product in getProductsForOrder(order.id)"
+        :key="product.id"
+      >
         <ProductStatus :status="product.status" />
         <ProductImage />
         <div class="product__information overflow-hidden">
-          <EllipsisText :title="product.title" maxWidth="100%" />
+          <EllipsisText :title="product.title" maxWidth="100%" @click="(e: MouseEvent) => toggleTooltip(product.id, product.title, e)" />
           <SecondaryText :text="product.serialNumber" />
         </div>
         <ProductStatusWork :status="product.status" />
         <BaseButton @click="onDelete(product.id)">
           <img :src="imageBacket" alt="Delete icon" width="16" height="16" />
         </BaseButton>
+        <Tooltip :title="product.title" v-if="activeTooltipId === product.id" :x="tooltipX ?? undefined" />
       </li>
     </ul>
   </div>
