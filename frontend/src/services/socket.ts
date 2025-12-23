@@ -1,15 +1,5 @@
-// import { io } from 'socket.io-client';
-
-// const socket = io("https://www.test-project.if.ua", {
-//     withCredentials: true,
-//     transports: ["websocket", "polling"]
-// });
-
-// export default socket;
-
 import { io } from 'socket.io-client';
 
-const SOCKET_URL = import.meta.env.VITE_API_URL;
-const socket = io(SOCKET_URL);
+const socket = io();
 
 export default socket;

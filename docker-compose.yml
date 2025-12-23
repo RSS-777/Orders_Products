@@ -1,40 +1,62 @@
-version: '3'
+version: '3.8'
+
 services:
-  frontend:
-    build: ./frontend
-    ports:
-      - "8080:80"
-    depends_on:
-      - backend
-
-  backend:
-    build: ./backend
-    ports:
-      - "3000:3000"
-    environment:
-      DB_HOST: db
-      DB_USER: testuser
-      DB_PASSWORD: testpassword
-      DB_NAME: testdb
-    depends_on:
-      - db
-
-  db:
-    image: mysql:5.7
+  mysql:
+    image: mysql:8.0
     container_name: my-mysql
     restart: always
+    env_file:
+    - backend/.env
     environment:
-      MYSQL_ROOT_PASSWORD: testpassword
-      MYSQL_DATABASE: testdb
-      MYSQL_USER: testuser
-      MYSQL_PASSWORD: testpassword
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      LANG: C.UTF-8
     ports:
       - "3306:3306"
     volumes:
-      - db_data:/var/lib/mysql
-      - ./db_init:/docker-entrypoint-initdb.d 
+       - mysql_data:/var/lib/mysql
+       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_0900_ai_ci
+      --init-connect="SET NAMES utf8mb4"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: orders_products
+    ports:
+      - "3002:3002"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: always
+    working_dir: /app/backend
+    env_file:
+      - backend/.env
+    environment:
+      DB_HOST: mysql 
+      DB_PORT: 3306 
+    volumes:
+      - ./backend/src/uploads:/app/backend/src/uploads
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
 
 volumes:
-  db_data:
-
-
+  mysql_data:

@@ -1,11 +1,5 @@
 import type { IProduct } from '../types/product';
 
-const BASE_URL = import.meta.env.VITE_API_URL;
-
-if (!BASE_URL) {
-  console.error('ERROR: VITE_API_URL is missing in your .env file');
-}
-
 export interface IProductsResponse {
   success: boolean;
   data?: IProduct[];
@@ -21,7 +15,7 @@ export interface IProductResponse {
 
 export const getProducts = async (token: string): Promise<IProductsResponse> => {
   try {
-    const response = await fetch(`${BASE_URL}/api/products/get`, {
+    const response = await fetch(`/api/products/get`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -56,7 +50,7 @@ export const getProducts = async (token: string): Promise<IProductsResponse> => 
 
 export const deleteProduct = async (id: number, token: string): Promise<IProductResponse> => {
   try {
-    const response = await fetch(`${BASE_URL}/api/products/${id}/delete`, {
+    const response = await fetch(`/api/products/${id}/delete`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -120,7 +114,7 @@ export const createProduct = async (product: IProductWithFile, token: string): P
       formData.append('photo', product.photoFile);
     }
 
-    const response = await fetch(`${BASE_URL}/api/products/create`, {
+    const response = await fetch(`/api/products/create`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,

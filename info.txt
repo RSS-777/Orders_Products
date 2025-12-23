@@ -1,6 +1,0 @@
-Зміни між версіями внесені:
-.env backend
-server.js
-
-.env frontend
-socket.ts

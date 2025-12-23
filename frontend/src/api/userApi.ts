@@ -1,5 +1,3 @@
-const BASE_URL = import.meta.env.VITE_API_URL;
-
 export interface IUserPhotoUpdateResponse {
   success: boolean;
   data?: {
@@ -13,7 +11,7 @@ export const updateUserPhoto = async (file: File, token: string): Promise<IUserP
     const formData = new FormData();
     formData.append('photo', file);
 
-    const response = await fetch(`${BASE_URL}/api/users/photo`, {
+    const response = await fetch(`/api/users/photo`, {
       method: 'PATCH',
       headers: {
         Authorization: `Bearer ${token}`,

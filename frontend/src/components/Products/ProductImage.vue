@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import defaultImageProduct from '../../assets/box.png';
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
 
 const { src, alt, width, height } = defineProps<{
   src?: string;
@@ -11,8 +10,7 @@ const { src, alt, width, height } = defineProps<{
 }>();
 
 const imageSrc = computed(() => {
-  if (!src) return defaultImageProduct;
-  return src.startsWith('http') ? src : `${BASE_URL}${src}`;
+  return src ? src : defaultImageProduct;
 });
 </script>
 

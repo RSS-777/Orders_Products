@@ -18,11 +18,12 @@ const isAdmin = computed(() => {
 
 const token: string = store.getters['auth/token'];
 const isOpen = ref<boolean>(false);
-const BASE_URL = import.meta.env.VITE_API_URL;
+
 const userImage = computed(() => {
   const photo = store.getters['auth/photoUrl'];
-  return photo ? `${BASE_URL}${photo}?t=${Date.now()}` : personDefaultImg;
+  return photo ? photo : personDefaultImg;
 });
+
 const fileInput = ref<HTMLInputElement | null>(null);
 
 const openFileDialog = () => {

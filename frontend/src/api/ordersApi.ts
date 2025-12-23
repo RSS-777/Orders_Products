@@ -1,11 +1,5 @@
 import type { IOrder } from '../types/order';
 
-const BASE_URL = import.meta.env.VITE_API_URL;
-
-if (!BASE_URL) {
-  console.error('ERROR: VITE_API_URL is missing in your .env file');
-}
-
 export interface IOrdersResponse {
   success: boolean;
   data?: IOrder[];
@@ -27,7 +21,7 @@ interface IDeleteOrderResponse {
 
 export const getOrders = async (token: string): Promise<IOrdersResponse> => {
   try {
-    const response = await fetch(`${BASE_URL}/api/orders/get`, {
+    const response = await fetch(`/api/orders/get`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -61,7 +55,7 @@ export const getOrders = async (token: string): Promise<IOrdersResponse> => {
 
 export const deleteOrder = async (id: number, token: string): Promise<IDeleteOrderResponse> => {
   try {
-    const response = await fetch(`${BASE_URL}/api/orders/${id}/delete`, {
+    const response = await fetch(`/api/orders/${id}/delete`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -96,7 +90,7 @@ export const deleteOrder = async (id: number, token: string): Promise<IDeleteOrd
 
 export const createOrder = async (token: string, order: { title: string; description?: string }): Promise<IOrderResponse> => {
   try {
-    const response = await fetch(`${BASE_URL}/api/orders/create`, {
+    const response = await fetch(`/api/orders/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

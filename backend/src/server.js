@@ -19,20 +19,8 @@ const io = new Server(server, {
         methods: ["GET", "POST"]
     }
 });
-// const io = new Server(server, {
-//     cors: {
-//         origin: ["https://test-project.if.ua", "https://www.test-project.if.ua"],
-//         methods: ["GET", "POST"],
-//         credentials: true 
-//     }
-// });
 
 app.use(cors());
-// app.use(cors({
-//     origin: ["https://test-project.if.ua", "https://www.test-project.if.ua"],
-//     methods: ["GET", "POST"],
-//     credentials: true
-// }));
 app.use(express.json());
 app.use('/images', express.static(path.join(__dirname, 'public/images')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -46,7 +34,15 @@ app.use('/api/settings', settingsRoutes);
 
 require('./socket/sessions')(io);
 
-const PORT = process.env.PORT || 3000;
+const frontendPath = path.join(__dirname, '../../frontend/dist');
+app.use(express.static(frontendPath));
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api')) return next();
+
+  res.sendFile(path.join(frontendPath, 'index.html'));
+});
+
+const PORT = process.env.PORT || 3002;
 server.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });

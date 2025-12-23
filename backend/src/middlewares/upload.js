@@ -32,8 +32,8 @@ const storage = (folder) => multer.diskStorage({
   }
 });
 
-const uploadUserPhoto = multer({ storage: storage('users') });
-const uploadProductPhoto = multer({ storage: storage('products') });
+const uploadUserPhoto = multer({ storage: storage('users'), fileFilter, limits });
+const uploadProductPhoto = multer({ storage: storage('products'), fileFilter, limits });
 
 module.exports = { uploadUserPhoto, uploadProductPhoto };
 

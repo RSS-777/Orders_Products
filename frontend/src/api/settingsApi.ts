@@ -1,9 +1,3 @@
-const BASE_URL = import.meta.env.VITE_API_URL;
-
-if (!BASE_URL) {
-  console.error('ERROR: VITE_API_URL is missing in your .env file');
-}
-
 export interface ICurrencyResponse {
   success: boolean;
   data?: { defaultCurrency: string };
@@ -13,7 +7,7 @@ export interface ICurrencyResponse {
 
 export const getDefaultCurrency = async (token: string): Promise<ICurrencyResponse> => {
   try {
-    const response = await fetch(`${BASE_URL}/api/settings/currency`, {
+    const response = await fetch(`/api/settings/currency`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -47,7 +41,7 @@ export const getDefaultCurrency = async (token: string): Promise<ICurrencyRespon
 
 export const updateDefaultCurrency = async (currency: string, token: string): Promise<ICurrencyResponse> => {
   try {
-    const response = await fetch(`${BASE_URL}/api/settings/currency`, {
+    const response = await fetch(`/api/settings/currency`, {
       method: 'PUT',
       headers: {
         Authorization: `Bearer ${token}`,
