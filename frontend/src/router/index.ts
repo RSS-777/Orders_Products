@@ -20,26 +20,31 @@ const routes = [
     path: '/arrival',
     name: 'Orders',
     component: Arrival,
+    meta: { roles: ['admin', 'manager', 'viewer'] }
   },
   {
     path: '/groups',
     name: 'groups',
     component: Groups,
+    meta: { roles: ['admin', 'manager', 'viewer'] }
   },
   {
     path: '/products',
     name: 'Products',
     component: Products,
+    meta: { roles: ['admin', 'manager', 'viewer'] }
   },
   {
     path: '/users',
     name: 'users',
     component: Users,
+    meta: { roles: ['admin'] }
   },
   {
     path: '/settings',
     name: 'settings',
     component: Settings,
+    meta: { roles: ['admin'] }
   },
   {
     path: '/:pathMatch(.*)*',
@@ -62,7 +67,7 @@ router.beforeEach((to, _from, next) => {
     return next('/login');
   }
 
-  if (to.path === '/settings' && role !== 'admin') {
+  if (Array.isArray(to.meta.roles) && !to.meta.roles.includes(role)) {
     return next('/');
   }
 

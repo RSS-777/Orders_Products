@@ -15,6 +15,7 @@ const emit = defineEmits(['close']);
 
 const store = useStore();
 const token = store.getters['auth/token'];
+const role = store.getters['auth/role'];
 const message = ref<string>('');
 const isLoading = ref<boolean>(false);
 const seccessFetch = ref<boolean>(false);
@@ -33,6 +34,13 @@ const handleSubmit = async (e: Event) => {
   e.preventDefault();
 
   if (isLoading.value) return;
+
+  if (!['admin', 'manager'].includes(role)) {
+    message.value = 'У вас нет прав!!!';
+
+    setTimeout(() => {message.value = ''}, 2000)
+    return;
+  }
 
   try {
     isLoading.value = true;
@@ -86,7 +94,8 @@ const closeForm = () => {
       <h2 class="form__title text-center py-3">Создать заказ</h2>
       <div class="px-4">
         <BaseInput v-model="dataForm.title" label="Название заказа" placeholder="Введите название" id="form__title" />
-        <BaseTextarea v-model="dataForm.description" label="Описание" id="form__textarea" placeholder="Введите описание" :rows="4" />
+        <BaseTextarea v-model="dataForm.description" label="Описание" id="form__textarea" placeholder="Введите описание"
+          :rows="4" />
       </div>
       <Spinner :isLoading="isLoading" />
       <FormButtons :isLoading="isLoading" nameConfirm="Создать" typeBtnConfirm="submit" @cancel="closeForm" />

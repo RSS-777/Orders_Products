@@ -19,6 +19,7 @@ import { useTooltip } from '../composables/useTooltip';
 const store = useStore();
 const isReady = ref<boolean>(false);
 const token = computed(() => store.getters['auth/token']);
+const role = computed(() => store.getters['auth/role']);
 const orderId = computed(() => store.getters['orders/orderId']);
 const countOrders = computed(() => store.getters['orders/count']);
 const currentOrder = computed(() => store.getters['orders/currentOrder']);
@@ -74,6 +75,13 @@ const handleDelete = () => {
 const handleConfirmDelete = async () => {
   if (orderId.value === null || isLoading.value) return;
 
+  if (!['admin', 'manager'].includes(role.value)) {
+    fetchMessage.value = 'У вас нет прав!!!';
+
+    setTimeout(() => {fetchMessage.value = ''}, 2000)
+    return;
+  }
+
   try {
     isLoading.value = true;
     const res = await deleteOrder(orderId.value, token.value);
@@ -127,11 +135,9 @@ onBeforeMount(async () => {
 <template>
   <WrapperMain>
     <main class="main full-page pb-2 mx-auto position-relative d-flex flex-column overflow-hidden">
-      <button
-        v-if="showCloseProductsButton"
+      <button v-if="showCloseProductsButton"
         class="button position-absolute z-2 rounded-circle shadow border-0 fw-semibold bg-white"
-        @click="callChildClose"
-      >
+        @click="callChildClose">
         ✕
       </button>
       <div class="main__inner d-flex flex-column overflow-x-auto overflow-y-hidden mx-3 position-relative">
@@ -142,25 +148,15 @@ onBeforeMount(async () => {
         <OrdersList v-if="isReady" ref="ordersListRef" />
       </div>
     </main>
-    <ConfirmModal
-      v-if="showModal"
-      :message="fetchMessage"
-      :success="isSuccessDelete"
-      :isLoading="isLoading"
-      name="приход"
-      @confirm="handleConfirmDelete"
-      @cancel="handleCancelDelete"
-    >
+    <ConfirmModal v-if="showModal" :message="fetchMessage" :success="isSuccessDelete" :isLoading="isLoading"
+      name="приход" @confirm="handleConfirmDelete" @cancel="handleCancelDelete">
       <div class="modal-element p-4 position-relative">
-        <EllipsisText
-          v-if="currentOrder"
-          :title="currentOrder.title"
-          className="fs-5 border-0 fw-medium"
-          @click="(e: MouseEvent) => toggleTooltip(currentOrder.id, currentOrder.title, e)"
-        />
+        <EllipsisText v-if="currentOrder" :title="currentOrder.title" className="fs-5 border-0 fw-medium"
+          @click="(e: MouseEvent) => toggleTooltip(currentOrder.id, currentOrder.title, e)" />
         <p class="fd-2 lh-sm my-2">{{ currentOrder?.description }}</p>
         <div v-if="getProductsForOrder(currentOrder?.id).length">
-          <button class="modal-element__btn border-0 bg-transparent p-0 d-flex align-items-center" @click="toggleProducts">
+          <button class="modal-element__btn border-0 bg-transparent p-0 d-flex align-items-center"
+            @click="toggleProducts">
             <span>Продукти</span> <span>{{ showProducts ? '▲' : '▼' }}</span>
           </button>
           <ProductListShort :order="currentOrder" :showProducts="showProducts" />
@@ -214,7 +210,8 @@ onBeforeMount(async () => {
   transform: scale(0.95);
 }
 
-@media (hover: none), (pointer: coarse) {
+@media (hover: none),
+(pointer: coarse) {
   .button {
     top: 150px;
   }

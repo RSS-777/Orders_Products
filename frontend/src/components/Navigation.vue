@@ -19,6 +19,7 @@ const isAdmin = computed(() => {
 const token: string = store.getters['auth/token'];
 const isOpen = ref<boolean>(false);
 
+const role = computed(() => store.getters['auth/role']);
 const userImage = computed(() => {
   const photo = store.getters['auth/photoUrl'];
   return photo ? photo : personDefaultImg;
@@ -31,6 +32,10 @@ const openFileDialog = () => {
 };
 
 const changePhoto = async (e: Event) => {
+  if (!['admin', 'manager'].includes(role.value)) {
+    return;
+  }
+
   const input = e.target as HTMLInputElement;
   const file = (e.target as HTMLInputElement).files?.[0];
   if (!file) return;
@@ -79,49 +84,42 @@ const toggleMenu = () => {
   <div class="min-h-100 position-relative">
     <form>
       <label for="user-photo" class="visually-hidden">Upload user photo</label>
-      <input
-        ref="fileInput"
-        id="user-photo"
-        name="userPhoto"
-        type="file"
-        class="d-none"
-        accept="image/jpeg,image/png,image/webp"
-        @change="changePhoto"
-      />
+      <input ref="fileInput" id="user-photo" name="userPhoto" type="file" class="d-none"
+        accept="image/jpeg,image/png,image/webp" @change="changePhoto" />
     </form>
-    <button class="btn-navbar position-absolute z-2 pt-1 ps-2 fs-3 top-3 start-3 focus-none border-0 bg-transparent" @click="toggleMenu">☰</button>
+    <button class="btn-navbar position-absolute z-2 pt-1 ps-2 fs-3 top-3 start-3 focus-none border-0 bg-transparent"
+      @click="toggleMenu">☰</button>
     <div class="navigation z-1 p-2 bg-white border" :class="{ open: isOpen }" @click.stop>
       <div class="navigation__image position-relative rounded-circle border mx-auto my-4">
         <div class="overflow-hidden rounded-circle w-100 h-100 d-flex align-items-center justify-content-center">
           <img :src="userImage" alt="Image person" class="img-fluid" />
         </div>
-        <button
-          @click="openFileDialog"
-          class="navigation__settings position-absolute rounded-circle bg-white d-flex align-items-center justify-content-center border-0 focus-none"
-        >
+        <button 
+          @click="['admin', 'manager'].includes(role) ? openFileDialog() : null"
+          :disabled="!['admin', 'manager'].includes(role)"
+          class="navigation__settings position-absolute rounded-circle bg-white d-flex align-items-center justify-content-center border-0 focus-none">
           <img :src="settingsImage || personDefaultImg" alt="Icon settings" width="18" height="18" class="img-fluid" />
         </button>
       </div>
       <nav>
-        <RouterLink to="/arrival" class="nav-link mx-auto mb-1 fw-medium" :class="{ 'active-link': route.path === '/arrival' }" @click="closeMenu"
-          >приход
+        <RouterLink to="/arrival" class="nav-link mx-auto mb-1 fw-medium"
+          :class="{ 'active-link': route.path === '/arrival' }" @click="closeMenu">приход
         </RouterLink>
-        <RouterLink to="/groups" class="nav-link mx-auto mb-1 fw-medium" :class="{ 'active-link': route.path === '/groups' }" @click="closeMenu"
-          >группы
+        <RouterLink to="/groups" class="nav-link mx-auto mb-1 fw-medium"
+          :class="{ 'active-link': route.path === '/groups' }" @click="closeMenu">группы
         </RouterLink>
-        <RouterLink to="/products" class="nav-link mx-auto mb-1 fw-medium" :class="{ 'active-link': route.path === '/products' }" @click="closeMenu">
+        <RouterLink to="/products" class="nav-link mx-auto mb-1 fw-medium"
+          :class="{ 'active-link': route.path === '/products' }" @click="closeMenu">
           продукты
         </RouterLink>
-        <RouterLink to="/users" class="nav-link mx-auto mb-1 fw-medium" :class="{ 'active-link': route.path === '/users' }" @click="closeMenu"
-          >пользователи
+        <RouterLink to="/users" class="nav-link mx-auto mb-1 fw-medium"
+          :class="{ 'active-link': route.path === '/users', 'active-link--disabled': !['admin', 'manager'].includes(role) }" @click="closeMenu">пользователи
         </RouterLink>
-        <RouterLink
-          :to="isAdmin ? '/settings' : '#'"
-          class="nav-link mx-auto mb-1 fw-medium"
+        <RouterLink :to="isAdmin ? '/settings' : '#'" class="nav-link mx-auto mb-1 fw-medium"
           :class="{ 'active-link': route.path === '/settings', 'active-link--disabled': !isAdmin }"
-          @click="closeMenu()"
-        >
-          <img :src="isAdmin ? padlockImageOpen : padlockImage" alt="Icon settings" width="18" height="18" class="img-fluid me-1" />
+          @click="closeMenu()">
+          <img :src="isAdmin ? padlockImageOpen : padlockImage" alt="Icon settings" width="18" height="18"
+            class="img-fluid me-1" />
           настройки
         </RouterLink>
       </nav>
@@ -167,6 +165,12 @@ const toggleMenu = () => {
 
 .navigation__settings:active {
   box-shadow: 0 0 2px 0 rgb(148, 148, 148);
+}
+
+.navigation__settings:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 a {

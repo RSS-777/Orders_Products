@@ -13,8 +13,8 @@ services:
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
       LANG: C.UTF-8
-    ports:
-      - "3309:3306"
+    # ports:
+    #   - "3309:3306"
     volumes:
        - mysql_data_orders:/var/lib/mysql
        - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -27,11 +27,13 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 512M
+    mem_limit: 512m
+    cpus: 1.0
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   app:
     build: 
@@ -39,7 +41,7 @@ services:
       dockerfile: Dockerfile
     container_name: orders_products
     ports:
-      - "3003:3002"
+      - "3003:3000"
     depends_on:
       mysql:
         condition: service_healthy
@@ -52,11 +54,13 @@ services:
       DB_PORT: 3306 
     volumes:
       - ./backend/src/uploads:/app/backend/src/uploads
-    deploy:
-      resources:
-        limits:
-          cpus: '1.0'
-          memory: 512M
+    mem_limit: 512m
+    cpus: 1.0
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 volumes:
   mysql_data_orders:

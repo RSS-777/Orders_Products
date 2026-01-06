@@ -20,7 +20,7 @@ import { useTooltip } from '../composables/useTooltip';
 
 const store = useStore();
 const isLoading = ref<boolean>(false);
-const massage = ref<string | null>(null);
+const message = ref<string | null>(null);
 const createOrder = ref<boolean>(false);
 const isDeleteProduct = ref<boolean>(false);
 const showDeleteModal = ref<boolean>(false);
@@ -58,14 +58,22 @@ const handleCenselDeleteProduct = () => {
 const handleSubmitDeleteProduct = async () => {
   if (isLoading.value) return;
   const token = store.getters['auth/token'];
+  const role = store.getters['auth/role'];
   const productId = idProduct.value;
+
+  if (!['admin', 'manager'].includes(role)) {
+    message.value = 'У вас нет прав!!!';
+
+    setTimeout(() => { message.value = '' }, 2000)
+    return;
+  }
 
   try {
     isLoading.value = true;
     const res = await deleteProduct(productId, token);
 
     if (res.success) {
-      massage.value = 'Продукт успешно удалён!';
+      message.value = 'Продукт успешно удалён!';
       isDeleteProduct.value = true;
 
       setTimeout(() => {
@@ -74,7 +82,7 @@ const handleSubmitDeleteProduct = async () => {
         fetchProducts(true);
         store.commit('products/clearCurrentProduct');
         store.commit('products/clearProductId');
-        massage.value = null;
+        message.value = null;
         isDeleteProduct.value = false;
         isLoading.value = false;
       }, 3000);
@@ -83,11 +91,11 @@ const handleSubmitDeleteProduct = async () => {
 
     throw new Error(res.error ?? 'Неизвестная ошибка');
   } catch (err: any) {
-    massage.value = err.error || 'Произошла ошибка';
+    message.value = err.error || 'Произошла ошибка';
 
     setTimeout(() => {
       isLoading.value = false;
-      massage.value = null;
+      message.value = null;
     }, 2000);
   }
 };
@@ -118,33 +126,22 @@ onBeforeUnmount(() => {
     </main>
     <FormCreateOrder v-if="createOrder" @close="handleToggleOrderForm" />
     <FormCreateProduct v-if="createProduct && idOrder" :idOrder="idOrder" @close="handleCloseProductForm" />
-    <ConfirmModal
-      v-if="showDeleteModal"
-      :message="massage"
-      :success="isDeleteProduct"
-      name="продукт"
-      :isLoading="isLoading"
-      @confirm="handleSubmitDeleteProduct"
-      @cancel="handleCenselDeleteProduct"
-    >
+    <ConfirmModal v-if="showDeleteModal" :message="message" :success="isDeleteProduct" name="продукт"
+      :isLoading="isLoading" @confirm="handleSubmitDeleteProduct" @cancel="handleCenselDeleteProduct">
       <div class="modal-element d-grid align-items-center gap-4 py-2 position-relative">
         <ProductNewIndicator v-if="currentProduct" :status="currentProduct.status" />
         <ProductImage :src="currentProduct?.photo" />
         <div class="d-flex flex-column w-100 overflow-hidden">
-          <EllipsisText
-            v-if="currentProduct"
-            :title="currentProduct.title"
-            className="border-0 fw-medium"
-            @click="
-              (e: MouseEvent) => {
-                if (!currentProduct) return;
-                toggleTooltip(currentProduct.id, currentProduct.title, e);
-              }
-            "
-          />
+          <EllipsisText v-if="currentProduct" :title="currentProduct.title" className="border-0 fw-medium" @click="
+            (e: MouseEvent) => {
+              if (!currentProduct) return;
+              toggleTooltip(currentProduct.id, currentProduct.title, e);
+            }
+          " />
           <SecondaryText v-if="currentProduct" :text="currentProduct?.serialNumber" />
         </div>
-        <Tooltip :title="currentProduct?.title" v-if="activeTooltipId === currentProduct?.id" :x="tooltipX ?? undefined" />
+        <Tooltip :title="currentProduct?.title" v-if="activeTooltipId === currentProduct?.id"
+          :x="tooltipX ?? undefined" />
       </div>
     </ConfirmModal>
   </WrapperMain>

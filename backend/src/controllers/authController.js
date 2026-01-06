@@ -50,7 +50,7 @@ const login = async (req, res) => {
       return res.status(401).json({ success: false, error: 'Invalid credentials' });
     }
 
-    const allowedRoles = ['admin', 'manager'];
+    const allowedRoles = ['admin', 'manager', 'viewer'];
     if (!allowedRoles.includes(user.role)) {
       return res.status(403).json({
         success: false,

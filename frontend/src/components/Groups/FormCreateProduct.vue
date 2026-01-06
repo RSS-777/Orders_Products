@@ -34,6 +34,7 @@ const { idOrder } = defineProps<{ idOrder: number }>();
 
 const store = useStore();
 const token = store.getters['auth/token'];
+const role = store.getters['auth/role'];
 const message = ref<string>('');
 const isLoading = ref<boolean>(false);
 const successFetch = ref<boolean>(false);
@@ -109,6 +110,13 @@ const schema = yup.object({
 const handleSubmit = async (e: Event) => {
   e.preventDefault();
   if (isLoading.value) return;
+
+  if (!['admin', 'manager'].includes(role)) {
+    message.value = 'У вас нет прав!!!';
+
+    setTimeout(() => {message.value = ''}, 2000)
+    return;
+  }
 
   try {
     isLoading.value = true;
@@ -186,7 +194,8 @@ const closeForm = () => {
 </script>
 
 <template>
-  <div class="modal position-absolute d-flex justify-content-center align-items-center bg-dark bg-opacity-50 border py-4">
+  <div
+    class="modal position-absolute d-flex justify-content-center align-items-center bg-dark bg-opacity-50 border py-4">
     <form class="form w-100 overflow-y-auto rounded shadow bg-white mx-3" @submit="handleSubmit">
       <div>
         <h2 class="form__title text-center py-3">Создать продукт</h2>
@@ -195,18 +204,16 @@ const closeForm = () => {
           <BaseInput v-model="dataForm.serialNumber" label="Серийный номер" />
           <BaseInput v-model="dataForm.owner" label="Владелец" />
           <div class="d-flex justify-content-between">
-            <RadioGroup
-              label="Состояние"
-              :options="[
-                { label: 'Новый', value: 1 },
-                { label: 'Б/У', value: 0 },
-              ]"
-              v-model="dataForm.isNew"
-            />
+            <RadioGroup label="Состояние" :options="[
+              { label: 'Новый', value: 1 },
+              { label: 'Б/У', value: 0 },
+            ]" v-model="dataForm.isNew" />
           </div>
-          <BaseInput v-model="dataForm.title" label="Название продукта" placeholder="Введите название" id="form__title" />
+          <BaseInput v-model="dataForm.title" label="Название продукта" placeholder="Введите название"
+            id="form__title" />
           <BaseInput v-model="dataForm.type" label="Тип продукта" placeholder="Введите тип" id="form__type" />
-          <BaseInput v-model="dataForm.specification" label="Спецификация" placeholder="Введите спецификацию" id="form__spec" />
+          <BaseInput v-model="dataForm.specification" label="Спецификация" placeholder="Введите спецификацию"
+            id="form__spec" />
           <BaseInput v-model="dataForm.guarantee.start" label="Гарантия с" type="date" />
           <BaseInput v-model="dataForm.guarantee.end" label="Гарантия до" type="date" />
           <BaseInput v-model="dataForm.price[0].value" label="Цена USD" type="number" />

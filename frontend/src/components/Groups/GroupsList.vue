@@ -97,7 +97,7 @@ const handleCloseProductList = () => {
       >
         <button
           v-if="openListProducts"
-          class="choice-products__btn-close position-absolute rounded-circle shadow border-0 fw-semibold bg-white"
+          class="choice-products__btn-close position-absolute z-2 rounded-circle shadow border-0 fw-semibold bg-white"
           @click="handleCloseProductList"
         >
           ✕

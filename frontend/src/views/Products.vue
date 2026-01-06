@@ -16,6 +16,7 @@ import { useTooltip } from '../composables/useTooltip';
 
 const store = useStore();
 const token = computed(() => store.getters['auth/token']);
+const role = computed(() => store.getters['auth/role']);
 const showModal = ref<boolean>(false);
 const fetchMessage = ref<string>('');
 const countProducts = computed(() => store.getters['products/count']);
@@ -38,6 +39,13 @@ const openDeleteModal = () => {
 
 const handleConfirmDelete = async () => {
   if (productId.value === null || isLoading.value) return;
+
+    if (!['admin', 'manager'].includes(role.value)) {
+    fetchMessage.value = 'У вас нет прав!!!';
+
+    setTimeout(() => { fetchMessage.value = '' }, 2000)
+    return;
+  }
 
   try {
     isLoading.value = true;

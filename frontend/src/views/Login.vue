@@ -12,8 +12,8 @@ import Spinner from '../components/СomponentsForm/Spinner.vue';
 
 const store = useStore();
 const router = useRouter();
-const email = ref<string>('admin@example.com');
-const password = ref<string>('admin');
+const email = ref<string>('viewer@example.com');
+const password = ref<string>('viewer');
 const message = ref<string>('');
 const isSubmitting = ref<boolean>(false);
 const successReg = ref<boolean>(false);

@@ -8,7 +8,7 @@ const Auth = {
   create: async ({ name, email, password }) => {
     const [result] = await db.query(
       'INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)',
-      [name, email, password, 'viewer']
+      [name, email, password, 'user']
     );
     return result;
   },

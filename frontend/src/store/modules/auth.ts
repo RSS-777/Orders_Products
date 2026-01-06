@@ -10,7 +10,7 @@ export interface IAuthState {
 
 interface ITokenPayload {
   id: number;
-  role: 'admin' | 'manager' | 'viewer';
+  role: 'admin' | 'manager' | 'viewer' | 'user';
 }
 
 const auth: Module<IAuthState, IRootState> = {

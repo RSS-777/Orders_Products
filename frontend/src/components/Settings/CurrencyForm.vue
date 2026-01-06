@@ -9,7 +9,8 @@ import Spinner from '../СomponentsForm/Spinner.vue';
 import FetchMessage from '../СomponentsForm/FetchMessage.vue';
 
 const store = useStore();
-const token = computed(() => store.getters['auth/token']);
+const token = store.getters['auth/token'];
+const role = store.getters['auth/role'];
 const currencyCurrent = computed(() => store.getters['settings/defaultCurrency']);
 const isLoading = ref<boolean>(false);
 const message = ref<string>('');
@@ -17,11 +18,18 @@ const isSeccess = ref<boolean>(false);
 const currency = ref<string>(currencyCurrent.value || 'USD');
 
 const submitForm = async () => {
-  if (!token.value || isLoading.value || !currency.value) return;
+  if (!token || isLoading.value || !currency.value) return;
+
+  if (!['admin', 'manager'].includes(role)) {
+    message.value = 'У вас нет прав!!!';
+
+    setTimeout(() => {message.value = ''}, 2000)
+    return;
+  }
 
   try {
     isLoading.value = true;
-    const res = await updateDefaultCurrency(currency.value, token.value);
+    const res = await updateDefaultCurrency(currency.value, token);
 
     if (res.success) {
       isSeccess.value = true;

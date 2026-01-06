@@ -9,6 +9,12 @@ This project is a **test assignment** designed to demonstrate skills in both fro
 
 ---
 
+## Live site
+Working web application: [Go to the website](https://test-project.if.ua)
+
+---
+
+
 ## Technologies
 
 ### Backend:
