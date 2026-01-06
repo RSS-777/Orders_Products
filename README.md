@@ -29,6 +29,7 @@ Working web application: [Go to the website](https://test-project.if.ua)
 - **winston-daily-rotate-file** – Extension for Winston that rotates log files daily for better log management.  
 - **Cors** – Middleware to enable Cross-Origin Resource Sharing, allowing frontend applications from different origins to communicate with the backend.  
 - **Dotenv** – Loads environment variables from a `.env` file, useful for sensitive information like database credentials and secret keys.  
+- **Docker** – Used for containerizing the backend and database, ensuring consistent environments and simplifying deployment.
 - **Nodemon** – Development tool that automatically restarts the server when code changes, improving development workflow.
 
 ### Frontend:
