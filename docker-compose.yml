@@ -2,11 +2,11 @@ version: '3.8'
 
 services:
   mysql:
-    image: mysql:8.0
+    image: mysql:5.7
     container_name: my-mysql
     restart: always
     env_file:
-    - backend/.env
+    - .env
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
@@ -14,13 +14,13 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD}
       LANG: C.UTF-8
     ports:
-      - "3306:3306"
+      - "3309:3306"
     volumes:
-       - mysql_data:/var/lib/mysql
+       - mysql_data_orders:/var/lib/mysql
        - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     command: >
       --character-set-server=utf8mb4
-      --collation-server=utf8mb4_0900_ai_ci
+      --collation-server=utf8mb4_unicode_ci
       --init-connect="SET NAMES utf8mb4"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
@@ -39,14 +39,14 @@ services:
       dockerfile: Dockerfile
     container_name: orders_products
     ports:
-      - "3002:3002"
+      - "3003:3002"
     depends_on:
       mysql:
         condition: service_healthy
     restart: always
     working_dir: /app/backend
     env_file:
-      - backend/.env
+      - .env
     environment:
       DB_HOST: mysql 
       DB_PORT: 3306 
@@ -59,4 +59,4 @@ services:
           memory: 512M
 
 volumes:
-  mysql_data:
+  mysql_data_orders:
