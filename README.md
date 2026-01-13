@@ -5,15 +5,12 @@ This project is a **test assignment** designed to demonstrate skills in both fro
 
 ⚠️ The project is in a **test implementation state**. Some features (e.g., localization, themes, advanced admin panel, tests) can still be further developed, but the core functionality is fully working.
 
-> 🔹 **Note:** I went beyond just the frontend and implemented the backend as well, because I enjoy having control over both sides and seeing the full process of the application.
-
 ---
 
 ## Live site
 Working web application: [Go to the website](https://test-project.if.ua)
 
 ---
-
 
 ## Technologies
 
@@ -113,7 +110,6 @@ Working web application: [Go to the website](https://test-project.if.ua)
 - **Localization** and theme support  
 - **Advanced admin panel** with access controls  
 - **Unit tests** (using Jest)  
-- **Style optimization** and closer alignment with design mockups  
 
 ---
 
